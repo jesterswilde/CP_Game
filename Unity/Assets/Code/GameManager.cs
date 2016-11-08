@@ -104,7 +104,8 @@ public class GameManager : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         _gameTime += Time.deltaTime;
-        SetActions(); 
+        SetActions();
+        TimeCounter.UpdateTime(_gameTime); 
 	}
     void Start()
     {
