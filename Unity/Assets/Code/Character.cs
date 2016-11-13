@@ -1,139 +1,112 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-
+using System;
 
 public class Character : MonoBehaviour {
 
     [SerializeField]
-    float speed = 5; 
+    float speed = 5;
+    CharacterCam _cam;
+    public CharacterCam Cam { get { return _cam; } }
+    Transform _camTrans; 
+    public Transform CamPoint { get { return _cam.CameraSpot; } }
+    [SerializeField]
+    int _count;
+    float _prevTime; 
 
-    Queue<Action> _actions = new Queue<Action>();
-    Queue<Action> _remainigActions = new Queue<Action>(); 
+    CharacterState _state = new CharacterState();
+    CharacterState _baseState = new CharacterState(); 
+    History _history = new History(); 
 
     [SerializeField]
     bool _playerControlled = false;
-    int _forward = 0;
-    int _left = 0;
-    int _back = 0;
-    int _right = 0;
-    Vector3 _oldVec; 
 
-    public void Rewind()
+    public void SetAction(IAction _action)
     {
-        float _oldTime = 0;
-        DefaultState(); 
-        _remainigActions = new Queue<Action>(_actions);
+        Debug.Log(_action.Type); 
+        _history.AddToHead(_action);
+    }
+
+    public void RewindToTime()
+    {
+        _state.SetToBase(_baseState); 
+        _history.SetCurrentTime(GameManager.GameTime);
+        if(_history.PointerAction != null)
+        {
+            Act(GameManager.GameTime - _history.PointerAction.Time);
+        }else
+        {
+            Act(); 
+        }
+    }
+    public void Play()
+    {
         while (true)
         {
-            if(_remainigActions.Count > 0)
+            HistoryNode _node = _history.PlayTime(GameManager.GameTime);
+            if(_node == null)
             {
-                if (_remainigActions.Peek().Time < GameManager.GameTime)
-                {
-                    Action _currentAction = _remainigActions.Dequeue(); 
-                    _oldVec = _currentAction.Position;
-                    _oldTime = _currentAction.Time;  
-                    UseAction(_currentAction);
-                }
-                else
-                {
-                    transform.position = _oldVec;
-                    Act(GameManager.GameTime - _oldTime); 
-                    break; 
-                }
+                Act(GameManager.GameTime - _prevTime);
+                _prevTime = GameManager.GameTime; 
+                break; 
             }
-            else
+            Act(_node.Action.Time - _prevTime);
+            _state.UseAction(_node.Action); 
+            _prevTime = _node.Action.Time; 
+        }
+    }
+    public void Rewind()
+    {
+        while (true)
+        {
+            HistoryNode _node = _history.RewindTime(GameManager.GameTime);
+            if (_node == null)
             {
-                transform.position = _oldVec;
-                Act(GameManager.GameTime - _oldTime);
+                ActReverse(_prevTime - GameManager.GameTime);
+                _prevTime = GameManager.GameTime;
                 break;
             }
-        }
-        if (_playerControlled)
-        {
-            OverwriteFuture();
-            DefaultState(); 
+            ActReverse(_prevTime - _node.Action.Time);
+            _state.ReverseAction(_node.Action);
+            _prevTime =_node.Action.Time;
         }
     }
-
-    void OverwriteFuture()
-    {
-        Queue<Action> _savedActions = new Queue<Action>();
-        while (_actions.Count > 0 && _actions.Peek().Time < GameManager.GameTime)
-        {
-            _savedActions.Enqueue(_actions.Dequeue());
-        }
-        _actions = _savedActions; 
-    }
-
-    void DefaultState()
-    {
-        _right = 0;
-        _forward = 0;
-        _left = 0;
-        _back = 0; 
-    }
-
-    public void SetAction(Action _action)
-    {
-        _actions.Enqueue(_action);
-        UseAction(_action); 
-    }
-
-    public void UseAction(Action _action)
-    {
-        switch (_action.Type)
-        {
-            case ActionType.PressForward:
-                _forward = 1;
-                break;
-            case ActionType.ReleaseForward:
-                _forward = 0;
-                break;
-            case ActionType.PressLeft:
-                _left = 1;
-                break;
-            case ActionType.ReleaseLeft:
-                _left = 0;
-                break;
-            case ActionType.PressBack:
-                _back = 1;
-                break;
-            case ActionType.ReleaseBack:
-                _back = 0;
-                break;
-            case ActionType.PressRight:
-                _right = 1;
-                break;
-            case ActionType.ReleaseRight:
-                _right = 0;
-                break;
-            default:
-                _forward = 0;
-                _right = 0;
-                _left = 0;
-                _back = 0;
-                break;
-        }
-    }
-
     public void Act()
     {
-        float newY = transform.position.y + speed * (_forward - _back) * Time.deltaTime;
-        float newX = transform.position.x + speed * (_right - _left) * Time.deltaTime;
-        transform.position = new Vector3(newX, newY, transform.position.z); 
+        Act(Time.deltaTime); 
     }
     public void Act(float _deltaTime)
     {
-        float newY = transform.position.y + speed * (_forward - _back) * _deltaTime;
-        float newX = transform.position.x + speed * (_right - _left) * _deltaTime;
-        transform.position = new Vector3(newX, newY, transform.position.z);
+        transform.forward = _cam.CameraForward(_state.XRot); 
+        Vector3 _move = (_state.Forward - _state.Backward) * transform.forward + (_state.Right - _state.Left) * transform.right;
+        transform.position += new Vector3(_move.x, 0, _move.z).normalized * speed * _deltaTime;
+    }
+    public void ActReverse()
+    {
+        ActReverse(Time.deltaTime); 
+    }
+    public void ActReverse(float _deltaTime)
+    {
+        transform.forward = _cam.CameraForward(_state.XRot);
+        Vector3 _move = (_state.Forward - _state.Backward) * transform.forward + (_state.Right - _state.Left) * transform.right;
+        transform.position += new Vector3(_move.x, 0, _move.z).normalized * speed * _deltaTime * -1;
+    }
+    public bool WillRotate()
+    {
+        if(_playerControlled && _state.IsMoving())
+        {
+            return _state.XRot != _cam.XRot; 
+        }
+        return false; 
+    }
+    public float RotationDifference()
+    {
+        return _cam.XRot - _state.XRot;
     }
 
     public void SetAsActivePlayer()
     {
-        DefaultState();
-        OverwriteFuture(); 
         _playerControlled = true;
         GetComponent<MeshRenderer>().material.color = Color.red; 
     }
@@ -145,33 +118,17 @@ public class Character : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        _oldVec = transform.position;
+        SetAction(new Action(ActionType.Clear)); 
 	}
     void Awake()
     {
-        GameManager.RegisterCharacter(this); 
+        GameManager.RegisterCharacter(this);
+        _cam = gameObject.GetComponent<CharacterCam>();
+        _camTrans = _cam.CameraSpot; 
     }
 	
 	// Update is called once per frame
 	void Update () {
-        if (!_playerControlled)
-        {
-            while (true)
-            {
-                if(_remainigActions.Count == 0)
-                {
-                    break;
-                }
-                if (_remainigActions.Peek().Time < GameManager.GameTime)
-                {
-                    UseAction(_remainigActions.Dequeue());
-                }
-                else
-                {
-                    break; 
-                }
-            }
-        }
-        Act(); 
+        _count = _history.Count; 
     }
 }

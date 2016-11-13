@@ -1,20 +1,37 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
-public struct Action{
+public class Action : IAction{
     ActionType _action;
     float _time;
-    Vector3 _pos; 
 
-    public Action(ActionType _actionType, Character _character)
+    public Action(ActionType _actionType)
     {
         _action = _actionType;
-        _pos = _character.transform.position; 
-        _time = GameManager.GameTime; 
+        _time = GameManager.GameTime;
     }
     public ActionType Type { get { return _action; } }
-    public Vector3 Position { get { return _pos; } }
     public float Time { get { return _time; } }
+
+    public float Value { get { return float.NaN; } }
+}
+
+public class ValueAction : IAction
+{
+    ActionType _action;
+    float _time;
+    float _value; 
+
+    public ValueAction(ActionType _actionType, float value)
+    {
+        _action = _actionType;
+        _time = GameManager.GameTime;
+        _value = value; 
+    }
+    public ActionType Type { get { return _action; } }
+    public float Time { get { return _time; } }
+    public float Value { get { return _value; } }
 }
 
 public enum ActionType
@@ -27,6 +44,7 @@ public enum ActionType
     ReleaseLeft,
     PressBack,
     ReleaseBack,
+    Rotation,
     Clear
 }
 

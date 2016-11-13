@@ -1,0 +1,137 @@
+﻿using UnityEngine;
+using System.Collections;
+using System.Collections.Generic; 
+
+public class History {
+
+    HistoryNode _head = null;
+    HistoryNode _tail = null;
+    HistoryNode _pointer = null;
+    int _count = 0; 
+    public int Count { get { return _count;  } }
+
+    public IAction TailAction  { get{ return (_tail != null) ? _tail.Action : null; } }
+    public IAction HeadAction { get { return (_head != null) ? _head.Action : null; } }
+    public IAction PointerAction { get { return (_pointer != null) ? _pointer.Action : null; } }
+
+    HistoryNode ChopTail()
+    {
+        if(_tail != null)
+        {
+            _count--; 
+            HistoryNode _chopped = _tail; 
+            if(_tail.Next == null)
+            {
+                _head = null;
+                _pointer = null; 
+            }
+            _tail.ClearPrevious(); 
+            _tail = _tail.Next;
+            return _chopped; 
+        }
+        return null; 
+    }
+    public void AddToHead(IAction _action)
+    {
+        _count++; 
+        HistoryNode _newHead = new HistoryNode(_action);
+        if(_tail == null)
+        {
+            _head = _newHead;
+            _tail = _newHead;
+            _pointer = _newHead; 
+        }
+        else
+        {
+            _head.SetNext(_newHead);
+            _newHead.SetPrevious(_head); 
+            _head = _newHead;
+        }
+    }
+
+    public void ClearFromTime(float _time)
+    {
+        if(_tail == null)
+        {
+            return;
+        }
+        HistoryNode _currentNode = _tail;
+        _count = 0; 
+        while (true)
+        {
+            if(_currentNode.Next == null)
+            {
+                break; 
+            }
+            if(_currentNode.Next.Action.Time < _time)
+            {
+                _currentNode = _currentNode.Next;
+                _count++; 
+            }else
+            {
+                _currentNode.ClearNext(); 
+                _head = _currentNode;
+                break; 
+            }
+        }
+    }
+
+    public void ClearToTime(float _time)
+    {
+        while (true)
+        {
+            if(_tail == null || _tail.Next == null)
+            {
+                break; 
+            }
+            if(_tail.Next.Action.Time < _time)
+            {
+                ChopTail(); 
+            }else
+            {
+                break; 
+            }
+        }
+    }
+
+    public void SetCurrentTime(float _time)
+    {
+        if(_tail == null)
+        {
+            _pointer = null; 
+            return; 
+        }
+        _pointer = _tail;
+        PlayTime(_time); 
+    }
+
+    public HistoryNode PlayTime(float _time)
+    {
+        if(_pointer == null || _pointer.Next == null)
+        {
+            return null;
+        }
+        if (_pointer.Next.Action.Time <= _time)
+        {
+            _pointer = _pointer.Next;
+            return _pointer; 
+        }
+        return null; 
+    }
+
+    public HistoryNode RewindTime(float _time)
+    {
+        if (_pointer == null || _pointer.Previous == null)
+        {
+            return null;
+        }
+        if(_pointer.Action.Time > _time)
+        {
+            HistoryNode _node = _pointer; 
+            _pointer = _pointer.Previous;
+            return _node;
+        }
+        return null; 
+    }
+
+}

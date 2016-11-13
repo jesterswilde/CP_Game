@@ -1,0 +1,9 @@
+﻿using UnityEngine;
+using System.Collections;
+
+public interface IAction {
+    float Time { get; }
+    ActionType Type { get; }
+    float Value { get;  }
+
+}
