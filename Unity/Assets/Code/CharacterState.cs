@@ -8,7 +8,11 @@ public class CharacterState
     int _backward = 0;
     int _left = 0;
     int _right = 0;
-    float _rotX = 0; 
+    float _rotX = 0;
+    int _canMoveForward = 1;
+    int _canMoveBackward = 1;
+    int _canMoveLeft = 1;
+    int _canMoveRight = 1; 
     Vector3 _prevPos = Vector3.zero;
     Quaternion _prevRot = new Quaternion();
 
@@ -16,10 +20,15 @@ public class CharacterState
     public int Backward { get { return _backward; } set { _backward = value; } }
     public int Left { get { return _left; } set { _left = value; } }
     public int Right { get { return _right; } set { _left = value; } }
+    public int CanForward { get { return _canMoveForward; } }
+    public int CanBackward { get { return _canMoveBackward; } }
+    public int CanLeft { get { return _canMoveLeft; } }
+    public int CanRight { get { return _canMoveRight; } }
     public float XRot { get { return _rotX; } }
     public Vector3 PrevPos { get { return _prevPos; } set { _prevPos = value; } }
     public Quaternion PrevRot { get { return _prevRot; } set { _prevRot = value; } }
 
+    
     public bool IsMoving()
     {
         if (_forward != 0 || _backward != 0 || _left != 0 || _right != 0)
@@ -46,6 +55,30 @@ public class CharacterState
     {
         switch (_action.Type)
         {
+            case ActionType.ForwardBlocked:
+                _canMoveForward = 0;
+                break;
+            case ActionType.ForwardUnblocked:
+                _canMoveForward = 1;
+                break;
+            case ActionType.RightBlocked:
+                _canMoveRight = 0;
+                break;
+            case ActionType.RightUnblocked:
+                _canMoveRight = 1;
+                break;
+            case ActionType.BackwardBlocked:
+                _canMoveBackward = 0;
+                break;
+            case ActionType.BackwardUnblocked:
+                _canMoveBackward = 1;
+                break;
+            case ActionType.LeftBlocked:
+                _canMoveLeft = 0;
+                break;
+            case ActionType.LeftUnblocked:
+                _canMoveLeft = 1;
+                break; 
             case ActionType.PressForward:
                 _forward = 1;
                 break;
@@ -85,6 +118,30 @@ public class CharacterState
     {
         switch (_action.Type)
         {
+            case ActionType.ForwardBlocked:
+                _canMoveForward = 1;
+                break;
+            case ActionType.ForwardUnblocked:
+                _canMoveForward = 0;
+                break;
+            case ActionType.RightBlocked:
+                _canMoveRight = 1;
+                break;
+            case ActionType.RightUnblocked:
+                _canMoveRight = 0;
+                break;
+            case ActionType.BackwardBlocked:
+                _canMoveBackward = 1;
+                break;
+            case ActionType.BackwardUnblocked:
+                _canMoveBackward = 0;
+                break;
+            case ActionType.LeftBlocked:
+                _canMoveLeft = 1;
+                break;
+            case ActionType.LeftUnblocked:
+                _canMoveLeft = 0;
+                break;
             case ActionType.PressForward:
                 _forward = 0;
                 break;

@@ -11,6 +11,17 @@ public class Action : IAction{
         _action = _actionType;
         _time = GameManager.GameTime;
     }
+    public Action (ActionType _actionType, bool _isFixed)
+    {
+        _action = _actionType;
+        if (_isFixed)
+        {
+            _time = GameManager.GetGameTimeFixed();
+        }else
+        {
+            _time = GameManager.GameTime; 
+        }
+    }
     public ActionType Type { get { return _action; } }
     public float Time { get { return _time; } }
 
@@ -29,6 +40,18 @@ public class ValueAction : IAction
         _time = GameManager.GameTime;
         _value = value; 
     }
+    public ValueAction(ActionType _actionType, float value, bool _isFixed)
+    {
+        _action = _actionType;
+        if (_isFixed)
+        {
+            _time = GameManager.GetGameTimeFixed();
+        }else
+        {
+            _time = GameManager.GameTime;
+
+        }
+    }
     public ActionType Type { get { return _action; } }
     public float Time { get { return _time; } }
     public float Value { get { return _value; } }
@@ -45,6 +68,17 @@ public enum ActionType
     PressBack,
     ReleaseBack,
     Rotation,
-    Clear
+    ForwardBlocked,
+    ForwardUnblocked,
+    BackwardBlocked,
+    BackwardUnblocked,
+    LeftBlocked,
+    LeftUnblocked,
+    RightBlocked,
+    RightUnblocked,
+    Clear,
+    AIWait,
+    AIMove,
+    AIRotate
 }
 

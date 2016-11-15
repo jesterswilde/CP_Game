@@ -4,8 +4,10 @@ using System;
 using System.Collections.Generic;
 
 public class GameManager : MonoBehaviour {
-
+    
     static float _gameTime = 0;
+    static float _updateTime = 0;
+    static float _fixedTime = 0; 
     public static float GameTime { get { return _gameTime; } }
     static Character _activeCharacter;
     public static Character ActiveCharacter { get { return _activeCharacter; } }
@@ -45,15 +47,6 @@ public class GameManager : MonoBehaviour {
     }
     #endregion
 
-
-    static void RewindAbs(int _subtract)
-    {
-        _gameTime = Mathf.Max(0, _gameTime - _subtract); 
-        foreach(Character _character in _characters)
-        {
-            _character.RewindToTime(); 
-        }
-    }
     static void BeginPlaying()
     {
         _isPlaying = true; 
@@ -133,10 +126,6 @@ public class GameManager : MonoBehaviour {
         {
             BeginPlaying();  
         }
-        if (Input.GetMouseButtonDown(1))
-        {
-            RewindAbs(1); 
-        }
         if (Input.GetKeyDown(KeyCode.Tab))
         {
             SwitchCharacter(); 
@@ -182,7 +171,10 @@ public class GameManager : MonoBehaviour {
             }
         }
     }
-
+    public static float GetGameTimeFixed()
+    {
+        return _gameTime + _fixedTime - _updateTime; 
+    }
     void Observe()
     {
         if(_activeCharacter == null)
@@ -197,6 +189,7 @@ public class GameManager : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
+        _updateTime += Time.deltaTime; 
         if (Input.GetKeyDown(KeyCode.Backspace))
         {
             Observe();
@@ -211,7 +204,11 @@ public class GameManager : MonoBehaviour {
         }
         TimeCounter.UpdateTime(_gameTime);
         _camController.UpdateCamera();
-	}
+    }
+    void FixedUpdate()
+    {
+        _fixedTime += Time.fixedDeltaTime;
+    }
     void Awake()
     {
         _obCam = ob; 
