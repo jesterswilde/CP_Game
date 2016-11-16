@@ -34,7 +34,6 @@ public class TriggerVolume : MonoBehaviour {
     {
         if (Util.LayerMaskContainsLayer(_collMask, _coll.gameObject.layer))
         {
-            Debug.Log("exiting " + _exit + " | " + _count); 
             _count--;
             if (_count == 0)
             {
