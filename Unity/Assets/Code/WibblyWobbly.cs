@@ -10,7 +10,15 @@ public abstract class WibblyWobbly : MonoBehaviour {
     protected abstract void ActReverse(float _deltaTIme);
     public virtual void SetAction(IAction _action)
     {
-        _history.AddToHead(_action); 
+        if(_history.HeadAction == null)
+        {
+            _history.AddToHead(_action);
+            return; 
+        }
+        if (GameManager.IsPlaying && _action.Time > _history.HeadAction.Time)
+        {
+            _history.AddToHead(_action); 
+        }
     }
     protected float _prevTime;
     public virtual void Play()

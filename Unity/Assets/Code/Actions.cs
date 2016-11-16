@@ -11,6 +11,11 @@ public class Action : IAction{
         _action = _actionType;
         _time = GameManager.GameTime;
     }
+    public Action(ActionType _actionType, float time)
+    {
+        _action = _actionType;
+        _time = time;
+    }
     public Action (ActionType _actionType, bool _isFixed)
     {
         _action = _actionType;
@@ -40,6 +45,12 @@ public class ValueAction : IAction
         _time = GameManager.GameTime;
         _value = value; 
     }
+    public ValueAction(ActionType _actionType, float value, float time)
+    {
+        _action = _actionType;
+        _time = time;
+        _value = value;
+    }
     public ValueAction(ActionType _actionType, float value, bool _isFixed)
     {
         _action = _actionType;
@@ -67,6 +78,12 @@ public class VectorAction : IAction
     {
         _action = _actionType;
         _time = GameManager.GameTime;
+        _vector = vector;
+    }
+    public VectorAction(ActionType _actionType, Vector3 vector, float time)
+    {
+        _action = _actionType;
+        _time = time;
         _vector = vector;
     }
     public VectorAction(ActionType _actionType, Vector3 vector, bool _isFixed)

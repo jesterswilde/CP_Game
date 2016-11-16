@@ -18,6 +18,7 @@ public class GameManager : MonoBehaviour {
     ObserverCam ob;
     static ObserverCam _obCam;
     static bool _isPlaying = true; 
+    public static bool IsPlaying { get { return _isPlaying; } }
 
     static ICamera _camController;
     static ICamera _nextCamController;

@@ -87,7 +87,12 @@ public class Enemy : WibblyWobbly {
     }
     void CheckRotation()
     {
-        
+        float _excessRotation = _rotationSpeed * Time.deltaTime - _rotAmount;
+        if ( _excessRotation > 0)
+        {
+            float _newStateDuration = (_excessRotation / _rotAmount) * Time.deltaTime;
+            ExecuteNextTask(GameManager.GameTime - _newStateDuration);
+        }
     }
     void CheckMovement()
     {
@@ -95,8 +100,8 @@ public class Enemy : WibblyWobbly {
         if(_distSqr > 0)
         {
             float _remainder = _moveSpeed * Time.deltaTime - (transform.position - _target).magnitude;
-            float _newStateDuration = (_remainder / Time.deltaTime) * Time.deltaTime;
-            ExecuteNextTask(GameManager.GameTime - _newStateDuration)
+            float _newStateDuration = (_remainder / _moveSpeed) * Time.deltaTime;
+            ExecuteNextTask(GameManager.GameTime - _newStateDuration);
         }
     }
 }
