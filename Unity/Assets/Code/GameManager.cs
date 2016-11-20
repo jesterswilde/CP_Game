@@ -216,7 +216,6 @@ public class GameManager : MonoBehaviour {
         {
             Observe();
         }
-        Debug.Log(_gameSpeed + " | " + _isPlaying + "  | " + _isPaused); 
         SetActions();
         if (_isPlaying && !_isPaused)
         {
