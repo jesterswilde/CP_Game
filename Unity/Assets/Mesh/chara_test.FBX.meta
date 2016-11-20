@@ -1,0 +1,125 @@
+fileFormatVersion: 2
+guid: e9f245b98db61844f93686caec3db215
+timeCreated: 1479113097
+licenseType: Free
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: chara_belt
+    100002: chara_body
+    100004: chara_hair
+    100006: chara_pouch_01
+    100008: chara_pouch_01 1
+    100010: chara_pouch_01 2
+    100012: chara_pouch_lgt_01
+    100014: chara_pouch_lgt_02
+    100016: chara_pouch_lgt_03
+    100018: //RootNode
+    100020: chara_visor
+    100022: test_chara_hair
+    400000: chara_belt
+    400002: chara_body
+    400004: chara_hair
+    400006: chara_pouch_01
+    400008: chara_pouch_01 1
+    400010: chara_pouch_01 2
+    400012: chara_pouch_lgt_01
+    400014: chara_pouch_lgt_02
+    400016: chara_pouch_lgt_03
+    400018: //RootNode
+    400020: chara_visor
+    400022: test_chara_hair
+    2300000: chara_belt
+    2300002: chara_body
+    2300004: chara_hair
+    2300006: chara_pouch_01
+    2300008: chara_pouch_01 1
+    2300010: chara_pouch_01 2
+    2300012: chara_pouch_lgt_01
+    2300014: chara_pouch_lgt_02
+    2300016: chara_pouch_lgt_03
+    2300018: chara_visor
+    3300000: chara_belt
+    3300002: chara_body
+    3300004: chara_hair
+    3300006: chara_pouch_01
+    3300008: chara_pouch_01 1
+    3300010: chara_pouch_01 2
+    3300012: chara_pouch_lgt_01
+    3300014: chara_pouch_lgt_02
+    3300016: chara_pouch_lgt_03
+    3300018: chara_visor
+    4300000: chara_body
+    4300002: chara_hair
+    4300004: chara_visor
+    4300006: chara_belt
+    4300008: chara_pouch_01
+    4300010: chara_pouch_01
+    4300012: chara_pouch_01
+    4300014: chara_pouch_lgt_01
+    4300016: chara_pouch_lgt_02
+    4300018: chara_pouch_lgt_03
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
