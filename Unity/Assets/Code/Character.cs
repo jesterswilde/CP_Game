@@ -35,11 +35,11 @@ public class Character : WibblyWobbly {
             ((_state.Right * _state.CanRight) - (_state.Left * _state.CanLeft)) * transform.right;
         transform.position += new Vector3(_move.x, 0, _move.z).normalized * speed * _deltaTime * -1;
     }
-    protected override void UseAction(IAction _action)
+    protected override void UseAction(IAction _action, float _time)
     {
         _state.UseAction(_action);
     }
-    protected override void ReverseAction(IAction _action)
+    protected override void ReverseAction(IAction _action, float _time)
     {
         _state.ReverseAction(_action);
     }
@@ -75,6 +75,7 @@ public class Character : WibblyWobbly {
     void Awake()
     {
         GameManager.RegisterCharacter(this);
+        RegisterWibblyWobbly(); 
         _cam = gameObject.GetComponent<CharacterCam>();
         _camTrans = _cam.CameraSpot; 
     }

@@ -127,7 +127,10 @@ public enum ActionType
     RightUnblocked,
     Clear,
     AIWait,
-    AIMove,
-    AIRotate
+    AIMoveForward,
+    AIRotate,
+    AIMoveTo, 
+    Null, 
+    AIAlert
 }
 

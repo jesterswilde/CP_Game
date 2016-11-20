@@ -7,6 +7,7 @@ public class History {
     HistoryNode _head = null;
     HistoryNode _tail = null;
     HistoryNode _pointer = null;
+    public HistoryNode Pointer { get { return _pointer; } }
     int _count = 0; 
     public int Count { get { return _count;  } }
 
@@ -49,49 +50,19 @@ public class History {
         }
     }
 
-    public void ClearFromTime(float _time)
+    public void ClearFromPointer()
     {
-        if(_tail == null)
+        if(_head == null || _pointer == null)
         {
             return;
         }
-        HistoryNode _currentNode = _tail;
-        _count = 0; 
-        while (true)
-        {
-            if(_currentNode.Next == null)
-            {
-                break; 
-            }
-            if(_currentNode.Next.Action.Time < _time)
-            {
-                _currentNode = _currentNode.Next;
-                _count++; 
-            }else
-            {
-                _currentNode.ClearNext(); 
-                _head = _currentNode;
-                break; 
-            }
-        }
+        _head = _pointer;
+        _head.ClearNext(); 
     }
 
-    public void ClearToTime(float _time)
+    public void ClearToPointer(float _time)
     {
-        while (true)
-        {
-            if(_tail == null || _tail.Next == null)
-            {
-                break; 
-            }
-            if(_tail.Next.Action.Time < _time)
-            {
-                ChopTail(); 
-            }else
-            {
-                break; 
-            }
-        }
+        
     }
 
     public void SetCurrentTime(float _time)
@@ -104,7 +75,10 @@ public class History {
         _pointer = _tail;
         PlayTime(_time); 
     }
-
+    public bool IsPointerAtHead()
+    {
+        return System.Object.ReferenceEquals(_pointer, _head); 
+    }
     public HistoryNode PlayTime(float _time)
     {
         if(_pointer == null || _pointer.Next == null)

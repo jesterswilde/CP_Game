@@ -2,113 +2,111 @@
 using System.Collections;
 using System.Collections.Generic; 
 using System;
+using System.Linq; 
 
 public class Enemy : WibblyWobbly {
     [SerializeField]
-    float _moveSpeed; 
+    float _moveSpeed;
+    public float MoveSpeed { get { return _moveSpeed; } }
     [SerializeField]
     float _rotationSpeed;
+    public float RotationSpeed { get { return _rotationSpeed; } }
+    float _lastChecked;
+
     [SerializeField]
-    List<AITask> _tasks;
-    int _taskIndex = 0;
+    Task _task;
+    AAMoveForward _aaMoveForward;
+    AARotate _aaRotate;
+    AAWait _aaWait;
+    AAMoveTo __aaMoveTo; 
+    IAtomicAction _currentAA;
+    ActionType[] _validControllers = new ActionType[] { ActionType.AIMoveForward, ActionType.AIMoveTo, ActionType.Rotation, ActionType.AIWait }; 
 
-    AIActions _currentAction;
-    Vector3 _target;
-    float _rotAmount; 
+    public override void Play()
+    {
+        if (_history.IsPointerAtHead())
+        {
+            if(GameManager.GameTime >= _currentAA.FinishesAt)
+            {
+                SetAction(new ValueAction(ActionType.AIWait, GameManager.GameTime - _currentAA.FinishesAt, _currentAA.FinishesAt));
+                _task.SetRoutine(this, _currentAA.FinishesAt); 
+            }
+        }
+        base.Play(); 
+    }
 
-    IAction ActionFromTask(AITask _task)
-    {
-        return ActionFromTask(_task, GameManager.GameTime); 
-    }
-    IAction ActionFromTask(AITask _task, float _time)
-    {
-        switch (_task.Action)
-        {
-            case AIActions.Move:
-                return new VectorAction(ActionType.AIMove, _task.Target.position, _time);
-            case AIActions.Wait:
-                return new ValueAction(ActionType.AIWait, _task.Value, _time);
-            case AIActions.Rotate:
-                return new ValueAction(ActionType.AIRotate, _task.Value, _time);
-            default:
-                return new Action(ActionType.Clear);
-        }
-    }
-    void ExecuteNextTask(float _time)
-    {
-        if(_tasks.Count > 0)
-        {
-            SetAction(ActionFromTask(_tasks[_taskIndex], _time));
-            _taskIndex = (_taskIndex + 1) % _tasks.Count; 
-        }
-    }
-    protected override void UseAction(IAction _action)
+    void SetCurrentAA(IAction _action)
     {
         switch (_action.Type)
         {
-            case ActionType.AIMove:
-                _currentAction = AIActions.Move;
-                _target = _action.Vector; 
+            case ActionType.AIMoveForward:
+                _currentAA = _aaMoveForward;
                 break;
             case ActionType.AIRotate:
-                _currentAction = AIActions.Rotate;
-                _rotAmount = _action.Value; 
+                _currentAA = _aaRotate;
                 break;
             case ActionType.AIWait:
-                _currentAction = AIActions.Wait;
+                _currentAA = _aaWait;
                 break;
-            default:
+            case ActionType.AIMoveTo:
+                _currentAA = __aaMoveTo;
+                break;
+            case ActionType.AIAlert:
+                Debug.Log(gameObject.name + " saw da cybapunk at approximately " + GameManager.GameTime);
                 break; 
         }
     }
-
-    protected override void ReverseAction(IAction _action)
+    protected override void UseAction(IAction _action, float _time)
     {
-       
+        SetCurrentAA(_action);
+        _currentAA.UseAction(_action, _time); 
+    }
+
+    protected override void ReverseAction(IAction _action, float _time)
+    {
+        SetCurrentAA(_history.PointerAction);
+        _currentAA.ReverseAction(_history.PointerAction, _time); 
     }
 
     protected override void Act(float _deltaTime)
     {
-        throw new NotImplementedException();
+        _currentAA.Act(_deltaTime); 
     }
 
     protected override void ActReverse(float _deltaTIme)
     {
-        throw new NotImplementedException();
+        _currentAA.ActReverse(_deltaTIme); 
     }
-
-    void CheckWaiting()
+    public override void SetExternalAction(IAction _action)
     {
-        float _timeFinished = _history.PointerAction.Time + _history.PointerAction.Value; 
-        if(_timeFinished < GameManager.GameTime)
+        if (_validControllers.Contains(_action.Type)){
+            base.SetExternalAction(_action);
+        }else
         {
-            ExecuteNextTask(_timeFinished);
+            if(_action.Type == ActionType.AIAlert)
+            {
+                Debug.Log("Cybapunk spotted at approximately " + _action.Time); 
+            }
         }
     }
-    void CheckRotation()
+    void Awake()
     {
-        float _excessRotation = _rotationSpeed * Time.deltaTime - _rotAmount;
-        if ( _excessRotation > 0)
-        {
-            float _newStateDuration = (_excessRotation / _rotAmount) * Time.deltaTime;
-            ExecuteNextTask(GameManager.GameTime - _newStateDuration);
-        }
+        _aaMoveForward = new AAMoveForward(this);
+        _aaRotate = new AARotate(this);
+        _aaWait = new AAWait();
+        __aaMoveTo = new AAMoveTo(this); 
+        UseAction(new ValueAction(ActionType.AIWait, 0.5f), 0); 
+        RegisterWibblyWobbly(); 
     }
-    void CheckMovement()
+    void Start()
     {
-        float _distSqr = _moveSpeed * _moveSpeed * Time.deltaTime - (transform.position - _target).sqrMagnitude;
-        if(_distSqr > 0)
-        {
-            float _remainder = _moveSpeed * Time.deltaTime - (transform.position - _target).magnitude;
-            float _newStateDuration = (_remainder / _moveSpeed) * Time.deltaTime;
-            ExecuteNextTask(GameManager.GameTime - _newStateDuration);
-        }
     }
 }
 
 public enum AIActions
 {
-    Move,
-    Rotate,
-    Wait
+    LookAt,
+    MoveFoward,
+    Wait,
+    MoveTo
 }

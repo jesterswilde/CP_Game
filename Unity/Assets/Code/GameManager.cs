@@ -7,18 +7,23 @@ public class GameManager : MonoBehaviour {
     
     static float _gameTime = 0;
     static float _updateTime = 0;
-    static float _fixedTime = 0; 
+    static float _fixedTime = 0;
+    static float _gameSpeed = 1; 
+    public static float GameSpeed { get { return _gameSpeed; } }
     public static float GameTime { get { return _gameTime; } }
     static Character _activeCharacter;
     public static Character ActiveCharacter { get { return _activeCharacter; } }
     [SerializeField]
     static List<Character> _characters = new List<Character>();
     static int _characterIndex = 0;
+    static List<WibblyWobbly> _timeyWimey = new List<WibblyWobbly>(); 
     [SerializeField]
     ObserverCam ob;
     static ObserverCam _obCam;
     static bool _isPlaying = true; 
     public static bool IsPlaying { get { return _isPlaying; } }
+    static bool _isPaused = false; 
+    public static bool IsPaused { get { return _isPaused; } }
 
     static ICamera _camController;
     static ICamera _nextCamController;
@@ -38,7 +43,6 @@ public class GameManager : MonoBehaviour {
     }
     public static void ExitedCamera()
     {
-        Debug.Log("exited"); 
         _camController = _nextCamController;
         _camController.StartCamera(); 
     }
@@ -48,35 +52,41 @@ public class GameManager : MonoBehaviour {
     }
     #endregion
 
-    static void BeginPlaying()
+    static void SetSpeed(float _speed)
     {
-        _isPlaying = true; 
-    }
-    static void BeginRewinding()
-    {
-        _isPlaying = false;
+        _gameSpeed = _speed; 
+        if(_gameSpeed > 0)
+        {
+            _isPlaying = true;
+            _isPaused = false; 
+        }
+        if(_gameSpeed < 0)
+        {
+            _isPaused = false;
+            _isPlaying = false; 
+        }
+        if(_gameSpeed == 0)
+        {
+            _isPaused = true;
+            _isPlaying = false; 
+        }
     }
     static void Play(float _speed)
     {
         _gameTime += _speed * Time.deltaTime; 
-        foreach(Character _character in _characters)
+        foreach(WibblyWobbly _character in _timeyWimey)
         {
             _character.Play(); 
         }
     }
-    static void StartRewinding()
-    {
-
-    }
     static void Rewind(float _speed)
     {
-        _isPlaying = false; 
         _gameTime -= _speed * Time.deltaTime; 
         if(_gameTime < 0)
         {
             _gameTime = 0; 
         }
-        foreach(Character _character in _characters)
+        foreach(WibblyWobbly _character in _timeyWimey)
         {
             _character.Rewind(); 
         }
@@ -106,6 +116,10 @@ public class GameManager : MonoBehaviour {
     {
         _characters.Add(_character); 
     }
+    public static void RegisterWibblyWobbly(WibblyWobbly _timey)
+    {
+        _timeyWimey.Add(_timey); 
+    }
     static void SwitchCharacter()
     {
         _characterIndex++; 
@@ -118,14 +132,21 @@ public class GameManager : MonoBehaviour {
     #endregion
     static void SetActions()
     {
-       
+        if (Input.GetKeyDown(KeyCode.LeftControl))
+        {
+            SetSpeed(0); 
+        }
+        if (Input.GetKeyUp(KeyCode.LeftControl))
+        {
+            SetSpeed(TimeCounter.Speed); 
+        }
         if (Input.GetMouseButtonDown(0))
         {
-            BeginRewinding(); 
+            SetSpeed(GameSettings.RewindSpeed); 
         }
         if (Input.GetMouseButtonUp(0))
         {
-            BeginPlaying();  
+            SetSpeed(GameSettings.ForwardSpeed); 
         }
         if (Input.GetKeyDown(KeyCode.Tab))
         {
@@ -195,20 +216,21 @@ public class GameManager : MonoBehaviour {
         {
             Observe();
         }
+        Debug.Log(_gameSpeed + " | " + _isPlaying + "  | " + _isPaused); 
         SetActions();
-        if (_isPlaying)
+        if (_isPlaying && !_isPaused)
         {
-            Play(1);
-        }else
+            Play(_gameSpeed);
+        }if (!_isPaused && !_isPlaying)
         {
-            Rewind(GameSettings.RewindSpeed); 
+            Rewind(_gameSpeed * -1); 
         }
         TimeCounter.UpdateTime(_gameTime);
         _camController.UpdateCamera();
     }
     void FixedUpdate()
     {
-        _fixedTime += Time.fixedDeltaTime;
+        _fixedTime += Time.fixedDeltaTime; 
     }
     void Awake()
     {
@@ -216,8 +238,8 @@ public class GameManager : MonoBehaviour {
     }
     void Start()
     {
+        SetSpeed(GameSettings.ForwardSpeed); 
         SetActiveCharacter(_characters[_characterIndex]);
-        BeginPlaying(); 
     }
 
 

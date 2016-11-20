@@ -3,11 +3,16 @@ using System.Collections;
 
 public class Util {
 
-    public static float AngleBetweenVector3(Vector3 vec1, Vector3 vec2)
+    public static float AngleBetweenVector3(Vector3 vec1, Vector3 vec2, Vector3 up)
     {
-        Vector3 difference = vec2 - vec1;
-        float sign = (vec2.y < vec1.y) ? -1.0f : 1.0f;
-        return Vector3.Angle(Vector3.right, difference) * sign;
+        float sign = AngleDir(vec1, vec2, up);
+        return Vector3.Angle(vec1, vec2) * sign;
+    }
+    static float AngleDir(Vector3 fwd, Vector3 targetDir, Vector3 up)
+    {
+        Vector3 perp = Vector3.Cross(fwd, targetDir);
+        float dir = Vector3.Dot(perp, up);
+        return (dir >= 0f) ? 1f : -1f; 
     }
     public static bool LayerMaskContainsLayer(LayerMask _mask, int _layer)
     {

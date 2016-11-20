@@ -4,10 +4,14 @@ using System.Collections;
 public abstract class WibblyWobbly : MonoBehaviour {
 
     protected History _history = new History();
-    protected abstract void UseAction(IAction _action);
-    protected abstract void ReverseAction(IAction _action); 
+    protected abstract void UseAction(IAction _action, float _time);
+    protected abstract void ReverseAction(IAction _action, float _time); 
     protected abstract void Act(float _deltaTime);
     protected abstract void ActReverse(float _deltaTIme);
+    protected void RegisterWibblyWobbly()
+    {
+        GameManager.RegisterWibblyWobbly(this); 
+    }
     public virtual void SetAction(IAction _action)
     {
         if(_history.HeadAction == null)
@@ -15,10 +19,14 @@ public abstract class WibblyWobbly : MonoBehaviour {
             _history.AddToHead(_action);
             return; 
         }
-        if (GameManager.IsPlaying && _action.Time > _history.HeadAction.Time)
+        if (GameManager.IsPlaying && _action.Time >= _history.HeadAction.Time)
         {
             _history.AddToHead(_action); 
         }
+    }
+    public virtual void SetExternalAction(IAction _action)
+    {
+        SetAction(_action); 
     }
     protected float _prevTime;
     public virtual void Play()
@@ -33,8 +41,8 @@ public abstract class WibblyWobbly : MonoBehaviour {
                 break;
             }
             Act(_node.Action.Time - _prevTime);
-            UseAction(_node.Action);
             _prevTime = _node.Action.Time;
+            UseAction(_node.Action, _prevTime);
         }
     }
     public virtual void Rewind()
@@ -49,8 +57,8 @@ public abstract class WibblyWobbly : MonoBehaviour {
                 break;
             }
             ActReverse(_prevTime - _node.Action.Time);
-            ReverseAction(_node.Action);
             _prevTime = _node.Action.Time;
+            ReverseAction(_node.Action, _prevTime);
         }
     }
 }
