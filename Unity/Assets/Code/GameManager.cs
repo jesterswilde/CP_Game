@@ -23,6 +23,8 @@ public class GameManager : MonoBehaviour {
     [SerializeField]
     ObserverCam ob;
     static ObserverCam _obCam;
+    static bool _isReplaying = false; 
+    public static bool IsReplaying { get { return _isReplaying; } }
     static bool _isPlaying = true; 
     public static bool IsPlaying { get { return _isPlaying; } }
     static bool _isPaused = false; 
@@ -67,14 +69,26 @@ public class GameManager : MonoBehaviour {
         {
             _isPlaying = true;
             _isPaused = false; 
+            if(_activeCharacter != null)
+            {
+                _activeCharacter.SetStateToKeyboard(); 
+            }
         }
         if(_gameSpeed < 0)
         {
+            if(_activeCharacter != null)
+            {
+                _activeCharacter.ClearState(); 
+            }
             _isPaused = false;
             _isPlaying = false; 
         }
         if(_gameSpeed == 0)
         {
+            if (_activeCharacter != null)
+            {
+                _activeCharacter.ClearState();
+            }
             _isPaused = true;
             _isPlaying = false; 
         }
@@ -122,7 +136,6 @@ public class GameManager : MonoBehaviour {
     {
         if(_activeCharacter != null)
         {
-            _activeCharacter.SwitchFromCharacter(); 
             _activeCharacter.SetAsInactivePlayer(); 
         }
         _activeCharacter = character;
@@ -140,6 +153,16 @@ public class GameManager : MonoBehaviour {
     public static void RegisterWibblyWobbly(WibblyWobbly _timey)
     {
         _timeyWimey.Add(_timey); 
+    }
+    public static bool[] GetAbsKeyboardState()
+    {
+        return new bool[]
+        {
+            Input.GetKey(KeyCode.W),
+            Input.GetKey(KeyCode.D),
+            Input.GetKey(KeyCode.S),
+            Input.GetKey(KeyCode.A)
+        };
     }
     #endregion
 
@@ -242,6 +265,7 @@ public class GameManager : MonoBehaviour {
             SetActiveCharacter(null);
         }
     }
+    
     static void JumpToTime(float _time)
     {
         float _timeGap = _time - GameManager.GameTime;
@@ -261,14 +285,28 @@ public class GameManager : MonoBehaviour {
         SetSpeed(0);
         _canAcceptPlayerInput = true;
     }
-
-	// Update is called once per frame
-	void Update () {
+    static void CheckReplaying()
+    {
+        if (_isReplaying && _activeCharacter != null && _activeCharacter.IsPastMostRecentAction())
+        {
+            _isReplaying = false;
+            SetSpeed(0);
+            return;
+        }
+        if(!_isReplaying && _activeCharacter != null && !_activeCharacter.IsPastMostRecentAction())
+        {
+            _isReplaying = true; 
+            return;
+        }
+    }
+    // Update is called once per frame
+    void Update () {
         _updateTime += Time.deltaTime; 
         if (Input.GetKeyDown(KeyCode.Backspace))
         {
             Observe();
         }
+        CheckReplaying(); 
         if (_canAcceptPlayerInput)
         {
             SetActions();

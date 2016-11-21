@@ -50,6 +50,31 @@ public class CharacterState
         }
         return _actions; 
     }
+    public List<IAction> SetStateToKeyboard(bool[] _keyboard)
+    {
+        List<IAction> _actions = new List<IAction>(); 
+        if(_keyboard[0])
+        {
+            Debug.Log("forwward");
+            _actions.Add(new Action(ActionType.PressForward));
+        }
+        if (_keyboard[1])
+        {
+            Debug.Log("Right"); 
+            _actions.Add(new Action(ActionType.PressRight));
+        }
+        if (_keyboard[2])
+        {
+            Debug.Log("back"); 
+            _actions.Add(new Action(ActionType.PressBack));
+        }
+        if (_keyboard[3])
+        {
+            Debug.Log("Left"); 
+            _actions.Add(new Action(ActionType.PressLeft)); 
+        }
+        return _actions; 
+    }
     public bool IsMoving()
     {
         if (_forward != 0 || _backward != 0 || _left != 0 || _right != 0)

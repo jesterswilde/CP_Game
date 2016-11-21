@@ -89,9 +89,7 @@ public class Character : WibblyWobbly {
     {
         _playerControlled = false;
         GetComponent<MeshRenderer>().material.color = Color.white;
-    }
-    public void SwitchFromCharacter()
-    {
+        SetAction(_state.ActionsToReset()); 
         _history.AddToHead(new Action(ActionType.Clear, _history.HeadAction.Time)); 
     }
     public float GetHeadTimestamp()
@@ -102,19 +100,27 @@ public class Character : WibblyWobbly {
         }
         return _history.HeadAction.Time; 
     }
+    public bool IsPastMostRecentAction()
+    {
+        return _history.IsPointerAtHead(); 
+    }
     public void DeleteFuture()
     {
         _history.ClearFromPointer();
-        List<IAction> _actions = _state.ActionsToReset(); 
-        for(int i = 0; i < _actions.Count; i++)
-        {
-            _history.AddToHead(_actions[i]); 
-        }
+        ClearState();
+    }
+    public void ClearState()
+    {
+        SetAction(_state.ActionsToReset());
+    }
+    public void SetStateToKeyboard()
+    {
+        SetAction(_state.SetStateToKeyboard(GameManager.GetAbsKeyboardState()));
     }
 
     // Use this for initialization
     void Start () {
-        SetAction(new Action(ActionType.Clear)); 
+        SetAction(new Action(ActionType.Null)); 
 	}
     void Awake()
     {
