@@ -5,6 +5,23 @@ using System;
 
 public class Character : WibblyWobbly {
 
+    public void PrintHistory()
+    {
+        HistoryNode _node;
+        _node = _history.Tail; 
+        while (true)
+        {
+            Debug.Log(_node.Action.Type + " | " + _node.Action.Time); 
+            if(_node.Next != null)
+            {
+                _node = _node.Next;
+            }else
+            {
+                break; 
+            }
+        }
+    }
+
     [SerializeField]
     float speed = 5;
     CharacterCam _cam;
@@ -43,6 +60,13 @@ public class Character : WibblyWobbly {
     {
         _state.ReverseAction(_action);
     }
+    public override void SetAction(IAction _action)
+    {
+        if (GameManager.CanAcceptPlayerInput)
+        {
+            base.SetAction(_action);
+        }
+    }
     public bool WillRotate()
     {
         if(_playerControlled && _state.IsMoving())
@@ -66,7 +90,27 @@ public class Character : WibblyWobbly {
         _playerControlled = false;
         GetComponent<MeshRenderer>().material.color = Color.white;
     }
-    
+    public void SwitchFromCharacter()
+    {
+        _history.AddToHead(new Action(ActionType.Clear, _history.HeadAction.Time)); 
+    }
+    public float GetHeadTimestamp()
+    {
+        if(_history.HeadAction == null)
+        {
+            return 0; 
+        }
+        return _history.HeadAction.Time; 
+    }
+    public void DeleteFuture()
+    {
+        _history.ClearFromPointer();
+        List<IAction> _actions = _state.ActionsToReset(); 
+        for(int i = 0; i < _actions.Count; i++)
+        {
+            _history.AddToHead(_actions[i]); 
+        }
+    }
 
     // Use this for initialization
     void Start () {

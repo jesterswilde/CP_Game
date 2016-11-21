@@ -4,7 +4,8 @@ using System;
 using System.Collections.Generic;
 
 public class GameManager : MonoBehaviour {
-    
+
+    static GameManager t; 
     static float _gameTime = 0;
     static float _updateTime = 0;
     static float _fixedTime = 0;
@@ -24,6 +25,10 @@ public class GameManager : MonoBehaviour {
     public static bool IsPlaying { get { return _isPlaying; } }
     static bool _isPaused = false; 
     public static bool IsPaused { get { return _isPaused; } }
+    static bool _showCtrlMenu = false; 
+    public static bool ShowCtrlMenu { get { return _showCtrlMenu; } }
+    static bool _canAcceptPlayerInput = true; 
+    public static bool CanAcceptPlayerInput { get { return _canAcceptPlayerInput; } }
 
     static ICamera _camController;
     static ICamera _nextCamController;
@@ -52,6 +57,7 @@ public class GameManager : MonoBehaviour {
     }
     #endregion
 
+    #region TIme
     static void SetSpeed(float _speed)
     {
         _gameSpeed = _speed; 
@@ -91,8 +97,20 @@ public class GameManager : MonoBehaviour {
             _character.Rewind(); 
         }
     }
+    #endregion
 
     #region Character
+    static void SwitchCharacter()
+    {
+        _characterIndex++; 
+        if(_characterIndex >= _characters.Count)
+        {
+            _characterIndex = 0; 
+        }
+        Character _nextCharacter = _characters[_characterIndex];
+        JumpToTime(_nextCharacter.GetHeadTimestamp()); 
+        SetActiveCharacter(_nextCharacter);
+    }
     public static void SetActiveCharacter(int index)
     {
         _characterIndex = index;
@@ -102,6 +120,7 @@ public class GameManager : MonoBehaviour {
     {
         if(_activeCharacter != null)
         {
+            _activeCharacter.SwitchFromCharacter(); 
             _activeCharacter.SetAsInactivePlayer(); 
         }
         _activeCharacter = character;
@@ -120,25 +139,19 @@ public class GameManager : MonoBehaviour {
     {
         _timeyWimey.Add(_timey); 
     }
-    static void SwitchCharacter()
-    {
-        _characterIndex++; 
-        if(_characterIndex >= _characters.Count)
-        {
-            _characterIndex = 0; 
-        }
-        SetActiveCharacter(_characters[_characterIndex]);
-    }
     #endregion
+
     static void SetActions()
     {
         if (Input.GetKeyDown(KeyCode.LeftControl))
         {
-            SetSpeed(0); 
+            SetSpeed(0);
+            _showCtrlMenu = true; 
         }
         if (Input.GetKeyUp(KeyCode.LeftControl))
         {
-            SetSpeed(TimeCounter.Speed); 
+            SetSpeed(TimeCounter.Speed);
+            _showCtrlMenu = false; 
         }
         if (Input.GetMouseButtonDown(0))
         {
@@ -148,11 +161,30 @@ public class GameManager : MonoBehaviour {
         {
             SetSpeed(GameSettings.ForwardSpeed); 
         }
+        if (Input.GetMouseButtonDown(1) && _activeCharacter != null)
+        {
+            SetSpeed(GameSettings.ForwardSpeed);
+            _activeCharacter.DeleteFuture(); 
+        }
         if (Input.GetKeyDown(KeyCode.Tab))
         {
             SwitchCharacter(); 
         }
-        if(_activeCharacter != null)
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            if (_gameSpeed == GameSettings.ForwardSpeed)
+            {
+                Debug.Log("pausing");
+                SetSpeed(0);
+                _activeCharacter.PrintHistory(); 
+            }
+            else
+            {
+                Debug.Log("playing");
+                SetSpeed(GameSettings.ForwardSpeed);
+            }
+        }
+        if (_activeCharacter != null && _isPlaying) 
         {
             if (Input.GetKeyDown(KeyCode.W))
             {
@@ -208,6 +240,22 @@ public class GameManager : MonoBehaviour {
             SetActiveCharacter(null);
         }
     }
+    static void JumpToTime(float _time)
+    {
+        float _jumpSpeed = (_time - GameManager.GameTime) / GameSettings.TimeJumpDuration; 
+        SetSpeed(_jumpSpeed);
+        _canAcceptPlayerInput = false;
+        GameManager.t.StartJump(); 
+    }
+    public void StartJump()
+    {
+        Invoke("EndJump", GameSettings.TimeJumpDuration); 
+    }
+    public void EndJump()
+    {
+        SetSpeed(0);
+        _canAcceptPlayerInput = true;
+    }
 
 	// Update is called once per frame
 	void Update () {
@@ -216,7 +264,10 @@ public class GameManager : MonoBehaviour {
         {
             Observe();
         }
-        SetActions();
+        if (_canAcceptPlayerInput)
+        {
+            SetActions();
+        }
         if (_isPlaying && !_isPaused)
         {
             Play(_gameSpeed);
@@ -233,6 +284,7 @@ public class GameManager : MonoBehaviour {
     }
     void Awake()
     {
+        t = this; 
         _obCam = ob; 
     }
     void Start()

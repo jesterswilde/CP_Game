@@ -8,7 +8,7 @@ public class GameCamera : MonoBehaviour {
     static Transform _lookAt;
     static UnityStandardAssets.ImageEffects.BlurOptimized _blur; 
     [SerializeField] 
-    float blurSpeed;
+    float nonBlurDuration;
     static float _blurSpeed;
     static bool _maintainLookat;
     static bool _maintainLock;
@@ -17,7 +17,7 @@ public class GameCamera : MonoBehaviour {
     void Awake()
     {
         _blur = GetComponent<UnityStandardAssets.ImageEffects.BlurOptimized>();
-        _blurSpeed = blurSpeed;
+        _blurSpeed = nonBlurDuration;
         t = this; 
     }
     void LateUpdate()

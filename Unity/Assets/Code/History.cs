@@ -8,6 +8,7 @@ public class History {
     HistoryNode _tail = null;
     HistoryNode _pointer = null;
     public HistoryNode Pointer { get { return _pointer; } }
+    public HistoryNode Tail { get { return _tail; } }
     int _count = 0; 
     public int Count { get { return _count;  } }
 

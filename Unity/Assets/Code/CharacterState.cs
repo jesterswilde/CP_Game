@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class CharacterState
 {
@@ -28,7 +29,27 @@ public class CharacterState
     public Vector3 PrevPos { get { return _prevPos; } set { _prevPos = value; } }
     public Quaternion PrevRot { get { return _prevRot; } set { _prevRot = value; } }
 
-    
+    public List<IAction> ActionsToReset()
+    {
+        List<IAction> _actions = new List<IAction>(); 
+        if(Forward == 1)
+        {
+            _actions.Add(new Action(ActionType.ReleaseForward));
+        }
+        if(Backward == 1)
+        {
+            _actions.Add(new Action(ActionType.ReleaseBack));
+        }
+        if(Left == 1)
+        {
+            _actions.Add(new Action(ActionType.ReleaseLeft));
+        }
+        if(Right == 1)
+        {
+            _actions.Add(new Action(ActionType.ReleaseRight));
+        }
+        return _actions; 
+    }
     public bool IsMoving()
     {
         if (_forward != 0 || _backward != 0 || _left != 0 || _right != 0)
