@@ -11,6 +11,7 @@ public class TriggerVolume : MonoBehaviour {
     ActionType _enter;
     [SerializeField]
     ActionType _exit;
+    [SerializeField]
     int _count = 0;
 
     [SerializeField]
@@ -38,7 +39,6 @@ public class TriggerVolume : MonoBehaviour {
             {
                 if(_enterTrans != null)
                 {
-                    Debug.DrawRay(_timeyWimey.transform.position, _enterTrans.transform.position - _timeyWimey.transform.position, Color.red, 10f);
                     _timeyWimey.SetExternalAction(new VectorAction(_enter, _enterTrans.position - _timeyWimey.transform.position, true));
                     return;
                 }

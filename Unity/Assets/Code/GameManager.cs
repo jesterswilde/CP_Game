@@ -9,7 +9,9 @@ public class GameManager : MonoBehaviour {
     static float _gameTime = 0;
     static float _updateTime = 0;
     static float _fixedTime = 0;
-    static float _gameSpeed = 1; 
+    static float _gameSpeed = 1;
+    static float _jumpDuration = 1; 
+    public static float JumpDuration { get { return _jumpDuration; } }
     public static float GameSpeed { get { return _gameSpeed; } }
     public static float GameTime { get { return _gameTime; } }
     static Character _activeCharacter;
@@ -242,14 +244,17 @@ public class GameManager : MonoBehaviour {
     }
     static void JumpToTime(float _time)
     {
-        float _jumpSpeed = (_time - GameManager.GameTime) / GameSettings.TimeJumpDuration; 
+        float _timeGap = _time - GameManager.GameTime;
+        int _dir = (_timeGap >= 0) ? 1 : -1; 
+        float _jumpSpeed = Mathf.Clamp(Mathf.Abs(_timeGap / GameSettings.MinJumpDuration), GameSettings.MinJumpDuration, GameSettings.MaxJumpSpeed) * _dir;
+         _jumpDuration = _timeGap / _jumpSpeed; 
         SetSpeed(_jumpSpeed);
         _canAcceptPlayerInput = false;
-        GameManager.t.StartJump(); 
+        GameManager.t.StartJump(_jumpDuration);
     }
-    public void StartJump()
+    public void StartJump(float _duration)
     {
-        Invoke("EndJump", GameSettings.TimeJumpDuration); 
+        Invoke("EndJump", _duration); 
     }
     public void EndJump()
     {
