@@ -306,7 +306,6 @@ public class GameManager : MonoBehaviour {
         {
             Observe();
         }
-        CheckReplaying(); 
         if (_canAcceptPlayerInput)
         {
             SetActions();
@@ -320,6 +319,7 @@ public class GameManager : MonoBehaviour {
         }
         TimeCounter.UpdateTime(_gameTime);
         _camController.UpdateCamera();
+        CheckReplaying(); 
     }
     void FixedUpdate()
     {
