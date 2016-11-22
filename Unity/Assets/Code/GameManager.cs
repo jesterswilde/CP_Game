@@ -19,7 +19,7 @@ public class GameManager : MonoBehaviour {
     [SerializeField]
     static List<Character> _characters = new List<Character>();
     static int _characterIndex = 0;
-    static List<WibblyWobbly> _timeyWimey = new List<WibblyWobbly>(); 
+    static List<WibblyWobbly> _timeyWimeys = new List<WibblyWobbly>(); 
     [SerializeField]
     ObserverCam ob;
     static ObserverCam _obCam;
@@ -96,7 +96,7 @@ public class GameManager : MonoBehaviour {
     static void Play(float _speed)
     {
         _gameTime += _speed * Time.deltaTime; 
-        foreach(WibblyWobbly _character in _timeyWimey)
+        foreach(WibblyWobbly _character in _timeyWimeys)
         {
             _character.Play(); 
         }
@@ -108,7 +108,7 @@ public class GameManager : MonoBehaviour {
         {
             _gameTime = 0; 
         }
-        foreach(WibblyWobbly _character in _timeyWimey)
+        foreach(WibblyWobbly _character in _timeyWimeys)
         {
             _character.Rewind(); 
         }
@@ -152,7 +152,7 @@ public class GameManager : MonoBehaviour {
     }
     public static void RegisterWibblyWobbly(WibblyWobbly _timey)
     {
-        _timeyWimey.Add(_timey); 
+        _timeyWimeys.Add(_timey); 
     }
     public static bool[] GetAbsKeyboardState()
     {
@@ -163,6 +163,13 @@ public class GameManager : MonoBehaviour {
             Input.GetKey(KeyCode.S),
             Input.GetKey(KeyCode.A)
         };
+    }
+    public static void TimeysApplyActions()
+    {
+        for(int i = 0; i < _timeyWimeys.Count; i++)
+        {
+            _timeyWimeys[i].ApplyActions(); 
+        }
     }
     #endregion
 
@@ -310,6 +317,7 @@ public class GameManager : MonoBehaviour {
         {
             SetActions();
         }
+        TimeysApplyActions(); 
         if (_isPlaying && !_isPaused)
         {
             Play(_gameSpeed);

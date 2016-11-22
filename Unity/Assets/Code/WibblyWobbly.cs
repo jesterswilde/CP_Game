@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public abstract class WibblyWobbly : MonoBehaviour {
 
     protected History _history = new History();
+    protected List<IAction> _actionsToBeConsumed = new List<IAction>();
     protected abstract void UseAction(IAction _action, float _time);
     protected abstract void ReverseAction(IAction _action, float _time); 
     protected abstract void Act(float _deltaTime);
@@ -15,25 +16,32 @@ public abstract class WibblyWobbly : MonoBehaviour {
     }
     public virtual void SetAction(IAction _action)
     {
-        if(_history.HeadAction == null)
+        if (CanAddActions())
         {
-            _history.AddToHead(_action);
-            return; 
-        }
-        if (GameManager.IsPlaying && _action.Time >= _history.HeadAction.Time)
-        {
-            _history.AddToHead(_action); 
+            _actionsToBeConsumed.Add(_action); 
         }
     }
     public virtual void SetAction(List<IAction> _actions)
     {
-        if(_history.HeadAction == null || GameManager.IsPlaying && _history.IsPointerAtHead())
+        if (CanAddActions())
         {
-            for(int i = 0; i < _actions.Count; i++)
+            _actionsToBeConsumed.AddRange(_actions); 
+        }
+    }
+    public virtual void ApplyActions()
+    {
+        if (CanAddActions())
+        {
+            for (int i = 0; i < _actionsToBeConsumed.Count; i++)
             {
-                _history.AddToHead(_actions[i]);             
+                _history.AddToHead(_actionsToBeConsumed[i]);
             }
         }
+        _actionsToBeConsumed.Clear();
+    }
+    protected bool CanAddActions()
+    {
+        return (_history.HeadAction == null || GameManager.IsPlaying && _history.IsPointerAtHead());
     }
     public virtual void SetExternalAction(IAction _action)
     {
