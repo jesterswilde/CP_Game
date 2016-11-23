@@ -11,7 +11,6 @@ public class Character : WibblyWobbly {
         _node = _history.Tail; 
         while (true)
         {
-            Debug.Log(_node.Action.Type + " | " + _node.Action.Time); 
             if(_node.Next != null)
             {
                 _node = _node.Next;
