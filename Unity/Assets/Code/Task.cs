@@ -6,7 +6,7 @@ public class Task : MonoBehaviour {
     [SerializeField]
     List<TaskElement> _actions = new List<TaskElement>();
 
-	public void SetRoutine(Enemy _enemy, float _time)
+	public void SimulateTask(IAI _enemy, float _time)
     {
         GameObject _go = new GameObject(); 
         DummyEnemy _dummy = _go.AddComponent<DummyEnemy>();
@@ -24,6 +24,9 @@ public class Task : MonoBehaviour {
                     break;
                 case AIActions.Wait:
                     AAWait.SimulateAction(_dummy, _action.Value);
+                    break;
+                case AIActions.MoveTo:
+                    AAMoveTo.SimulateAction(_dummy, _action.GetTarget());
                     break; 
             }
         }

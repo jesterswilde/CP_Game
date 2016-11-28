@@ -7,7 +7,8 @@ public class GameSettings : MonoBehaviour {
     static float _forwardSpeed; 
     static float[] _speeds;
     static float _minJumpDuration;
-    static float _maxJumpSpeed;   
+    static float _maxJumpSpeed;
+    static float _fixedTimestep;
     [SerializeField]
     float rewindSpeed = -5;
     [SerializeField]
@@ -17,12 +18,15 @@ public class GameSettings : MonoBehaviour {
     [SerializeField]
     float minJumpDuration = 1;
     [SerializeField]
-    float maxJumpSpeed = 15; 
+    float maxJumpSpeed = 15;
+    [SerializeField]
+    float fixedTimstep = 0.02f; 
     public static float RewindSpeed { get { return _rewindSpeed; } }
     public static float[] Speeds { get { return _speeds; } }
     public static float ForwardSpeed { get { return _forwardSpeed; } }
     public static float MinJumpDuration { get { return _minJumpDuration; } }
     public static float MaxJumpSpeed { get { return _maxJumpSpeed; } }
+    public static float FixedTimestep { get { return _fixedTimestep; } }
 
 	void Awake()
     {
@@ -31,5 +35,6 @@ public class GameSettings : MonoBehaviour {
         _forwardSpeed = forwardSpeed;
         _maxJumpSpeed = maxJumpSpeed;
         _minJumpDuration = minJumpDuration;
+        _fixedTimestep = fixedTimstep;
     }
 }

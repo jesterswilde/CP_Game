@@ -3,12 +3,12 @@ using System.Collections;
 
 public class DummyEnemy : MonoBehaviour {
 
-    Enemy _enemy;
+    IAI _enemy;
     float _time;  
     public float Time { get { return _time; } }
     public float MoveSpeed { get { return _enemy.MoveSpeed; } }
     public float RotationSpeed { get { return _enemy.RotationSpeed; } }
-    public void Startup(Enemy enemy, float time)
+    public void Startup(IAI enemy, float time)
     {
         _enemy = enemy;
         _time = time;

@@ -35,7 +35,7 @@ public class History {
     }
     public void AddToHead(IAction _action)
     {
-        _count++; 
+        _count++;
         HistoryNode _newHead = new HistoryNode(_action);
         if(_tail == null)
         {
@@ -49,6 +49,52 @@ public class History {
             _newHead.SetPrevious(_head); 
             _head = _newHead;
         }
+    }
+    public void InsertAfterPointer(IAction _action)
+    {
+        _count++;
+        if(_head == null)
+        {
+            AddToHead(_action);
+            return;
+        }
+        HistoryNode _node = new HistoryNode(_action);
+        HistoryNode _next = _pointer.Next;
+        _pointer.SetNext(_node);
+        _node.SetNext(_next);
+        _node.SetPrevious(_pointer);
+        if(_next != null)
+        {
+            _next.SetPrevious(_node);
+        }else
+        {
+            _head = _node; 
+        }
+    }
+    public HistoryNode PopNode(HistoryNode _node)
+    {
+        if(_node == null)
+        {
+            return null; 
+        }
+        _count--;
+        if(System.Object.ReferenceEquals(_node, _head))
+        {
+            _head = _head.Previous;
+            _head.SetNext(null); 
+        }
+        if(System.Object.ReferenceEquals(_node, _tail))
+        {
+            _tail = _tail.Next;
+            _tail.SetPrevious(null); 
+        }
+        if(System.Object.ReferenceEquals(_node, _pointer))
+        {
+            _pointer = _pointer.Previous; 
+        }
+        _node.Previous.SetNext(_node.Next);
+        _node.Next.SetPrevious(_node.Previous); 
+        return _node; 
     }
 
     public void ClearFromPointer()
@@ -80,6 +126,32 @@ public class History {
     {
         return System.Object.ReferenceEquals(_pointer, _head); 
     }
+    public bool IsPointerAtTail()
+    {
+        return System.Object.ReferenceEquals(_pointer, _tail);
+    }
+    public void SpliceOffPossibleFuture()
+    {
+        HistoryNode _next = _pointer.Next; 
+        ClearFromPointer(); 
+        AddToHead(new FutureActions(ActionType.SpliceFuture, _next, GameManager.FixedGameTime));
+        _pointer = _head;
+    }
+    public void ReloadPossibleFuture(HistoryNode _future)
+    {
+        Debug.Log("new action" +  _pointer.Action.Type);
+        _pointer.SetNext(_future);
+        HistoryNode _node = _pointer;
+        while (true)
+        {
+            if(_node.Next == null)
+            {
+                _head = _node;
+                break; 
+            }
+            _node = _node.Next; 
+        }
+    }
     public HistoryNode PlayTime(float _time)
     {
         if(_pointer == null || _pointer.Next == null)
@@ -102,8 +174,12 @@ public class History {
         }
         if(_pointer.Action.Time > _time)
         {
-            HistoryNode _node = _pointer; 
+            HistoryNode _node = _pointer;
             _pointer = _pointer.Previous;
+            if (_node.Action.IsExternal)
+            {
+                return PopNode(_node);
+            } 
             return _node;
         }
         return null; 

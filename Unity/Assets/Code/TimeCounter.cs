@@ -25,10 +25,10 @@ public class TimeCounter : MonoBehaviour {
         Image = _image;  
     }
 
-    public static void UpdateTime(float _time)
+    public static void UpdateTime(string _time)
     {
         Text.text = _time.ToString();
-        if (GameManager.ShowCtrlMenu)
+        if (GameManager.ShowingCtrlMenu)
         {
             Image.gameObject.SetActive(true); 
             Slider.maxValue = GameSettings.Speeds[GameSettings.Speeds.Length - 1];

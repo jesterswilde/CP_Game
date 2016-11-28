@@ -6,6 +6,7 @@ public class AAWait : IAtomicAction
 {
     float _remainingWait;
     float _finishesAt;
+    float _maxWait; 
     public float FinishesAt { get { return _finishesAt; } }
     public void Act(float _deltaTime)
     {
@@ -22,14 +23,21 @@ public class AAWait : IAtomicAction
     }
     public void ReverseAction(IAction _action, float _time)
     {
+        _maxWait = _action.Value; 
         _remainingWait = _action.Time + _action.Value - _time;
         CalculateFinishTime(_action);  
     }
 
     public void UseAction(IAction _action, float _time)
     {
+        _maxWait = _action.Value;  
         _remainingWait = _action.Time + _action.Value - _time;
-        CalculateFinishTime(_action);  
+        CalculateFinishTime(_action);
+    }
+
+    public IAction Unset()
+    {
+        return new ValueAction(ActionType.AIWaitUnset, _maxWait);
     }
 
     public static IAction CreateAction(Enemy _enemy, float _value, float _time)
@@ -39,6 +47,7 @@ public class AAWait : IAtomicAction
     public static void SimulateAction(DummyEnemy _enemy, float _waitAmount)
     {
         _enemy.SetAction(new ValueAction(ActionType.AIWait, _waitAmount, _enemy.Time));
-        _enemy.AddToTIme(_waitAmount); 
+        _enemy.AddToTIme(_waitAmount);
+        _enemy.SetAction(new ValueAction(ActionType.AIWaitUnset, _waitAmount, _enemy.Time));
     }
 }

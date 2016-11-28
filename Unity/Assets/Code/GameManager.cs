@@ -7,13 +7,16 @@ public class GameManager : MonoBehaviour {
 
     static GameManager t; 
     static float _gameTime = 0;
-    static float _updateTime = 0;
-    static float _fixedTime = 0;
+    static float _totalUpdateTime = 0;
+    static float _totalFixedTime = 0;
     static float _gameSpeed = 1;
+    static float _fixedGameTime = 0; 
     static float _jumpDuration = 1; 
     public static float JumpDuration { get { return _jumpDuration; } }
     public static float GameSpeed { get { return _gameSpeed; } }
     public static float GameTime { get { return _gameTime; } }
+    public static float TotalFixedTime { get { return _totalFixedTime; } }
+    public static float FixedGameTime { get { return _fixedGameTime; } }
     static Character _activeCharacter;
     public static Character ActiveCharacter { get { return _activeCharacter; } }
     [SerializeField]
@@ -29,8 +32,8 @@ public class GameManager : MonoBehaviour {
     public static bool IsPlaying { get { return _isPlaying; } }
     static bool _isPaused = false; 
     public static bool IsPaused { get { return _isPaused; } }
-    static bool _showCtrlMenu = false; 
-    public static bool ShowCtrlMenu { get { return _showCtrlMenu; } }
+    static bool _showingCtrlMenu = false; 
+    public static bool ShowingCtrlMenu { get { return _showingCtrlMenu; } }
     static bool _canAcceptPlayerInput = true; 
     public static bool CanAcceptPlayerInput { get { return _canAcceptPlayerInput; } }
 
@@ -62,21 +65,21 @@ public class GameManager : MonoBehaviour {
     #endregion
 
     #region TIme
-    static void SetSpeed(float _speed)
+    public static void SetSpeed(float _speed)
     {
         _gameSpeed = _speed; 
         if(_gameSpeed > 0)
         {
-            _isPlaying = true;
-            _isPaused = false; 
-            if(_activeCharacter != null)
+            if(_activeCharacter != null && !_isPlaying)
             {
                 _activeCharacter.SetStateToKeyboard(); 
             }
+            _isPlaying = true;
+            _isPaused = false; 
         }
         if(_gameSpeed < 0)
         {
-            if(_activeCharacter != null)
+            if(_activeCharacter != null && _isPlaying)
             {
                 _activeCharacter.ClearState(); 
             }
@@ -85,7 +88,7 @@ public class GameManager : MonoBehaviour {
         }
         if(_gameSpeed == 0)
         {
-            if (_activeCharacter != null)
+            if (_activeCharacter != null && _isPlaying)
             {
                 _activeCharacter.ClearState();
             }
@@ -93,30 +96,89 @@ public class GameManager : MonoBehaviour {
             _isPlaying = false; 
         }
     }
-    static void Play(float _speed)
+    public static void ShowCtrlMenu(bool _show)
     {
-        _gameTime += _speed * Time.deltaTime; 
-        foreach(WibblyWobbly _character in _timeyWimeys)
+        if (_canAcceptPlayerInput)
         {
-            _character.Play(); 
+            if (_show)
+            {
+                SetSpeed(0);
+            }
+            else
+            {
+                SetSpeed(TimeCounter.Speed); 
+            }
+            _showingCtrlMenu = _show;
         }
     }
-    static void Rewind(float _speed)
+    void UpdateFixedTimestep()
     {
-        _gameTime -= _speed * Time.deltaTime; 
+        if (_gameSpeed == 0)
+        {
+            Time.fixedDeltaTime = 0;
+        }
+        else
+        {
+            Time.fixedDeltaTime = GameSettings.FixedTimestep / Mathf.Abs(_gameSpeed);
+        }
+    }
+
+    static void JumpToTime(float _time)
+    {
+        float _timeGap = _time - GameManager.GameTime;
+        int _dir = (_timeGap >= 0) ? 1 : -1;
+        float _jumpSpeed = Mathf.Clamp(Mathf.Abs(_timeGap / GameSettings.MinJumpDuration), GameSettings.MinJumpDuration, GameSettings.MaxJumpSpeed) * _dir;
+        _jumpDuration = _timeGap / _jumpSpeed;
+        SetSpeed(_jumpSpeed);
+        _canAcceptPlayerInput = false;
+        GameManager.t.StartJump(_jumpDuration);
+    }
+    public void StartJump(float _duration)
+    {
+        Invoke("EndJump", _duration);
+    }
+    public void EndJump()
+    {
+        _gameTime = _fixedGameTime; 
+        SetSpeed(0);
+        _canAcceptPlayerInput = true;
+    }
+    static void CheckReplaying()
+    {
+        if (_isReplaying && _activeCharacter != null && _activeCharacter.IsPastMostRecentAction())
+        {
+            _isReplaying = false;
+            SetSpeed(0);
+            return;
+        }
+        if (!_isReplaying && _activeCharacter != null && !_activeCharacter.IsPastMostRecentAction())
+        {
+            _isReplaying = true;
+            return;
+        }
+    }
+    static void Play(float _time)
+    {
+        foreach(WibblyWobbly _character in _timeyWimeys)
+        {
+            _character.Play(_time); 
+        }
+    }
+    static void Rewind(float _time)
+    {
         if(_gameTime < 0)
         {
             _gameTime = 0; 
         }
         foreach(WibblyWobbly _character in _timeyWimeys)
         {
-            _character.Rewind(); 
+            _character.Rewind(_time); 
         }
     }
     #endregion
 
     #region Character
-    static void SwitchCharacter()
+    public static void SwitchCharacter()
     {
         _characterIndex++; 
         if(_characterIndex >= _characters.Count)
@@ -154,16 +216,6 @@ public class GameManager : MonoBehaviour {
     {
         _timeyWimeys.Add(_timey); 
     }
-    public static bool[] GetAbsKeyboardState()
-    {
-        return new bool[]
-        {
-            Input.GetKey(KeyCode.W),
-            Input.GetKey(KeyCode.D),
-            Input.GetKey(KeyCode.S),
-            Input.GetKey(KeyCode.A)
-        };
-    }
     public static void TimeysApplyActions()
     {
         for(int i = 0; i < _timeyWimeys.Count; i++)
@@ -173,93 +225,10 @@ public class GameManager : MonoBehaviour {
     }
     #endregion
 
-    static void SetActions()
-    {
-        if (Input.GetKeyDown(KeyCode.LeftControl))
-        {
-            SetSpeed(0);
-            _showCtrlMenu = true; 
-        }
-        if (Input.GetKeyUp(KeyCode.LeftControl))
-        {
-            SetSpeed(TimeCounter.Speed);
-            _showCtrlMenu = false; 
-        }
-        if (Input.GetMouseButtonDown(0))
-        {
-            SetSpeed(GameSettings.RewindSpeed); 
-        }
-        if (Input.GetMouseButtonUp(0))
-        {
-            SetSpeed(GameSettings.ForwardSpeed); 
-        }
-        if (Input.GetMouseButtonDown(1) && _activeCharacter != null)
-        {
-            SetSpeed(GameSettings.ForwardSpeed);
-            _activeCharacter.DeleteFuture(); 
-        }
-        if (Input.GetKeyDown(KeyCode.Tab))
-        {
-            SwitchCharacter(); 
-        }
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            if (_gameSpeed == GameSettings.ForwardSpeed)
-            {
-                Debug.Log("pausing");
-                SetSpeed(0);
-                _activeCharacter.PrintHistory(); 
-            }
-            else
-            {
-                Debug.Log("playing");
-                SetSpeed(GameSettings.ForwardSpeed);
-            }
-        }
-        if (_activeCharacter != null && _isPlaying) 
-        {
-            if (Input.GetKeyDown(KeyCode.W))
-            {
-                _activeCharacter.SetAction(new Action(ActionType.PressForward));
-            }
-            if (Input.GetKeyDown(KeyCode.A))
-            {
-                _activeCharacter.SetAction(new Action(ActionType.PressLeft));
-            }
-            if (Input.GetKeyDown(KeyCode.S))
-            {
-                _activeCharacter.SetAction(new Action(ActionType.PressBack));
-            }
-            if (Input.GetKeyDown(KeyCode.D))
-            {
-                _activeCharacter.SetAction(new Action(ActionType.PressRight));
-            }
-
-            if (Input.GetKeyUp(KeyCode.W))
-            {
-                _activeCharacter.SetAction(new Action(ActionType.ReleaseForward));
-            }
-            if (Input.GetKeyUp(KeyCode.A))
-            {
-                _activeCharacter.SetAction(new Action(ActionType.ReleaseLeft));
-            }
-            if (Input.GetKeyUp(KeyCode.S))
-            {
-                _activeCharacter.SetAction(new Action(ActionType.ReleaseBack));
-            }
-            if (Input.GetKeyUp(KeyCode.D))
-            {
-                _activeCharacter.SetAction(new Action(ActionType.ReleaseRight));
-            }
-            if (_activeCharacter.WillRotate())
-            {
-                _activeCharacter.SetAction(new ValueAction(ActionType.Rotation, _activeCharacter.RotationDifference()));
-            }
-        }
-    }
+    
     public static float GetGameTimeFixed()
     {
-        return _gameTime + _fixedTime - _updateTime; 
+        return _gameTime + _totalFixedTime - _totalUpdateTime; 
     }
     void Observe()
     {
@@ -273,70 +242,55 @@ public class GameManager : MonoBehaviour {
         }
     }
     
-    static void JumpToTime(float _time)
-    {
-        float _timeGap = _time - GameManager.GameTime;
-        int _dir = (_timeGap >= 0) ? 1 : -1; 
-        float _jumpSpeed = Mathf.Clamp(Mathf.Abs(_timeGap / GameSettings.MinJumpDuration), GameSettings.MinJumpDuration, GameSettings.MaxJumpSpeed) * _dir;
-         _jumpDuration = _timeGap / _jumpSpeed; 
-        SetSpeed(_jumpSpeed);
-        _canAcceptPlayerInput = false;
-        GameManager.t.StartJump(_jumpDuration);
-    }
-    public void StartJump(float _duration)
-    {
-        Invoke("EndJump", _duration); 
-    }
-    public void EndJump()
-    {
-        SetSpeed(0);
-        _canAcceptPlayerInput = true;
-    }
-    static void CheckReplaying()
-    {
-        if (_isReplaying && _activeCharacter != null && _activeCharacter.IsPastMostRecentAction())
-        {
-            _isReplaying = false;
-            SetSpeed(0);
-            return;
-        }
-        if(!_isReplaying && _activeCharacter != null && !_activeCharacter.IsPastMostRecentAction())
-        {
-            _isReplaying = true; 
-            return;
-        }
-    }
     // Update is called once per frame
     void Update () {
-        _updateTime += Time.deltaTime; 
+        _totalUpdateTime += Time.deltaTime;
+        _gameTime = _fixedGameTime; 
+        //_gameTime += Time.deltaTime * _gameSpeed;
+        //_gameTime = Mathf.Max(_gameTime, 0); 
         if (Input.GetKeyDown(KeyCode.Backspace))
         {
             Observe();
         }
         if (_canAcceptPlayerInput)
         {
-            SetActions();
+            PlayerInput.CheckSpeedButtons(); 
         }
-        TimeysApplyActions(); 
-        if (_isPlaying && !_isPaused)
+        if (_canAcceptPlayerInput && _activeCharacter != null && _isPlaying)
         {
-            Play(_gameSpeed);
-        }if (!_isPaused && !_isPlaying)
-        {
-            Rewind(_gameSpeed * -1); 
+            _activeCharacter.FaceCamrea(); 
+            _activeCharacter.SetStateToKeyboard(); 
+            _activeCharacter.ApplyActions(); 
         }
-        TimeCounter.UpdateTime(_gameTime);
+        TimeCounter.UpdateTime(_gameTime + " | " + _fixedGameTime);
         _camController.UpdateCamera();
-        CheckReplaying(); 
+        UpdateFixedTimestep(); 
     }
+    
     void FixedUpdate()
     {
-        _fixedTime += Time.fixedDeltaTime; 
+        TimeysApplyActions();
+        if (!_isPaused)
+        {
+            _totalFixedTime += GameSettings.FixedTimestep;
+            int _dir = (_gameSpeed >= 0) ? 1 : -1; 
+            _fixedGameTime += GameSettings.FixedTimestep * _dir;
+            _fixedGameTime = Mathf.Max(_fixedGameTime, 0); 
+        }
+        if (_isPlaying && !_isPaused)
+        {
+            Play(_fixedGameTime);
+        }
+        if (!_isPaused && !_isPlaying)
+        {
+            Rewind(_fixedGameTime);
+        }
+        CheckReplaying(); 
     }
     void Awake()
     {
         t = this; 
-        _obCam = ob; 
+        _obCam = ob;
     }
     void Start()
     {

@@ -4,12 +4,12 @@ using System;
 
 public class AAMoveForward : IAtomicAction
 {
-    Enemy _enemy;
+    IAI _enemy;
     float _distance;
     float _maxDistance;
     float _finishesAt;
     public float FinishesAt { get { return _finishesAt; } }
-    public AAMoveForward(Enemy enemy)
+    public AAMoveForward(IAI enemy)
     {
         _enemy = enemy; 
     }
@@ -43,6 +43,10 @@ public class AAMoveForward : IAtomicAction
         _maxDistance = _action.Value;
         CalculateFinishTime(_action);
     }
+    public IAction Unset()
+    {
+        return new ValueAction(ActionType.AIMoveForwardUnset, _maxDistance); 
+    }
 
     public static IAction CreateAction(Transform _enemy, Vector3 _target, float _time)
     {
@@ -54,5 +58,6 @@ public class AAMoveForward : IAtomicAction
         _enemy.transform.position += _enemy.transform.forward * _distance; 
         _enemy.SetAction(new ValueAction(ActionType.AIMoveForward, _distance, _enemy.Time));
         _enemy.AddToTIme(_distance / _enemy.MoveSpeed);
+        _enemy.SetAction(new ValueAction(ActionType.AIMoveForwardUnset, _distance, _enemy.Time));
     }
 }

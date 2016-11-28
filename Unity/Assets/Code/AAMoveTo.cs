@@ -3,13 +3,13 @@ using System.Collections;
 
 public class AAMoveTo : IAtomicAction {
 
-    Enemy _enemy;
+    IAI _enemy;
     Vector3 _maxVector;
     Vector3 _dir; 
     Vector3 _remaining; 
     float _finishesAt;
     public float FinishesAt { get { return _finishesAt; } }
-    public AAMoveTo(Enemy enemy)
+    public AAMoveTo(IAI enemy)
     {
         _enemy = enemy;
     }
@@ -45,7 +45,10 @@ public class AAMoveTo : IAtomicAction {
         _dir = _action.Vector.normalized; 
         CalculateFinishTime(_action);
     }
-
+    public IAction Unset()
+    {
+        return new VectorAction(ActionType.AIMoveToUnset, _maxVector); 
+    }
     public static IAction CreateAction(Transform _enemy, Vector3 _target, float _time)
     {
         return new ValueAction(ActionType.AIMoveForward, Vector3.Distance(_enemy.transform.position, _target), _time);
@@ -56,5 +59,6 @@ public class AAMoveTo : IAtomicAction {
         _enemy.transform.position = _target;
         _enemy.SetAction(new VectorAction(ActionType.AIMoveTo, _toVector, _enemy.Time));
         _enemy.AddToTIme(_toVector.magnitude / _enemy.MoveSpeed);
+        _enemy.SetAction(new VectorAction(ActionType.AIMoveToUnset, _toVector, _enemy.Time));
     }
 }

@@ -23,7 +23,7 @@ public abstract class WibblyWobbly : MonoBehaviour {
     }
     public virtual void SetAction(List<IAction> _actions)
     {
-        if (CanAddActions())
+        if (CanAddActions() && _actions.Count > 0)
         {
             _actionsToBeConsumed.AddRange(_actions); 
         }
@@ -36,8 +36,8 @@ public abstract class WibblyWobbly : MonoBehaviour {
             {
                 _history.AddToHead(_actionsToBeConsumed[i]);
             }
+            _actionsToBeConsumed.Clear();
         }
-        _actionsToBeConsumed.Clear();
     }
     protected bool CanAddActions()
     {
@@ -45,18 +45,21 @@ public abstract class WibblyWobbly : MonoBehaviour {
     }
     public virtual void SetExternalAction(IAction _action)
     {
-        SetAction(_action); 
+        if (GameManager.IsPlaying)
+        {
+            _history.InsertAfterPointer(_action); 
+        }
     }
     protected float _prevTime;
-    public virtual void Play()
+    public virtual void Play(float _time)
     {
         while (true)
         {
-            HistoryNode _node = _history.PlayTime(GameManager.GameTime);
+            HistoryNode _node = _history.PlayTime(_time);
             if (_node == null)
             {
-                Act(GameManager.GameTime - _prevTime);
-                _prevTime = GameManager.GameTime;
+                Act(_time - _prevTime);
+                _prevTime = _time;
                 break;
             }
             Act(_node.Action.Time - _prevTime);
@@ -64,15 +67,15 @@ public abstract class WibblyWobbly : MonoBehaviour {
             UseAction(_node.Action, _prevTime);
         }
     }
-    public virtual void Rewind()
+    public virtual void Rewind(float _time)
     {
         while (true)
         {
-            HistoryNode _node = _history.RewindTime(GameManager.GameTime);
+            HistoryNode _node = _history.RewindTime(_time);
             if (_node == null)
             {
-                ActReverse(_prevTime - GameManager.GameTime);
-                _prevTime = GameManager.GameTime;
+                ActReverse(_prevTime - _time);
+                _prevTime = _time;
                 break;
             }
             ActReverse(_prevTime - _node.Action.Time);

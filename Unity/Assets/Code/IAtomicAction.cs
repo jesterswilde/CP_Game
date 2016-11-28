@@ -8,4 +8,5 @@ public interface IAtomicAction {
     void UseAction(IAction _action, float _time);
     void ReverseAction(IAction _action, float _time);
     float FinishesAt { get; }
+    IAction Unset(); 
 }

@@ -38,7 +38,7 @@ public class Character : WibblyWobbly {
 
     protected override void Act(float _deltaTime)
     {
-        transform.forward = _cam.CameraForward(_state.XRot); 
+        transform.forward = _cam.CameraForward(_state.XRot);
         Vector3 _move = ((_state.Forward * _state.CanForward) - (_state.Backward * _state.CanBackward)) * transform.forward +
             ((_state.Right * _state.CanRight) - (_state.Left * _state.CanLeft)) * transform.right;
         transform.position += new Vector3(_move.x, 0, _move.z).normalized * speed * _deltaTime;
@@ -112,9 +112,16 @@ public class Character : WibblyWobbly {
     {
         SetAction(_state.ActionsToReset());
     }
+    public void FaceCamrea()
+    {
+        if (WillRotate())
+        {
+            SetAction(new ValueAction(ActionType.Rotation, RotationDifference()));
+        }
+    }
     public void SetStateToKeyboard()
     {
-        SetAction(_state.SetStateToKeyboard(GameManager.GetAbsKeyboardState()));
+        SetAction(_state.SetStateToKeyboard());
     }
 
     // Use this for initialization

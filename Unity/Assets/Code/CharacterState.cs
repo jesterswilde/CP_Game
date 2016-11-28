@@ -50,28 +50,41 @@ public class CharacterState
         }
         return _actions; 
     }
-    public List<IAction> SetStateToKeyboard(bool[] _keyboard)
+    public List<IAction> SetStateToKeyboard()
     {
+        bool[] _keyboard = PlayerInput.GetAbsKeyboardState(); 
         List<IAction> _actions = new List<IAction>(); 
-        if(_keyboard[0])
+        if(_keyboard[0] && _forward == 0)
         {
-            Debug.Log("forwward");
             _actions.Add(new Action(ActionType.PressForward));
         }
-        if (_keyboard[1])
+        if(!_keyboard[0] && _forward == 1)
         {
-            Debug.Log("Right"); 
+            _actions.Add(new Action(ActionType.ReleaseForward));
+        }
+        if (_keyboard[1] && _right == 0)
+        {
             _actions.Add(new Action(ActionType.PressRight));
         }
-        if (_keyboard[2])
+        if (!_keyboard[1] && _right == 1)
         {
-            Debug.Log("back"); 
+            _actions.Add(new Action(ActionType.ReleaseRight));
+        }
+        if (_keyboard[2] && _backward == 0)
+        {
             _actions.Add(new Action(ActionType.PressBack));
         }
-        if (_keyboard[3])
+        if (!_keyboard[2] && _backward == 1)
         {
-            Debug.Log("Left"); 
+            _actions.Add(new Action(ActionType.ReleaseBack));
+        }
+        if (_keyboard[3] && _left == 0)
+        {
             _actions.Add(new Action(ActionType.PressLeft)); 
+        }
+        if (!_keyboard[3] && _left == 1)
+        {
+            _actions.Add(new Action(ActionType.ReleaseLeft));
         }
         return _actions; 
     }
