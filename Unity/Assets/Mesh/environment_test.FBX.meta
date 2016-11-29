@@ -94,6 +94,20 @@ ModelImporter:
     100172: wires_wall_metal001
     100174: wires_wall_metal002
     100176: text_line
+    100178: pipe_wide012
+    100180: pipe_wide013
+    100182: pipe_wide014
+    100184: pipe_wide015
+    100186: pipe_wide016
+    100188: pipe_wide017
+    100190: pipe_wide018
+    100192: pipe_wide019
+    100194: pipe_wide020
+    100196: pipe_wide021
+    100198: pipe_wide022
+    100200: pipe_wide023
+    100202: pipe_wide024
+    100204: pipe_wide_turn004
     400000: building_2s_01
     400002: building_4s_02
     400004: building_4st_01
@@ -183,6 +197,20 @@ ModelImporter:
     400172: wires_wall_metal001
     400174: wires_wall_metal002
     400176: text_line
+    400178: pipe_wide012
+    400180: pipe_wide013
+    400182: pipe_wide014
+    400184: pipe_wide015
+    400186: pipe_wide016
+    400188: pipe_wide017
+    400190: pipe_wide018
+    400192: pipe_wide019
+    400194: pipe_wide020
+    400196: pipe_wide021
+    400198: pipe_wide022
+    400200: pipe_wide023
+    400202: pipe_wide024
+    400204: pipe_wide_turn004
     2300000: building_2s_01
     2300002: building_4s_02
     2300004: building_4st_01
@@ -270,6 +298,20 @@ ModelImporter:
     2300168: wires_wall_metal001
     2300170: wires_wall_metal002
     2300172: text_line
+    2300174: pipe_wide012
+    2300176: pipe_wide013
+    2300178: pipe_wide014
+    2300180: pipe_wide015
+    2300182: pipe_wide016
+    2300184: pipe_wide017
+    2300186: pipe_wide018
+    2300188: pipe_wide019
+    2300190: pipe_wide020
+    2300192: pipe_wide021
+    2300194: pipe_wide022
+    2300196: pipe_wide023
+    2300198: pipe_wide024
+    2300200: pipe_wide_turn004
     3300000: building_2s_01
     3300002: building_4s_02
     3300004: building_4st_01
@@ -357,6 +399,20 @@ ModelImporter:
     3300168: wires_wall_metal001
     3300170: wires_wall_metal002
     3300172: text_line
+    3300174: pipe_wide012
+    3300176: pipe_wide013
+    3300178: pipe_wide014
+    3300180: pipe_wide015
+    3300182: pipe_wide016
+    3300184: pipe_wide017
+    3300186: pipe_wide018
+    3300188: pipe_wide019
+    3300190: pipe_wide020
+    3300192: pipe_wide021
+    3300194: pipe_wide022
+    3300196: pipe_wide023
+    3300198: pipe_wide024
+    3300200: pipe_wide_turn004
     4300000: building_4st_01
     4300002: building_4s_02
     4300004: heatsink_large
@@ -444,6 +500,20 @@ ModelImporter:
     4300168: door_single_metal_01
     4300170: heatsink_large_metal
     4300172: text_line
+    4300174: pipe_wide012
+    4300176: pipe_wide013
+    4300178: pipe_wide014
+    4300180: pipe_wide015
+    4300182: pipe_wide016
+    4300184: pipe_wide017
+    4300186: pipe_wide018
+    4300188: pipe_wide019
+    4300190: pipe_wide020
+    4300192: pipe_wide021
+    4300194: pipe_wide_turn004
+    4300196: pipe_wide022
+    4300198: pipe_wide023
+    4300200: pipe_wide024
   materials:
     importMaterials: 1
     materialName: 0
