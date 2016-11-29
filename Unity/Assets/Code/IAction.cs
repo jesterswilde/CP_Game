@@ -8,4 +8,6 @@ public interface IAction {
     Vector3 Vector { get; }
     HistoryNode PossibleFuture { get; }
     bool IsExternal { get; }
+    InteractableTrigger Target { get; }
+    Task Task { get; }
 }

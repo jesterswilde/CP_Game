@@ -28,10 +28,10 @@ public class Character : WibblyWobbly {
     Transform _camTrans; 
     public Transform CamPoint { get { return _cam.CameraSpot; } }
     [SerializeField]
-    int _count;
+    float _maxTargetDistance = 0.1f; 
+    InteractableTrigger _target;
 
     CharacterState _state = new CharacterState();
-    CharacterState _baseState = new CharacterState(); 
 
     [SerializeField]
     bool _playerControlled = false;
@@ -53,10 +53,22 @@ public class Character : WibblyWobbly {
     }
     protected override void UseAction(IAction _action, float _time)
     {
+        switch (_action.Type)
+        {
+            case ActionType.Activate:
+                _action.Target.Activate();
+                return; 
+        }
         _state.UseAction(_action);
     }
     protected override void ReverseAction(IAction _action, float _time)
     {
+        switch (_action.Type)
+        {
+            case ActionType.Activate:
+                _action.Target.RewindActivation();
+                return;
+        }
         _state.ReverseAction(_action);
     }
     public override void SetAction(IAction _action)
@@ -64,6 +76,29 @@ public class Character : WibblyWobbly {
         if (GameManager.CanAcceptPlayerInput)
         {
             base.SetAction(_action);
+        }
+    }
+    public TargetedAction CreateTargetAction()
+    {
+        if(_target != null)
+        {
+            return new TargetedAction(ActionType.Activate, _target); 
+        }
+        return null; 
+    }
+    public void Activate()
+    {
+        if(_target != null && (transform.position - _target.transform.position).magnitude < _target.MinDistanceToActivate)
+        {
+            Ray _ray = new Ray(transform.position, _target.transform.position - transform.position);
+            RaycastHit _hit; 
+            if(Physics.Raycast(_ray, out _hit, GameManager.CollMask))
+            {
+                if(System.Object.ReferenceEquals(_hit.collider.gameObject, _target.gameObject))
+                {
+                    _target.Activate(); 
+                }
+            }
         }
     }
     public bool WillRotate()
@@ -138,7 +173,21 @@ public class Character : WibblyWobbly {
 	
 	// Update is called once per frame
 	void Update () {
-        _count = _history.Count; 
+        InteractableTrigger _trigger = GameManager.ClosestToViewPort(_maxTargetDistance);
+        if(_trigger == null && _target != null)
+        {
+            _target.UnTarget();
+            _target = _trigger; 
+        }
+        if(!System.Object.ReferenceEquals(_trigger, _target) && _trigger != null)
+        {
+            if(_target != null)
+            {
+                _target.UnTarget();
+            }
+            _target = _trigger;
+            _target.Target(); 
+        }
     }
 
    

@@ -1,50 +1,80 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic; 
 
 public class InteractableTrigger : MonoBehaviour
 {
 
-
+    public float MinDistanceToActivate { get { return _minDistanceToActivate;  } }
     [SerializeField]
     Interactable _interactable;
     [SerializeField]
     LayerMask _collMask;
     [SerializeField]
-    Task _enterTask;
+    List<Task> _tasks = new List<Task>();
     [SerializeField]
-    Task _exitTask;
+    int _index = 0; 
     [SerializeField]
-    int _count = 0;
+    float _minDistanceToActivate = 3f;
+    [SerializeField]
+    bool _loop = false; 
+
+    Material _mat;
+    Color _startingColor;
+    Renderer _renderer;
+    public bool IsVisible { get { return _renderer.isVisible; } }
+
+    public void Activate()
+    {
+        if(_tasks.Count == 0)
+        {
+            return; 
+        }
+        if(_index < _tasks.Count)
+        {
+            _interactable.SetTask(_tasks[_index]);
+            _index++;
+        }else
+        {
+            if (_loop)
+            {
+                _index = 0;
+                Activate(); 
+            }
+        } 
+    }
+    public void RewindActivation()
+    {
+        _index--;
+        if (_loop)
+        {
+            if(_index < 0)
+            {
+                _index = _tasks.Count -1; 
+            }
+        }
+    }
+    public void Target()
+    {
+        _mat.color = Color.yellow; 
+    }
+    public void UnTarget()
+    {
+        _mat.color = _startingColor; 
+    }
 
     void Awake()
     {
+        _mat = GetComponent<Renderer>().material;
+        _startingColor = _mat.color; 
         if(_interactable == null)
         {
             throw new System.Exception(gameObject.name + " has no interactable object"); 
         }
+        _renderer = GetComponent<Renderer>();
     }
-
-    void OnTriggerEnter(Collider _coll)
+    void Start()
     {
-        if (Util.LayerMaskContainsLayer(_collMask, _coll.gameObject.layer))
-        {
-            _count++;
-            if (_count == 1)
-            {
-                _interactable.SetTask(_enterTask); 
-            }
-        }
-    }
-
-    void OnTriggerExit(Collider _coll)
-    {
-        if (Util.LayerMaskContainsLayer(_collMask, _coll.gameObject.layer))
-        {
-            _count--;
-            if (_count == 0)
-            {
-                _interactable.SetTask(_exitTask); 
-            }
-        }
+        GameManager.RegisterInteractableTrigger(this); 
     }
 }

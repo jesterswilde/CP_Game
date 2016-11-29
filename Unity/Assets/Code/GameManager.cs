@@ -5,6 +5,10 @@ using System.Collections.Generic;
 
 public class GameManager : MonoBehaviour {
 
+    [SerializeField]
+    LayerMask collMask;
+    static LayerMask _collMask;
+    public static LayerMask CollMask { get { return _collMask; } }
     static GameManager t; 
     static float _gameTime = 0;
     static float _totalUpdateTime = 0;
@@ -19,10 +23,10 @@ public class GameManager : MonoBehaviour {
     public static float FixedGameTime { get { return _fixedGameTime; } }
     static Character _activeCharacter;
     public static Character ActiveCharacter { get { return _activeCharacter; } }
-    [SerializeField]
     static List<Character> _characters = new List<Character>();
     static int _characterIndex = 0;
-    static List<WibblyWobbly> _timeyWimeys = new List<WibblyWobbly>(); 
+    static List<WibblyWobbly> _timeyWimeys = new List<WibblyWobbly>();
+    static List<InteractableTrigger> _interactables = new List<InteractableTrigger>(); 
     [SerializeField]
     ObserverCam ob;
     static ObserverCam _obCam;
@@ -41,6 +45,25 @@ public class GameManager : MonoBehaviour {
     static ICamera _nextCamController;
 
     #region Camera
+    public static InteractableTrigger ClosestToViewPort(float _threshold)
+    {
+        InteractableTrigger _target = null; 
+        for(int i = 0; i < _interactables.Count; i++)
+        {
+            InteractableTrigger _interactable = _interactables[i];
+            if (_interactable.IsVisible) 
+            {
+                 Vector3 _point = Camera.main.WorldToViewportPoint(_interactable.transform.position);
+                float _dist = Mathf.Pow(_point.x - 0.5f, 2) + Mathf.Pow(_point.y - 0.5f, 2);
+                if(_dist < _threshold)
+                {
+                    _threshold = _dist;
+                    _target = _interactable; 
+                }
+            }
+        }
+        return _target; 
+    }
     static void SwitchCamera(ICamera _next)
     {
         if(_camController != null)
@@ -115,7 +138,7 @@ public class GameManager : MonoBehaviour {
     {
         if (_gameSpeed == 0)
         {
-            Time.fixedDeltaTime = 0;
+            Time.fixedDeltaTime = 0.02f;
         }
         else
         {
@@ -216,6 +239,10 @@ public class GameManager : MonoBehaviour {
     {
         _timeyWimeys.Add(_timey); 
     }
+    public static void RegisterInteractableTrigger(InteractableTrigger _trigger)
+    {
+        _interactables.Add(_trigger); 
+    }
     public static void TimeysApplyActions()
     {
         for(int i = 0; i < _timeyWimeys.Count; i++)
@@ -259,7 +286,8 @@ public class GameManager : MonoBehaviour {
         if (_canAcceptPlayerInput && _activeCharacter != null && _isPlaying)
         {
             _activeCharacter.FaceCamrea(); 
-            _activeCharacter.SetStateToKeyboard(); 
+            _activeCharacter.SetStateToKeyboard();
+            _activeCharacter.SetAction(PlayerInput.ActionButtons(_activeCharacter)); 
             _activeCharacter.ApplyActions(); 
         }
         TimeCounter.UpdateTime(_gameTime + " | " + _fixedGameTime);
@@ -291,6 +319,7 @@ public class GameManager : MonoBehaviour {
     {
         t = this; 
         _obCam = ob;
+        _collMask = collMask; 
     }
     void Start()
     {

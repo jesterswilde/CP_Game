@@ -16,7 +16,6 @@ public class Interactable : WibblyWobbly, IAI {
             _log += _node.Action.Type + ", " + _node.Action.Time +" | ";
             _node = _node.Next; 
         }
-        Debug.Log(_log); 
     }
     IAtomicAction _currentAction;
     [SerializeField]
@@ -25,12 +24,20 @@ public class Interactable : WibblyWobbly, IAI {
     [SerializeField]
     float _rotationSpeed;
     public float RotationSpeed { get { return _rotationSpeed; } }
+    [SerializeField]
+    Task _defaultTask; 
 
     protected override void Act(float _deltaTime)
     {
         if(_currentAction != null)
         {
-            _currentAction.Act(_deltaTime); 
+            _currentAction.Act(_deltaTime);
+        }else
+        {
+            if(_defaultTask != null && _history.IsPointerAtHead())
+            {
+                SetTask(_defaultTask); 
+            }
         }
     }
 
@@ -45,7 +52,6 @@ public class Interactable : WibblyWobbly, IAI {
 
     protected override void ReverseAction(IAction _action, float _time)
     {
-        Debug.Log("Reversing " + _action.Type); 
         switch (_action.Type)
         {
             case ActionType.AIMoveForwardUnset:
@@ -64,6 +70,12 @@ public class Interactable : WibblyWobbly, IAI {
                 _currentAction = new AAWait();
                 _currentAction.ReverseAction(_action, _time); 
                 break;
+            case ActionType.UnsetTask:
+                _defaultTask = _action.Task;
+                break;
+            case ActionType.SetTask:
+                _defaultTask = null;
+                break; 
             case ActionType.AIMoveForward:
             case ActionType.AIMoveTo:
             case ActionType.AIRotate:
@@ -82,7 +94,6 @@ public class Interactable : WibblyWobbly, IAI {
 
     protected override void UseAction(IAction _action, float _time)
     {
-        Debug.Log("Using " + _action.Type); 
         switch(_action.Type)
         {
             case ActionType.AIMoveForward:
@@ -101,6 +112,12 @@ public class Interactable : WibblyWobbly, IAI {
                 _currentAction = new AAWait();
                 _currentAction.UseAction(_action, _time); 
                 break;
+            case ActionType.SetTask:
+                _defaultTask = _action.Task;
+                break;
+            case ActionType.UnsetTask:
+                _defaultTask = null;
+                break; 
             case ActionType.AIMoveForwardUnset:
             case ActionType.AIMoveToUnset:
             case ActionType.AIRotateUnset:
@@ -123,13 +140,21 @@ public class Interactable : WibblyWobbly, IAI {
         if (GameManager.IsPlaying)
         {
             _history.SpliceOffPossibleFuture();
+            if (_task.Loop)
+            {
+                if(_task != null)
+                {
+                    SetAction(new TaskAction(ActionType.UnsetTask, _defaultTask));
+                }
+                SetAction(new TaskAction(ActionType.SetTask, _task)); 
+            }
             _task.SimulateTask(this, GameManager.FixedGameTime); 
         }
     }
     void Awake()
     {
         _history.AddToHead(new Action(ActionType.Null));
-        RegisterWibblyWobbly(); 
+        RegisterWibblyWobbly();
     }
     void Update()
     {

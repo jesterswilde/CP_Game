@@ -53,6 +53,17 @@ public class PlayerInput {
             }
         }
     }
+    public static IAction ActionButtons(Character _activeCharacter)
+    {
+        if(_activeCharacter != null)
+        {
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                return _activeCharacter.CreateTargetAction(); 
+            }
+        }
+        return null; 
+    }
 
     public static IAction GetActionInputs()
     {

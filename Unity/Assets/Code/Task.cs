@@ -4,7 +4,10 @@ using System.Collections.Generic;
 
 public class Task : MonoBehaviour {
     [SerializeField]
-    List<TaskElement> _actions = new List<TaskElement>();
+    bool _loop;
+    public bool Loop { get { return _loop; } }
+    [SerializeField]
+    List<TaskElement> _actions = new List<  TaskElement>();
 
 	public void SimulateTask(IAI _enemy, float _time)
     {

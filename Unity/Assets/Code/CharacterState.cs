@@ -164,7 +164,7 @@ public class CharacterState
                 break;
             case ActionType.Rotation:
                 _rotX += _action.Value;
-                break; 
+                break;
             case ActionType.Clear:
                 ClearState();
                 break;

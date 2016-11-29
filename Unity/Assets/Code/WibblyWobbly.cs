@@ -16,7 +16,7 @@ public abstract class WibblyWobbly : MonoBehaviour {
     }
     public virtual void SetAction(IAction _action)
     {
-        if (CanAddActions())
+        if (CanAddActions() && _action != null)
         {
             _actionsToBeConsumed.Add(_action); 
         }

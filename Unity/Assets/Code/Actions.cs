@@ -35,6 +35,8 @@ public class Action : IAction{
     public Vector3 Vector { get { return Vector3.zero; } }
     public bool IsExternal { get { return _isExternal; } }
     public HistoryNode PossibleFuture { get { return null; } }
+    public InteractableTrigger Target { get { return null; } }
+    public Task Task { get { return null; } }
 }
 
 public class ValueAction : IAction
@@ -75,6 +77,8 @@ public class ValueAction : IAction
     public Vector3 Vector { get { return Vector3.zero; } }
     public bool IsExternal { get { return _isExternal; } }
     public HistoryNode PossibleFuture { get { return null; } }
+    public InteractableTrigger Target { get { return null; } }
+    public Task Task { get { return null; } }
 }
 public class VectorAction : IAction
 {
@@ -114,6 +118,8 @@ public class VectorAction : IAction
     public Vector3 Vector { get { return _vector; } }
     public bool IsExternal { get { return _isExternal; } }
     public HistoryNode PossibleFuture { get { return null; } }
+    public InteractableTrigger Target { get { return null; } }
+    public Task Task { get { return null; } }
 }
 public class FutureActions : IAction
 {
@@ -139,7 +145,72 @@ public class FutureActions : IAction
     public HistoryNode PossibleFuture { get { return _future; } }
     public float Value {get{return float.NaN;}}
     public Vector3 Vector { get { return Vector3.zero; } }
+    public InteractableTrigger Target { get { return null; } }
+    public Task Task { get { return null; } }
 }
+
+public class TargetedAction : IAction
+{
+    float _time;
+    bool _isExternal = false;
+    ActionType _type;
+    InteractableTrigger _target;
+
+    public TargetedAction(ActionType type, InteractableTrigger target)
+    {
+        _type = type;
+        _target = target;
+        _time = GameManager.FixedGameTime; 
+    }
+    public TargetedAction(ActionType type, InteractableTrigger target, bool external)
+    {
+        _type = type;
+        _target = target;
+        _isExternal = external;
+        _time = GameManager.FixedGameTime; 
+    }
+
+    public bool IsExternal { get { return _isExternal; } }
+    public float Time { get { return _time; } }
+    public ActionType Type { get { return _type; } }
+    public HistoryNode PossibleFuture { get { return null; } }
+    public float Value { get { return float.NaN; } }
+    public Vector3 Vector { get { return Vector3.zero; } }
+    public InteractableTrigger Target { get { return _target; } }
+    public Task Task { get { return null; } }
+}
+
+public class TaskAction : IAction
+{
+    float _time;
+    bool _isExternal = false;
+    ActionType _type;
+    Task _task;
+
+    public TaskAction(ActionType type, Task task)
+    {
+        _type = type;
+        _task = task;
+        _time = GameManager.FixedGameTime;
+    }
+    public TaskAction(ActionType type, Task task, bool external)
+    {
+        _type = type;
+        _task = task;
+        _isExternal = external;
+        _time = GameManager.FixedGameTime;
+    }
+
+    public bool IsExternal { get { return _isExternal; } }
+    public float Time { get { return _time; } }
+    public ActionType Type { get { return _type; } }
+    public HistoryNode PossibleFuture { get { return null; } }
+    public float Value { get { return float.NaN; } }
+    public Vector3 Vector { get { return Vector3.zero; } }
+    public InteractableTrigger Target { get { return null; } }
+    public Task Task { get { return _task; } }
+}
+
 
 public enum ActionType
 {
@@ -161,6 +232,9 @@ public enum ActionType
     RightBlocked,
     RightUnblocked,
     Clear,
+    Activate,
+    SetTask,
+    UnsetTask,
     AIWait,
     AIWaitUnset,
     AIMoveForward,
