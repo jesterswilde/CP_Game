@@ -50,7 +50,7 @@ public class InteractableTrigger : MonoBehaviour
         {
             if(_index < 0)
             {
-                _index = _tasks.Count -1; 
+                _index = _tasks.Count -1    ; 
             }
         }
     }

@@ -5,22 +5,6 @@ using System;
 
 public class Character : WibblyWobbly {
 
-    public void PrintHistory()
-    {
-        HistoryNode _node;
-        _node = _history.Tail; 
-        while (true)
-        {
-            if(_node.Next != null)
-            {
-                _node = _node.Next;
-            }else
-            {
-                break; 
-            }
-        }
-    }
-
     [SerializeField]
     float speed = 5;
     CharacterCam _cam;
@@ -29,13 +13,15 @@ public class Character : WibblyWobbly {
     public Transform CamPoint { get { return _cam.CameraSpot; } }
     [SerializeField]
     float _maxTargetDistance = 0.1f; 
-    InteractableTrigger _target;
+    InteractableTrigger _activatableTarget;
+    IAttackable _attackableTarget;
 
     CharacterState _state = new CharacterState();
 
     [SerializeField]
     bool _playerControlled = false;
 
+    #region Time
     protected override void Act(float _deltaTime)
     {
         transform.forward = _cam.CameraForward(_state.XRot);
@@ -78,25 +64,19 @@ public class Character : WibblyWobbly {
             base.SetAction(_action);
         }
     }
-    public TargetedAction CreateTargetAction()
-    {
-        if(_target != null)
-        {
-            return new TargetedAction(ActionType.Activate, _target); 
-        }
-        return null; 
-    }
+    #endregion
+    
     public void Activate()
     {
-        if(_target != null && (transform.position - _target.transform.position).magnitude < _target.MinDistanceToActivate)
+        if(_activatableTarget != null && (transform.position - _activatableTarget.transform.position).magnitude < _activatableTarget.MinDistanceToActivate)
         {
-            Ray _ray = new Ray(transform.position, _target.transform.position - transform.position);
+            Ray _ray = new Ray(transform.position, _activatableTarget.transform.position - transform.position);
             RaycastHit _hit; 
             if(Physics.Raycast(_ray, out _hit, GameManager.CollMask))
             {
-                if(System.Object.ReferenceEquals(_hit.collider.gameObject, _target.gameObject))
+                if(System.Object.ReferenceEquals(_hit.collider.gameObject, _activatableTarget.gameObject))
                 {
-                    _target.Activate(); 
+                    _activatableTarget.Activate(); 
                 }
             }
         }
@@ -112,6 +92,10 @@ public class Character : WibblyWobbly {
     public float RotationDifference()
     {
         return _cam.XRot - _state.XRot;
+    }
+    public IAction CreateTargetAction()
+    {
+        return new TargetedAction(ActionType.Activate, _activatableTarget); 
     }
 
     public void SetAsActivePlayer()
@@ -159,7 +143,7 @@ public class Character : WibblyWobbly {
         SetAction(_state.SetStateToKeyboard());
     }
 
-    // Use this for initialization
+        // Use this for initialization
     void Start () {
         SetAction(new Action(ActionType.Null)); 
 	}
@@ -168,25 +152,32 @@ public class Character : WibblyWobbly {
         GameManager.RegisterCharacter(this);
         RegisterWibblyWobbly(); 
         _cam = gameObject.GetComponent<CharacterCam>();
-        _camTrans = _cam.CameraSpot; 
+        _camTrans = _cam.CameraSpot;
     }
 	
 	// Update is called once per frame
 	void Update () {
-        InteractableTrigger _trigger = GameManager.ClosestToViewPort(_maxTargetDistance);
-        if(_trigger == null && _target != null)
+        TargetableDist _trigger = GameManager.ClosestInteractableToViewport(_maxTargetDistance);
+        AttackableDist _attackable = GameManager.ClosestAttackableToViewport(_trigger.Distance); 
+        if(_attackable.Target != null)
         {
-            _target.UnTarget();
-            _target = _trigger; 
-        }
-        if(!System.Object.ReferenceEquals(_trigger, _target) && _trigger != null)
+            
+        }else
         {
-            if(_target != null)
+            if(_trigger.Target == null && _activatableTarget != null)
             {
-                _target.UnTarget();
+                _activatableTarget.UnTarget();
+                _activatableTarget = _trigger.Target; 
             }
-            _target = _trigger;
-            _target.Target(); 
+            if(!System.Object.ReferenceEquals(_trigger.Target, _activatableTarget) && _trigger.Target != null)
+            {
+                if(_activatableTarget != null)
+                {
+                    _activatableTarget.UnTarget();
+                }
+                _activatableTarget = _trigger.Target;
+                _activatableTarget.Target(); 
+            }
         }
     }
 

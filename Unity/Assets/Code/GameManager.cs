@@ -26,7 +26,8 @@ public class GameManager : MonoBehaviour {
     static List<Character> _characters = new List<Character>();
     static int _characterIndex = 0;
     static List<WibblyWobbly> _timeyWimeys = new List<WibblyWobbly>();
-    static List<InteractableTrigger> _interactables = new List<InteractableTrigger>(); 
+    static List<InteractableTrigger> _interactables = new List<InteractableTrigger>();
+    static List<IAttackable> _attackables = new List<IAttackable>(); 
     [SerializeField]
     ObserverCam ob;
     static ObserverCam _obCam;
@@ -45,7 +46,7 @@ public class GameManager : MonoBehaviour {
     static ICamera _nextCamController;
 
     #region Camera
-    public static InteractableTrigger ClosestToViewPort(float _threshold)
+    public static TargetableDist ClosestInteractableToViewport(float _threshold)
     {
         InteractableTrigger _target = null; 
         for(int i = 0; i < _interactables.Count; i++)
@@ -62,7 +63,26 @@ public class GameManager : MonoBehaviour {
                 }
             }
         }
-        return _target; 
+        return new TargetableDist(_target, _threshold); 
+    }
+    public static AttackableDist ClosestAttackableToViewport(float _threshold)
+    {
+        IAttackable _target = null;
+        for (int i = 0; i < _attackables.Count; i++)
+        {
+            IAttackable _attackable = _attackables[i];
+            if (_attackable.IsVisible)
+            {
+                Vector3 _point = Camera.main.WorldToViewportPoint(_attackable.Position);
+                float _dist = Mathf.Pow(_point.x - 0.5f, 2) + Mathf.Pow(_point.y - 0.5f, 2);
+                if (_dist < _threshold)
+                {
+                    _threshold = _dist;
+                    _target = _attackable;
+                }
+            }
+        }
+        return new AttackableDist(_target, _threshold);
     }
     static void SwitchCamera(ICamera _next)
     {
