@@ -35,8 +35,9 @@ public class Action : IAction{
     public Vector3 Vector { get { return Vector3.zero; } }
     public bool IsExternal { get { return _isExternal; } }
     public HistoryNode PossibleFuture { get { return null; } }
-    public InteractableTrigger Target { get { return null; } }
+    public ITargetable Target { get { return null; } }
     public Task Task { get { return null; } }
+    public Weapon Weapon { get { return null; } }
 }
 
 public class ValueAction : IAction
@@ -62,7 +63,8 @@ public class ValueAction : IAction
     {
         _action = _actionType;
         _value = value;
-        _isExternal = isExternal; 
+        _isExternal = isExternal;
+        _time = GameManager.FixedGameTime;
     }
     public ValueAction(ActionType _actionType, float value, float time, bool isExternal)
     {
@@ -77,8 +79,9 @@ public class ValueAction : IAction
     public Vector3 Vector { get { return Vector3.zero; } }
     public bool IsExternal { get { return _isExternal; } }
     public HistoryNode PossibleFuture { get { return null; } }
-    public InteractableTrigger Target { get { return null; } }
+    public ITargetable Target { get { return null; } }
     public Task Task { get { return null; } }
+    public Weapon Weapon { get { return null; } }
 }
 public class VectorAction : IAction
 {
@@ -103,7 +106,8 @@ public class VectorAction : IAction
     {
         _action = _actionType;
         _vector = vector;
-        _isExternal = isExternal; 
+        _isExternal = isExternal;
+        _time = GameManager.FixedGameTime; 
     }
     public VectorAction(ActionType _actionType, Vector3 vector, float time, bool isExternal)
     {
@@ -118,8 +122,9 @@ public class VectorAction : IAction
     public Vector3 Vector { get { return _vector; } }
     public bool IsExternal { get { return _isExternal; } }
     public HistoryNode PossibleFuture { get { return null; } }
-    public InteractableTrigger Target { get { return null; } }
+    public ITargetable Target { get { return null; } }
     public Task Task { get { return null; } }
+    public Weapon Weapon { get { return null; } }
 }
 public class FutureActions : IAction
 {
@@ -131,7 +136,8 @@ public class FutureActions : IAction
     public FutureActions(ActionType type, HistoryNode future)
     {
         _type = type;
-        _future = future; 
+        _future = future;
+        _time = GameManager.FixedGameTime;
     }
     public FutureActions(ActionType type, HistoryNode future, float time)
     {
@@ -145,8 +151,9 @@ public class FutureActions : IAction
     public HistoryNode PossibleFuture { get { return _future; } }
     public float Value {get{return float.NaN;}}
     public Vector3 Vector { get { return Vector3.zero; } }
-    public InteractableTrigger Target { get { return null; } }
+    public ITargetable Target { get { return null; } }
     public Task Task { get { return null; } }
+    public Weapon Weapon { get { return null; } }
 }
 
 public class TargetedAction : IAction
@@ -154,15 +161,15 @@ public class TargetedAction : IAction
     float _time;
     bool _isExternal = false;
     ActionType _type;
-    InteractableTrigger _target;
+    ITargetable _target;
 
-    public TargetedAction(ActionType type, InteractableTrigger target)
+    public TargetedAction(ActionType type, ITargetable target)
     {
         _type = type;
         _target = target;
         _time = GameManager.FixedGameTime; 
     }
-    public TargetedAction(ActionType type, InteractableTrigger target, bool external)
+    public TargetedAction(ActionType type, ITargetable target, bool external)
     {
         _type = type;
         _target = target;
@@ -176,8 +183,9 @@ public class TargetedAction : IAction
     public HistoryNode PossibleFuture { get { return null; } }
     public float Value { get { return float.NaN; } }
     public Vector3 Vector { get { return Vector3.zero; } }
-    public InteractableTrigger Target { get { return _target; } }
+    public ITargetable Target { get { return _target; } }
     public Task Task { get { return null; } }
+    public Weapon Weapon { get { return null; } }
 }
 
 public class TaskAction : IAction
@@ -207,8 +215,41 @@ public class TaskAction : IAction
     public HistoryNode PossibleFuture { get { return null; } }
     public float Value { get { return float.NaN; } }
     public Vector3 Vector { get { return Vector3.zero; } }
-    public InteractableTrigger Target { get { return null; } }
+    public ITargetable Target { get { return null; } }
     public Task Task { get { return _task; } }
+    public Weapon Weapon { get { return null; } }
+}
+
+public class WeaponAction : IAction
+{
+    float _time;
+    bool _isExternal = false;
+    ActionType _type;
+    Weapon _weapon; 
+
+    public WeaponAction(ActionType type, Weapon weapon)
+    {
+        _type = type;
+        _weapon = weapon; 
+        _time = GameManager.FixedGameTime;
+    }
+    public WeaponAction(ActionType type, Weapon weapon, bool external)
+    {
+        _type = type;
+        _weapon = weapon;
+        _isExternal = external;
+        _time = GameManager.FixedGameTime;
+    }
+
+    public bool IsExternal { get { return _isExternal; } }
+    public float Time { get { return _time; } }
+    public ActionType Type { get { return _type; } }
+    public HistoryNode PossibleFuture { get { return null; } }
+    public float Value { get { return float.NaN; } }
+    public Vector3 Vector { get { return Vector3.zero; } }
+    public ITargetable Target { get { return null; } }
+    public Task Task { get { return null; } }
+    public Weapon Weapon { get { return _weapon; } }
 }
 
 
@@ -231,8 +272,15 @@ public enum ActionType
     LeftUnblocked,
     RightBlocked,
     RightUnblocked,
+    PullTrigger,
+    ReleaseTrigger,
     Clear,
     Activate,
+    Deactivate,
+    Fire, 
+    TakeDamage,
+    ShotBy,
+    Die,
     SetTask,
     UnsetTask,
     AIWait,
@@ -241,11 +289,14 @@ public enum ActionType
     AIMoveForwardUnset,
     AIRotate,
     AIRotateUnset,
+    AIRotateDir,
+    AIRotateDirUnset,
     AIMoveTo, 
     AIMoveToUnset,
     SpliceFuture,
     ClearFuture, 
     Null, 
-    AIAlert
+    Alert,
+    UnAlert
 }
 

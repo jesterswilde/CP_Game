@@ -78,15 +78,23 @@ public class History {
             return null; 
         }
         _count--;
+        if(_node.Next == null && _node.Previous == null)
+        {
+            _head = null;
+            _tail = null;
+            return _node; 
+        }
         if(System.Object.ReferenceEquals(_node, _head))
         {
             _head = _head.Previous;
-            _head.SetNext(null); 
+            _head.SetNext(null);
+            return _node;  
         }
         if(System.Object.ReferenceEquals(_node, _tail))
         {
             _tail = _tail.Next;
-            _tail.SetPrevious(null); 
+            _tail.SetPrevious(null);
+            return _node;  
         }
         if(System.Object.ReferenceEquals(_node, _pointer))
         {
@@ -139,7 +147,6 @@ public class History {
     }
     public void ReloadPossibleFuture(HistoryNode _future)
     {
-        Debug.Log("new action" +  _pointer.Action.Type);
         _pointer.SetNext(_future);
         HistoryNode _node = _pointer;
         while (true)

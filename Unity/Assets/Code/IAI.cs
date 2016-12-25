@@ -6,4 +6,5 @@ public interface IAI{
     float RotationSpeed { get; }
     Transform transform { get; }
     void SetAction(IAction _action);
+    void SetAction(IAction _action, bool _detrmineOrigin); 
 }

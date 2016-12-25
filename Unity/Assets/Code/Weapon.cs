@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq; 
 
 public class Weapon : MonoBehaviour {
     [SerializeField]
@@ -12,19 +14,31 @@ public class Weapon : MonoBehaviour {
     public float AP { get { return _ap; } }
     [SerializeField]
     float _accuracy;
+    public float Accuracy { get { return _accuracy; } }
+    [SerializeField]
+    float _distanceFalloff = 5; 
+    List<float> _firedAt = new List<float>(); 
 
-    float _timeLastFired; 
-
-    public void FiredWeaponAt(float _time)
+    public void ReverseFireWeapon()
     {
-        _timeLastFired = _time;
+        _firedAt.RemoveAt(_firedAt.Count - 1); 
     }
-    public bool FireWeapon(float _currentTime)
+    public bool PullTrigger(float _currentTime)
     {
-        if(_timeLastFired + _maximmumFireRate < _currentTime)
+        if(_firedAt.Count == 0)
         {
+            _firedAt.Add(_currentTime); 
             return true; 
         }
+        if (_firedAt.Last() + _maximmumFireRate < _currentTime)
+        {
+            _firedAt.Add(_currentTime);
+            return true;
+        }
         return false; 
+    }
+    public float AccuracyLoss(float distance)
+    {
+        return distance * _distanceFalloff; 
     }
 }

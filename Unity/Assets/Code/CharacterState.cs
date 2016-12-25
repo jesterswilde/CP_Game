@@ -9,6 +9,7 @@ public class CharacterState
     int _backward = 0;
     int _left = 0;
     int _right = 0;
+    bool _pullingTrigger = false; 
     float _rotX = 0;
     int _canMoveForward = 1;
     int _canMoveBackward = 1;
@@ -21,6 +22,7 @@ public class CharacterState
     public int Backward { get { return _backward; } set { _backward = value; } }
     public int Left { get { return _left; } set { _left = value; } }
     public int Right { get { return _right; } set { _left = value; } }
+    public bool PullingTrigger { get { return _pullingTrigger; } }
     public int CanForward { get { return _canMoveForward; } }
     public int CanBackward { get { return _canMoveBackward; } }
     public int CanLeft { get { return _canMoveLeft; } }
@@ -168,6 +170,12 @@ public class CharacterState
             case ActionType.Clear:
                 ClearState();
                 break;
+            case ActionType.PullTrigger:
+                _pullingTrigger = true;
+                break;
+            case ActionType.ReleaseTrigger:
+                _pullingTrigger = false;
+                break;
             default:
                 break;
         }
@@ -227,6 +235,12 @@ public class CharacterState
                 break;
             case ActionType.Rotation:
                 _rotX -= _action.Value;
+                break;
+            case ActionType.PullTrigger:
+                _pullingTrigger = false;
+                break;
+            case ActionType.ReleaseTrigger:
+                _pullingTrigger = true;
                 break;
             default:
                 break;

@@ -1,8 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
-using System.Collections.Generic; 
+using System.Collections.Generic;
+using System;
 
-public class InteractableTrigger : MonoBehaviour
+public class TargetableTrigger : MonoBehaviour, ITargetable
 {
 
     public float MinDistanceToActivate { get { return _minDistanceToActivate;  } }
@@ -23,6 +24,13 @@ public class InteractableTrigger : MonoBehaviour
     Color _startingColor;
     Renderer _renderer;
     public bool IsVisible { get { return _renderer.isVisible; } }
+
+    public Vector3 Position { get { return transform.position; } }
+
+    public bool isActivatable { get { return true;} }
+    public bool isAttackable { get { return false;} }
+    public CombatState Combat { get { return null; } }
+    public GameObject Go { get { return gameObject; } }
 
     public void Activate()
     {
@@ -54,11 +62,11 @@ public class InteractableTrigger : MonoBehaviour
             }
         }
     }
-    public void Target()
+    public void Targeted()
     {
         _mat.color = Color.yellow; 
     }
-    public void UnTarget()
+    public void UnTargeted()
     {
         _mat.color = _startingColor; 
     }
@@ -75,6 +83,16 @@ public class InteractableTrigger : MonoBehaviour
     }
     void Start()
     {
-        GameManager.RegisterInteractableTrigger(this); 
+        GameManager.RegisterTargetable(this); 
+    }
+
+    public void SetAction(IAction _action)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void SetAction(IAction _action, bool _evaluatSource)
+    {
+        throw new NotImplementedException();
     }
 }

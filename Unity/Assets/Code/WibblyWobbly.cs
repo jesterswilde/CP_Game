@@ -6,6 +6,7 @@ public abstract class WibblyWobbly : MonoBehaviour {
 
     protected History _history = new History();
     protected List<IAction> _actionsToBeConsumed = new List<IAction>();
+    protected CombatState _combat; 
     protected abstract void UseAction(IAction _action, float _time);
     protected abstract void ReverseAction(IAction _action, float _time); 
     protected abstract void Act(float _deltaTime);
@@ -13,6 +14,20 @@ public abstract class WibblyWobbly : MonoBehaviour {
     protected void RegisterWibblyWobbly()
     {
         GameManager.RegisterWibblyWobbly(this); 
+    }
+    public virtual void SetAction(IAction _action, bool _determineExternal)
+    {
+        if(_action == null)
+        {
+            return; 
+        }
+        if (_action.IsExternal)
+        {
+            SetExternalAction(_action);
+        }else
+        {
+            SetAction(_action); 
+        }
     }
     public virtual void SetAction(IAction _action)
     {

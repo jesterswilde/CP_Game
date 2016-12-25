@@ -3,25 +3,47 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 
+[RequireComponent(typeof(Inventory))]
+[RequireComponent(typeof(CombatState))]
 public class Character : WibblyWobbly {
-
+    [SerializeField]
+    float _health = 20;
+    [SerializeField]
+    float _currentHealth; 
+    [SerializeField]
+    float _accuracy = 80; 
+    [SerializeField]
+    float _damageReduction = 0;
+    [SerializeField]
+    float _dodge = 5; 
     [SerializeField]
     float speed = 5;
+    bool _isDead = false; 
     CharacterCam _cam;
     public CharacterCam Cam { get { return _cam; } }
     Transform _camTrans; 
     public Transform CamPoint { get { return _cam.CameraSpot; } }
     [SerializeField]
-    float _maxTargetDistance = 0.1f; 
-    InteractableTrigger _activatableTarget;
-    IAttackable _attackableTarget;
+    float _maxTargetDistance = 0.1f;
+    [SerializeField]
+    Transform[] _vitalsTrans;
+    Vitals _vitals = new Vitals(); 
+    ITargetable _currentTarget;
+    int _rollI; 
 
     CharacterState _state = new CharacterState();
+    Renderer _renderer; 
 
     [SerializeField]
     bool _playerControlled = false;
+    Inventory _inventory;
 
     #region Time
+    public override void Play(float _time)
+    {
+        SetAction(_combat.PullTrigger(_time, _currentTarget), true);
+        base.Play(_time);
+    }
     protected override void Act(float _deltaTime)
     {
         transform.forward = _cam.CameraForward(_state.XRot);
@@ -43,8 +65,9 @@ public class Character : WibblyWobbly {
         {
             case ActionType.Activate:
                 _action.Target.Activate();
-                return; 
+                return;
         }
+        SetAction(_combat.UseAction(_action), true); 
         _state.UseAction(_action);
     }
     protected override void ReverseAction(IAction _action, float _time)
@@ -55,6 +78,7 @@ public class Character : WibblyWobbly {
                 _action.Target.RewindActivation();
                 return;
         }
+        _combat.ReverseAction(_action);
         _state.ReverseAction(_action);
     }
     public override void SetAction(IAction _action)
@@ -65,18 +89,28 @@ public class Character : WibblyWobbly {
         }
     }
     #endregion
-    
+
+    public void Die()
+    {
+
+    }
+    public void ReverseDying()
+    {
+
+    }
+
     public void Activate()
     {
-        if(_activatableTarget != null && (transform.position - _activatableTarget.transform.position).magnitude < _activatableTarget.MinDistanceToActivate)
+        if(_currentTarget != null && _currentTarget.isActivatable &&
+            (transform.position - _currentTarget.Position).magnitude < _currentTarget.MinDistanceToActivate)
         {
-            Ray _ray = new Ray(transform.position, _activatableTarget.transform.position - transform.position);
+            Ray _ray = new Ray(transform.position, _currentTarget.Position - transform.position);
             RaycastHit _hit; 
             if(Physics.Raycast(_ray, out _hit, GameManager.CollMask))
             {
-                if(System.Object.ReferenceEquals(_hit.collider.gameObject, _activatableTarget.gameObject))
+                if(System.Object.ReferenceEquals(_hit.collider.gameObject, _currentTarget.Go))
                 {
-                    _activatableTarget.Activate(); 
+                    _currentTarget.Activate(); 
                 }
             }
         }
@@ -95,7 +129,7 @@ public class Character : WibblyWobbly {
     }
     public IAction CreateTargetAction()
     {
-        return new TargetedAction(ActionType.Activate, _activatableTarget); 
+        return new TargetedAction(ActionType.Activate, _currentTarget); 
     }
 
     public void SetAsActivePlayer()
@@ -129,7 +163,7 @@ public class Character : WibblyWobbly {
     }
     public void ClearState()
     {
-        SetAction(_state.ActionsToReset());
+        SetAction(_combat.ActionsToReset(_state.ActionsToReset()));
     }
     public void FaceCamrea()
     {
@@ -140,12 +174,13 @@ public class Character : WibblyWobbly {
     }
     public void SetStateToKeyboard()
     {
-        SetAction(_state.SetStateToKeyboard());
+        SetAction(_combat.SetStateToKeyboard(_state.SetStateToKeyboard()));
     }
 
         // Use this for initialization
     void Start () {
-        SetAction(new Action(ActionType.Null)); 
+        SetAction(new Action(ActionType.Null));
+        _rollI =  SRand.GetStartingIndex(); 
 	}
     void Awake()
     {
@@ -153,31 +188,35 @@ public class Character : WibblyWobbly {
         RegisterWibblyWobbly(); 
         _cam = gameObject.GetComponent<CharacterCam>();
         _camTrans = _cam.CameraSpot;
+        _inventory = gameObject.GetComponent<Inventory>();
+        _currentHealth = _health;
+        _renderer = GetComponent<Renderer>();
+        _combat = GetComponent<CombatState>(); 
+        if(_vitalsTrans.Length > 0)
+        {
+            _vitals.SetVitals(_vitalsTrans);
+        }else
+        {
+            _vitals.SetVitals(transform); 
+        }
     }
 	
 	// Update is called once per frame
 	void Update () {
-        TargetableDist _trigger = GameManager.ClosestInteractableToViewport(_maxTargetDistance);
-        AttackableDist _attackable = GameManager.ClosestAttackableToViewport(_trigger.Distance); 
-        if(_attackable.Target != null)
+        ITargetable _target = GameManager.GetTargeted(GameSettings.MaxTargetDistance); 
+        if(_target == null && _currentTarget != null)
         {
-            
-        }else
+            _currentTarget.UnTargeted();
+            _currentTarget = _target; 
+        }
+        if(!System.Object.ReferenceEquals(_target, _currentTarget) && _target != null)
         {
-            if(_trigger.Target == null && _activatableTarget != null)
+            if(_currentTarget != null)
             {
-                _activatableTarget.UnTarget();
-                _activatableTarget = _trigger.Target; 
+                _currentTarget.UnTargeted();
             }
-            if(!System.Object.ReferenceEquals(_trigger.Target, _activatableTarget) && _trigger.Target != null)
-            {
-                if(_activatableTarget != null)
-                {
-                    _activatableTarget.UnTarget();
-                }
-                _activatableTarget = _trigger.Target;
-                _activatableTarget.Target(); 
-            }
+            _currentTarget = _target;
+            _currentTarget.Targeted(); 
         }
     }
 

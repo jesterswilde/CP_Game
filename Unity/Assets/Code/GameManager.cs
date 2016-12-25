@@ -3,6 +3,8 @@ using System.Collections;
 using System;
 using System.Collections.Generic;
 
+[RequireComponent(typeof(GameSettings))]
+[RequireComponent(typeof(Combat))]
 public class GameManager : MonoBehaviour {
 
     [SerializeField]
@@ -26,8 +28,7 @@ public class GameManager : MonoBehaviour {
     static List<Character> _characters = new List<Character>();
     static int _characterIndex = 0;
     static List<WibblyWobbly> _timeyWimeys = new List<WibblyWobbly>();
-    static List<InteractableTrigger> _interactables = new List<InteractableTrigger>();
-    static List<IAttackable> _attackables = new List<IAttackable>(); 
+    static List<ITargetable> _targetables = new List<ITargetable>();
     [SerializeField]
     ObserverCam ob;
     static ObserverCam _obCam;
@@ -46,43 +47,24 @@ public class GameManager : MonoBehaviour {
     static ICamera _nextCamController;
 
     #region Camera
-    public static TargetableDist ClosestInteractableToViewport(float _threshold)
+    public static ITargetable GetTargeted(float _threshold)
     {
-        InteractableTrigger _target = null; 
-        for(int i = 0; i < _interactables.Count; i++)
+        ITargetable _target = null; 
+        for(int i = 0; i < _targetables.Count; i++)
         {
-            InteractableTrigger _interactable = _interactables[i];
-            if (_interactable.IsVisible) 
+            ITargetable _targetable = _targetables[i];
+            if (_targetable.IsVisible) 
             {
-                 Vector3 _point = Camera.main.WorldToViewportPoint(_interactable.transform.position);
+                 Vector3 _point = Camera.main.WorldToViewportPoint(_targetable.Position);
                 float _dist = Mathf.Pow(_point.x - 0.5f, 2) + Mathf.Pow(_point.y - 0.5f, 2);
                 if(_dist < _threshold)
                 {
                     _threshold = _dist;
-                    _target = _interactable; 
+                    _target = _targetable; 
                 }
             }
         }
-        return new TargetableDist(_target, _threshold); 
-    }
-    public static AttackableDist ClosestAttackableToViewport(float _threshold)
-    {
-        IAttackable _target = null;
-        for (int i = 0; i < _attackables.Count; i++)
-        {
-            IAttackable _attackable = _attackables[i];
-            if (_attackable.IsVisible)
-            {
-                Vector3 _point = Camera.main.WorldToViewportPoint(_attackable.Position);
-                float _dist = Mathf.Pow(_point.x - 0.5f, 2) + Mathf.Pow(_point.y - 0.5f, 2);
-                if (_dist < _threshold)
-                {
-                    _threshold = _dist;
-                    _target = _attackable;
-                }
-            }
-        }
-        return new AttackableDist(_target, _threshold);
+        return _target; 
     }
     static void SwitchCamera(ICamera _next)
     {
@@ -259,9 +241,9 @@ public class GameManager : MonoBehaviour {
     {
         _timeyWimeys.Add(_timey); 
     }
-    public static void RegisterInteractableTrigger(InteractableTrigger _trigger)
+    public static void RegisterTargetable(ITargetable _trigger)
     {
-        _interactables.Add(_trigger); 
+        _targetables.Add(_trigger); 
     }
     public static void TimeysApplyActions()
     {
@@ -293,8 +275,6 @@ public class GameManager : MonoBehaviour {
     void Update () {
         _totalUpdateTime += Time.deltaTime;
         _gameTime = _fixedGameTime; 
-        //_gameTime += Time.deltaTime * _gameSpeed;
-        //_gameTime = Mathf.Max(_gameTime, 0); 
         if (Input.GetKeyDown(KeyCode.Backspace))
         {
             Observe();
@@ -339,10 +319,13 @@ public class GameManager : MonoBehaviour {
     {
         t = this; 
         _obCam = ob;
-        _collMask = collMask; 
+        _collMask = collMask;
+        SRand.Awake(); 
     }
     void Start()
     {
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false; 
         SetSpeed(GameSettings.ForwardSpeed); 
         SetActiveCharacter(_characters[_characterIndex]);
     }

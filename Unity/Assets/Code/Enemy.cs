@@ -50,7 +50,7 @@ public class Enemy : WibblyWobbly, IAI {
             case ActionType.AIWaitUnset:
                 _currentAA = null;
                 break; 
-            case ActionType.AIAlert:
+            case ActionType.Alert:
                 Debug.Log(gameObject.name + " saw da cybapunk at approximately " + GameManager.GameTime);
                 break; 
         }
@@ -126,7 +126,7 @@ public class Enemy : WibblyWobbly, IAI {
             base.SetExternalAction(_action);
         }else
         {
-            if(_action.Type == ActionType.AIAlert)
+            if(_action.Type == ActionType.Alert)
             {
                 Debug.Log("Cybapunk spotted at approximately " + _action.Time); 
             }

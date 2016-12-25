@@ -11,7 +11,8 @@ public class PlayerInput {
             Input.GetKey(KeyCode.W),
             Input.GetKey(KeyCode.D),
             Input.GetKey(KeyCode.S),
-            Input.GetKey(KeyCode.A)
+            Input.GetKey(KeyCode.A),
+            Input.GetMouseButton(0) && !Input.GetKey(KeyCode.LeftShift)
         };
     }
     public static void CheckSpeedButtons()
@@ -28,15 +29,15 @@ public class PlayerInput {
         {
             GameManager.ShowCtrlMenu(false); 
         }
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && Input.GetKey(KeyCode.LeftShift))
         {
             GameManager.SetSpeed(GameSettings.RewindSpeed);
         }
-        if (Input.GetMouseButtonUp(0))
+        if (Input.GetMouseButtonUp(0) && Input.GetKey(KeyCode.LeftShift))
         {
             GameManager.SetSpeed(GameSettings.ForwardSpeed);
         }
-        if (Input.GetMouseButtonDown(1) && GameManager.ActiveCharacter != null)
+        if (Input.GetMouseButtonDown(1) && GameManager.ActiveCharacter != null && Input.GetKey(KeyCode.LeftShift))
         {
             GameManager.SetSpeed(GameSettings.ForwardSpeed);
             GameManager.ActiveCharacter.DeleteFuture();

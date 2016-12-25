@@ -3,11 +3,11 @@ using System.Collections;
 
 public struct TargetableDist
 {
-    InteractableTrigger _target;
+    TargetableTrigger _target;
     float _dist; 
-    public InteractableTrigger Target { get { return _target; } }
+    public TargetableTrigger Target { get { return _target; } }
     public float Distance { get { return _dist; } }
-    public TargetableDist(InteractableTrigger target, float dist)
+    public TargetableDist(TargetableTrigger target, float dist)
     {
         _target = target;
         _dist = dist; 
@@ -16,11 +16,11 @@ public struct TargetableDist
 
 public struct AttackableDist
 {
-    IAttackable _target;
+    ITargetable _target;
     float _dist;
-    public IAttackable Target { get { return _target; } }
+    public ITargetable Target { get { return _target; } }
     public float Distance { get { return _dist; } }
-    public AttackableDist(IAttackable target, float dist)
+    public AttackableDist(ITargetable target, float dist)
     {
         _target = target;
         _dist = dist; 

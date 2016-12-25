@@ -9,6 +9,7 @@ public class GameSettings : MonoBehaviour {
     static float _minJumpDuration;
     static float _maxJumpSpeed;
     static float _fixedTimestep;
+    static float _maxTargetDistance; 
     static LayerMask _bulletCollLayers; 
     [SerializeField]
     float rewindSpeed = -5;
@@ -24,6 +25,8 @@ public class GameSettings : MonoBehaviour {
     float fixedTimstep = 0.02f;
     [SerializeField]
     LayerMask bulletCollLayers;
+    [SerializeField]
+    float maxTargetDistance = 0.1f; 
     public static float RewindSpeed { get { return _rewindSpeed; } }
     public static float[] Speeds { get { return _speeds; } }
     public static float ForwardSpeed { get { return _forwardSpeed; } }
@@ -31,6 +34,7 @@ public class GameSettings : MonoBehaviour {
     public static float MaxJumpSpeed { get { return _maxJumpSpeed; } }
     public static float FixedTimestep { get { return _fixedTimestep; } }
     public static LayerMask BulletCollLayers { get { return _bulletCollLayers; } }
+    public static float MaxTargetDistance { get { return _maxTargetDistance; } }
 
 	void Awake()
     {
@@ -40,6 +44,7 @@ public class GameSettings : MonoBehaviour {
         _maxJumpSpeed = maxJumpSpeed;
         _minJumpDuration = minJumpDuration;
         _fixedTimestep = fixedTimstep;
-        _bulletCollLayers = bulletCollLayers; 
+        _bulletCollLayers = bulletCollLayers;
+        _maxTargetDistance = maxTargetDistance;  
     }
 }

@@ -1,22 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic; 
 using System;
 
-public class Turret : MonoBehaviour, IAttackable {
+public class Turret : Interactable, ITargetable {
 
     [SerializeField]
-    float _health;
-    [SerializeField]
-    float _accuracy;
-    [SerializeField]
-    float _damageReduction;
-    [SerializeField]
-    float _dodge;
-    [SerializeField]
-    float _damage;
-    [SerializeField]
-    Transform[] _vitalPoints; 
-    Vitals _vitals = new Vitals(); 
+    bool _isActive = true;
+    bool _isAlerted = false; 
 
     Renderer _renderer;
     Color _baseColor;
@@ -25,7 +16,11 @@ public class Turret : MonoBehaviour, IAttackable {
     public Vector3 Position { get { return transform.position;  } }
 
 
-    public float Dodge { get { return _dodge; } }
+    public bool isActivatable { get { return false; } }
+    public bool isAttackable { get { return (_combat != null) ? true : false; } }
+    public CombatState Combat { get { return _combat; } }
+    public GameObject Go { get { return gameObject; } }
+    public float MinDistanceToActivate { get { return float.NaN; } }
 
     public void Targeted()
     {
@@ -36,42 +31,57 @@ public class Turret : MonoBehaviour, IAttackable {
     {
         _renderer.material.color = _baseColor; 
     }
-    public float AmountOfBodyExposed(Vector3 _gunPoint)
+    public void Die()
     {
-        return _vitals.AmountOfBodyExposed(_gunPoint); 
     }
-    public void ShotBy(Weapon _bullet)
+    public void ReverseDying()
     {
-        _health -= _bullet.Damage - Math.Max(0, _damageReduction - _bullet.AP); 
-        if(_health <= 0)
-        {
-            Death(); 
-        }
     }
-    public void UnShitBy(Weapon _bullet)
+
+    protected override void UseAction(IAction _action, float _time)
     {
-        _health += _bullet.Damage - Math.Max(0, _damageReduction - _bullet.AP); 
+        Debug.Log(_action.Type); 
+        SetAction(_combat.UseAction(_action), true); 
+        base.UseAction(_action, _time); 
     }
-    public void Death()
+
+    protected override void ReverseAction(IAction _action, float _time)
     {
-        _renderer.enabled = false; 
+        _combat.ReverseAction(_action); 
+        base.ReverseAction(_action, _time); 
     }
-    public void Undeath()
-    {
-        _renderer.enabled = true; 
-    }
+
     void Awake()
     {
         _renderer = GetComponent<Renderer>();
+        _combat = GetComponent<CombatState>(); 
         _baseColor =  _renderer.material.color;
-        if(_vitalPoints.Length > 0)
-        {
-            _vitals.SetVitals(_vitalPoints);
-        }else
-        {
-            _vitals.SetVitals(transform); 
-        }
+    }
+    void Start()
+    {
+        GameManager.RegisterTargetable(this); 
+        GameManager.RegisterWibblyWobbly(this);
+        SetAction(new Action(ActionType.Null)); 
+    }
+
+    public void Activate()
+    {
+        throw new Exception("cannot be activated");
+    }
+
+    public void RewindActivation()
+    {
+        throw new Exception("cannot be activated"); 
     }
 
 
+    protected override void Act(float _deltaTime)
+    {
+        base.Act(_deltaTime); 
+    }
+
+    protected override void ActReverse(float _deltaTIme)
+    {
+        base.Act(_deltaTIme); 
+    }
 }
