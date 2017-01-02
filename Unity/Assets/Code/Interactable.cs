@@ -4,16 +4,26 @@ using System;
 
 public class Interactable : WibblyWobbly, IAI {
 
-    IAtomicAction _currentAction;
+    protected IAtomicAction _currentAction;
     [SerializeField]
-    float _moveSpeed;
+    protected float _moveSpeed;
     public float MoveSpeed { get { return _moveSpeed; } }
     [SerializeField]
-    float _rotationSpeed;
+    protected float _rotationSpeed;
     public float RotationSpeed { get { return _rotationSpeed; } }
     [SerializeField]
-    Task _currentTask; 
+    protected Task _currentTask;
+    protected Task _defaultTask; 
 
+    public override void Play(float _time)
+    {
+        StartPlay(_time - _prevTime); 
+        base.Play(_time);
+    }
+    protected virtual void StartPlay(float _deltaTime)
+    {
+
+    }
     protected override void Act(float _deltaTime)
     {
         if(_currentAction != null)
@@ -21,9 +31,15 @@ public class Interactable : WibblyWobbly, IAI {
             _currentAction.Act(_deltaTime);
         }else
         {
-            if(_currentTask != null && _currentTask.Loop && _history.IsPointerAtHead())
+            if(_currentTask != null && _history.IsPointerAtHead())
             {
-                SetTask(_currentTask); 
+                SetTask(_currentTask);
+            }else
+            {
+                if(_defaultTask != null && _history.IsPointerAtHead())
+                {
+                    SetTask(_defaultTask); 
+                }
             }
         }
     }
@@ -66,12 +82,20 @@ public class Interactable : WibblyWobbly, IAI {
             case ActionType.UnsetTask:
                 _currentTask = null;
                 break;
+            case ActionType.SpliceFuture:
+                _history.SpliceOffPossibleFuture();
+                break; 
             case ActionType.AIMoveForwardUnset:
             case ActionType.AIMoveToUnset:
             case ActionType.AIRotateUnset:
             case ActionType.AIWaitUnset:
+            case ActionType.AIRotateDirUnset:
                 _currentAction = null;
                 break;
+        }
+        if(_combat != null && _action != null)
+        {
+            SetAction(_combat.UseAction(_action), true); 
         }
     }
 
@@ -86,6 +110,7 @@ public class Interactable : WibblyWobbly, IAI {
             case ActionType.AIRotateUnset:
                 _currentAction = new AARotate(this);
                 _currentAction.ReverseAction(_action, _time);
+                Debug.Log(_action.Value);
                 break; 
             case ActionType.AIMoveToUnset:
                 _currentAction = new AAMoveTo(this);
@@ -109,43 +134,73 @@ public class Interactable : WibblyWobbly, IAI {
             case ActionType.AIMoveTo:
             case ActionType.AIRotate: 
             case ActionType.AIWait:
+            case ActionType.AIRotateDir:
                 _currentAction = null;
                 break; 
             case ActionType.SpliceFuture:
                 _history.ReloadPossibleFuture(_action.PossibleFuture);
-                if(_history.Pointer.Next != null)
-                {
-                    ReverseAction(_history.Pointer.Next.Action, GameManager.FixedGameTime); 
-                }
                 break;
         }
+        if (_combat != null)
+        {
+            _combat.ReverseAction(_action);
+        }
     }
-
-    protected virtual void ProcessTask()
+    protected virtual void UnloadAll()
     {
-        _history.AddToHead(new Action(ActionType.ClearFuture, true));
+        _history.SpliceOffPossibleFuture();
+        if (_currentAction != null)
+        {
+            SetAction(_currentAction.Unset());
+        }
+        if (_currentTask != null)
+        {
+            SetAction(new TaskAction(ActionType.UnsetTask, _currentTask, true));
+        }
+    }
+    public void SetAtomicAction(ActionType _type, IAI _ai, Vector3 _target, float _time)
+    {
+        _history.SpliceOffPossibleFuture();
+        if (_currentAction != null)
+        {
+            SetAction(_currentAction.Unset());
+        }
+        switch (_type)
+        {
+            case ActionType.AIRotate:
+                AARotate.SimulateAction(_ai, _target, _time);
+                break; 
+        } 
+    }
+    public virtual void ExternalTrigger(Task _task, TriggerType _trigger, Character _character  )
+    {
+        if(_task != null)
+        {
+            SetTask(_task);
+        }
     }
     public override void SetExternalAction(IAction _action)
     {
-        _history.SpliceOffPossibleFuture(); 
         base.SetExternalAction(_action);
     }
     public virtual void SetTask(Task _task)
     {
         if (GameManager.IsPlaying)
         {
-            _history.SpliceOffPossibleFuture();
-            if(_currentTask != null)
-            {
-                SetAction(new TaskAction(ActionType.UnsetTask, _currentTask));
-            }
+            UnloadAll(); 
             SetAction(new TaskAction(ActionType.SetTask, _task)); 
+            _task.SimulateTask(this, GameManager.FixedGameTime); 
         }
-        _task.SimulateTask(this, GameManager.FixedGameTime); 
     }
     void Awake()
     {
         _history.AddToHead(new Action(ActionType.Null));
         RegisterWibblyWobbly();
+        _combat = GetComponent<CombatState>();
+        _defaultTask = _currentTask; 
+        if(_combat != null)
+        {
+            _combat.SetCallbacks(new SetActionDelegate(SetAction));
+        }
     }
 }

@@ -18,9 +18,8 @@ public class AARotate : IAtomicAction
 
     public void Act(float _deltaTime)
     {
-        Vector3 _forward = _enemy.transform.forward;
         float _rotAmount = _deltaTime * _enemy.RotationSpeed * _dir;
-        _remainingRotation -= _rotAmount; 
+        _remainingRotation -= _rotAmount;
         _enemy.transform.Rotate(new Vector3(0, _rotAmount, 0));
     }
 
@@ -53,7 +52,7 @@ public class AARotate : IAtomicAction
 
     public IAction Unset()
     {
-        return new ValueAction(ActionType.AIRotateUnset, _maxRotation); 
+        return new ValueAction(ActionType.AIRotateUnset, _maxRotation, true); 
     }
 
     public static IAction CreateAction(Transform _enemy, Vector3 _target, float _time)
@@ -75,5 +74,15 @@ public class AARotate : IAtomicAction
         _enemy.SetAction(new ValueAction(ActionType.AIRotate, _angle, _enemy.Time));
         _enemy.AddToTIme(Math.Abs(_angle) / _enemy.RotationSpeed);
         _enemy.SetAction(new ValueAction(ActionType.AIRotateUnset, _angle, _enemy.Time));
+    }
+    public static void SimulateAction(IAI _ai, Vector3 _target, float _startTime)
+    {
+        Vector3 _tempTarget = new Vector3(_target.x, _ai.transform.position.y, _target.z);
+        Vector3 _up = _ai.transform.up;
+        Vector3 _dir = _tempTarget - _ai.transform.position;
+        float _angle = Util.AngleBetweenVector3(_ai.transform.forward, _dir, _up);
+        _ai.SetAction(new ValueAction(ActionType.AIRotate, _angle, _startTime));
+        float _endTime = Math.Abs(_angle) / _ai.RotationSpeed + _startTime; 
+        _ai.SetAction(new ValueAction(ActionType.AIRotateUnset, _angle,  _endTime));
     }
 }

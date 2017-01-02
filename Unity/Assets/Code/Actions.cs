@@ -38,6 +38,8 @@ public class Action : IAction{
     public ITargetable Target { get { return null; } }
     public Task Task { get { return null; } }
     public Weapon Weapon { get { return null; } }
+    public CombatState Combat { get { return null; } }
+    public IBehavior Behavior { get { return null; } }
 }
 
 public class ValueAction : IAction
@@ -82,6 +84,8 @@ public class ValueAction : IAction
     public ITargetable Target { get { return null; } }
     public Task Task { get { return null; } }
     public Weapon Weapon { get { return null; } }
+    public CombatState Combat { get { return null; } }
+    public IBehavior Behavior { get { return null; } }
 }
 public class VectorAction : IAction
 {
@@ -125,6 +129,8 @@ public class VectorAction : IAction
     public ITargetable Target { get { return null; } }
     public Task Task { get { return null; } }
     public Weapon Weapon { get { return null; } }
+    public CombatState Combat { get { return null; } }
+    public IBehavior Behavior { get { return null; } }
 }
 public class FutureActions : IAction
 {
@@ -154,6 +160,8 @@ public class FutureActions : IAction
     public ITargetable Target { get { return null; } }
     public Task Task { get { return null; } }
     public Weapon Weapon { get { return null; } }
+    public CombatState Combat { get { return null; } }
+    public IBehavior Behavior { get { return null; } }
 }
 
 public class TargetedAction : IAction
@@ -186,6 +194,8 @@ public class TargetedAction : IAction
     public ITargetable Target { get { return _target; } }
     public Task Task { get { return null; } }
     public Weapon Weapon { get { return null; } }
+    public CombatState Combat { get { return null; } }
+    public IBehavior Behavior { get { return null; } }
 }
 
 public class TaskAction : IAction
@@ -218,6 +228,8 @@ public class TaskAction : IAction
     public ITargetable Target { get { return null; } }
     public Task Task { get { return _task; } }
     public Weapon Weapon { get { return null; } }
+    public CombatState Combat { get { return null; } }
+    public IBehavior Behavior { get { return null; } }
 }
 
 public class WeaponAction : IAction
@@ -250,8 +262,78 @@ public class WeaponAction : IAction
     public ITargetable Target { get { return null; } }
     public Task Task { get { return null; } }
     public Weapon Weapon { get { return _weapon; } }
+    public CombatState Combat { get { return null; } }
+    public IBehavior Behavior { get { return null; } }
 }
 
+
+public class CombatAction : IAction
+{
+    float _time;
+    bool _isExternal = false;
+    ActionType _type;
+    CombatState _combat;
+
+    public CombatAction(ActionType type, CombatState combat)
+    {
+        _type = type;
+        _combat = combat;
+        _time = GameManager.FixedGameTime;
+    }
+    public CombatAction(ActionType type, CombatState combat, bool external)
+    {
+        _type = type;
+        _combat = combat; 
+        _isExternal = external;
+        _time = GameManager.FixedGameTime;
+    }
+
+    public bool IsExternal { get { return _isExternal; } }
+    public float Time { get { return _time; } }
+    public ActionType Type { get { return _type; } }
+    public HistoryNode PossibleFuture { get { return null; } }
+    public float Value { get { return float.NaN; } }
+    public Vector3 Vector { get { return Vector3.zero; } }
+    public ITargetable Target { get { return null; } }
+    public Task Task { get { return null; } }
+    public Weapon Weapon { get { return null; } }
+    public CombatState Combat { get { return _combat; } }
+    public IBehavior Behavior { get { return null; } }
+}
+
+public class BehaviorAction : IAction
+{
+    float _time;
+    bool _isExternal = false;
+    ActionType _type;
+    IBehavior _behavior;
+
+    public BehaviorAction(ActionType type, IBehavior behavior)
+    {
+        _type = type;
+        _behavior = behavior; 
+        _time = GameManager.FixedGameTime;
+    }
+    public BehaviorAction(ActionType type, IBehavior behavior, bool external)
+    {
+        _type = type;
+        _behavior = behavior; 
+        _isExternal = external;
+        _time = GameManager.FixedGameTime;
+    }
+
+    public bool IsExternal { get { return _isExternal; } }
+    public float Time { get { return _time; } }
+    public ActionType Type { get { return _type; } }
+    public HistoryNode PossibleFuture { get { return null; } }
+    public float Value { get { return float.NaN; } }
+    public Vector3 Vector { get { return Vector3.zero; } }
+    public ITargetable Target { get { return null; } }
+    public Task Task { get { return null; } }
+    public Weapon Weapon { get { return null; } }
+    public CombatState Combat { get { return null; } }
+    public IBehavior Behavior { get { return _behavior; } }
+}
 
 public enum ActionType
 {
@@ -283,6 +365,8 @@ public enum ActionType
     Die,
     SetTask,
     UnsetTask,
+    BSeekAndShoot,
+    BSeekAndShootUnset,
     AIWait,
     AIWaitUnset,
     AIMoveForward,
@@ -293,9 +377,12 @@ public enum ActionType
     AIRotateDirUnset,
     AIMoveTo, 
     AIMoveToUnset,
+    SawTarget,
+    DidntSeeTarget,
     SpliceFuture,
     ClearFuture, 
     Null, 
+    SawPlayer,
     Alert,
     UnAlert
 }

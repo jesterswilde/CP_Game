@@ -273,6 +273,7 @@ public class GameManager : MonoBehaviour {
     
     // Update is called once per frame
     void Update () {
+        //CheckReplaying();
         _totalUpdateTime += Time.deltaTime;
         _gameTime = _fixedGameTime; 
         if (Input.GetKeyDown(KeyCode.Backspace))
@@ -313,7 +314,7 @@ public class GameManager : MonoBehaviour {
         {
             Rewind(_fixedGameTime);
         }
-        CheckReplaying(); 
+        
     }
     void Awake()
     {

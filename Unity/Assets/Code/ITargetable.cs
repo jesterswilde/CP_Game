@@ -9,7 +9,7 @@ public interface ITargetable {
     bool isActivatable { get; }
     bool isAttackable { get; }
     CombatState Combat { get; }
-    void Activate();
+    void Activate(Character _character);
     void RewindActivation();
     GameObject Go { get; }
     float MinDistanceToActivate { get; }

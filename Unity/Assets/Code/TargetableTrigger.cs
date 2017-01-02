@@ -7,12 +7,16 @@ public class TargetableTrigger : MonoBehaviour, ITargetable
 {
 
     public float MinDistanceToActivate { get { return _minDistanceToActivate;  } }
+    /*
     [SerializeField]
     Interactable _interactable;
     [SerializeField]
     LayerMask _collMask;
     [SerializeField]
     List<Task> _tasks = new List<Task>();
+    */
+    [SerializeField]
+    List<AlertList> _alertList = new List<AlertList>(); 
     [SerializeField]
     int _index = 0; 
     [SerializeField]
@@ -32,22 +36,26 @@ public class TargetableTrigger : MonoBehaviour, ITargetable
     public CombatState Combat { get { return null; } }
     public GameObject Go { get { return gameObject; } }
 
-    public void Activate()
+    public void Activate(Character _character)
     {
-        if(_tasks.Count == 0)
+        if(_alertList.Count == 0)
         {
             return; 
         }
-        if(_index < _tasks.Count)
+        if(_index < _alertList.Count)
         {
-            _interactable.SetTask(_tasks[_index]);
+            AlertList _alerts = _alertList[_index]; 
+            foreach(AlertActions _alert in _alerts.alerts)
+            {
+                _alert.Interactable.ExternalTrigger(_alert.Task, _alert.Enter, _character);
+            }
             _index++;
         }else
         {
             if (_loop)
             {
                 _index = 0;
-                Activate(); 
+                Activate(_character); 
             }
         } 
     }
@@ -58,7 +66,7 @@ public class TargetableTrigger : MonoBehaviour, ITargetable
         {
             if(_index < 0)
             {
-                _index = _tasks.Count -1    ; 
+                _index = _alertList.Count -1; 
             }
         }
     }
@@ -75,7 +83,7 @@ public class TargetableTrigger : MonoBehaviour, ITargetable
     {
         _mat = GetComponent<Renderer>().material;
         _startingColor = _mat.color; 
-        if(_interactable == null)
+        if(_alertList.Count == 0)
         {
             throw new System.Exception(gameObject.name + " has no interactable object"); 
         }

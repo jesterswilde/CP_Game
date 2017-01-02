@@ -7,16 +7,6 @@ using System;
 [RequireComponent(typeof(CombatState))]
 public class Character : WibblyWobbly {
     [SerializeField]
-    float _health = 20;
-    [SerializeField]
-    float _currentHealth; 
-    [SerializeField]
-    float _accuracy = 80; 
-    [SerializeField]
-    float _damageReduction = 0;
-    [SerializeField]
-    float _dodge = 5; 
-    [SerializeField]
     float speed = 5;
     bool _isDead = false; 
     CharacterCam _cam;
@@ -25,9 +15,6 @@ public class Character : WibblyWobbly {
     public Transform CamPoint { get { return _cam.CameraSpot; } }
     [SerializeField]
     float _maxTargetDistance = 0.1f;
-    [SerializeField]
-    Transform[] _vitalsTrans;
-    Vitals _vitals = new Vitals(); 
     ITargetable _currentTarget;
     int _rollI; 
 
@@ -41,7 +28,10 @@ public class Character : WibblyWobbly {
     #region Time
     public override void Play(float _time)
     {
-        SetAction(_combat.PullTrigger(_time, _currentTarget), true);
+        if(_currentTarget != null)
+        {
+            SetAction(_combat.PullTrigger(_time, _currentTarget.Combat), true);
+        }
         base.Play(_time);
     }
     protected override void Act(float _deltaTime)
@@ -64,7 +54,7 @@ public class Character : WibblyWobbly {
         switch (_action.Type)
         {
             case ActionType.Activate:
-                _action.Target.Activate();
+                _action.Target.Activate(this);
                 return;
         }
         SetAction(_combat.UseAction(_action), true); 
@@ -92,7 +82,7 @@ public class Character : WibblyWobbly {
 
     public void Die()
     {
-
+        ClearState(); 
     }
     public void ReverseDying()
     {
@@ -110,7 +100,7 @@ public class Character : WibblyWobbly {
             {
                 if(System.Object.ReferenceEquals(_hit.collider.gameObject, _currentTarget.Go))
                 {
-                    _currentTarget.Activate(); 
+                    _currentTarget.Activate(this); 
                 }
             }
         }
@@ -189,15 +179,15 @@ public class Character : WibblyWobbly {
         _cam = gameObject.GetComponent<CharacterCam>();
         _camTrans = _cam.CameraSpot;
         _inventory = gameObject.GetComponent<Inventory>();
-        _currentHealth = _health;
         _renderer = GetComponent<Renderer>();
-        _combat = GetComponent<CombatState>(); 
-        if(_vitalsTrans.Length > 0)
+        _combat = GetComponent<CombatState>();
+        if(_combat == null)
         {
-            _vitals.SetVitals(_vitalsTrans);
-        }else
+            _combat = gameObject.AddComponent<CombatState>(); 
+        }
+        if (_combat != null)
         {
-            _vitals.SetVitals(transform); 
+            _combat.SetCallbacks(new SetActionDelegate(SetAction));
         }
     }
 	

@@ -3,84 +3,163 @@ using System.Collections;
 using System;
 using System.Collections.Generic;
 
-public class BSeekAndShoot : MonoBehaviour, IBehavior
+public class BSeekAndShoot : IBehavior
 {
-    [SerializeField]
-    float _firingAngle;
-    [SerializeField]
-    float _timeToLoseTarget;
+    float _firingAngle = 90;
+    float _timeToLoseTarget = 2f;
     float _timeSinceSeenTarget = 0;
     float _timeSinceLastCheck = 0; 
-    float _checkInterval = 1f; 
-    ITargetable _target;
+    float _checkInterval = 0.5f;
+    float _distanceThrehold = 0.1f;
+    Vector3 _lastKnownPostion; 
+    CombatState _target;
     CombatState _combat; 
     IAI _self;
-    bool _isRotating;
-    bool _shouldFire = false; 
+    float _rotation = 0;
+    bool _shouldFire = false;
 
+
+    public void StartBehavior(IAI self, CombatState target)
+    {
+        _target = target;
+        _self = self;
+        _combat = _self.Combat;
+        _lastKnownPostion = _target.transform.position;
+        _self.SetAtomicAction(ActionType.AIRotate, _self, _target.transform.position, GameManager.FixedGameTime); 
+    }
+    void ReturnControl()
+    {
+        _self.SetAction(new Action(ActionType.UnAlert, true)); 
+    }
+    public IAction EndBehavior()
+    {
+        return new BehaviorAction(ActionType.BSeekAndShootUnset, this, true); 
+    }
+    void SawTarget(IAction _action)
+    {
+        if (!float.IsNaN(_action.Value))
+        {
+            _timeSinceSeenTarget = 0;
+        }
+    }
+    void ReverseSawTarget(IAction _action)
+    {
+        if (float.IsNaN(_action.Value))
+        {
+            _lastKnownPostion = _action.Vector;
+        }else
+        {
+            _timeSinceSeenTarget += _action.Value; 
+        }
+    }
+    void DidntSeeTarget()
+    {
+        _timeSinceSeenTarget += _checkInterval;
+        if (_timeSinceSeenTarget > _timeToLoseTarget)
+        {
+            Debug.Log("leaving seek");
+            ReturnControl();
+        }
+    }
+    void ReverseDidntSeeTarget()
+    {
+        _timeSinceSeenTarget -= _checkInterval; 
+    }
     void CheckIfStillSeeing(float _deltaTime)
     {
         _timeSinceLastCheck += _deltaTime;
         if (_timeSinceLastCheck > _checkInterval)
         {
             _timeSinceLastCheck -= _checkInterval;
-           if(_target.Combat.CanSee(_self.transform.position))
+            if (_target.CanSee(_self.transform.position))
             {
-                _timeSinceSeenTarget = 0;
-            }else
-            {
-                _timeSinceSeenTarget += _checkInterval; 
-                if(_timeSinceSeenTarget > _timeToLoseTarget)
+                _self.SetAction(new ValueAction(ActionType.SawTarget, _timeSinceSeenTarget, true));
+                _self.SetAction(new VectorAction(ActionType.SawTarget, _lastKnownPostion, true));
+                if(Vector3.Distance(_lastKnownPostion, _target.transform.position) > _distanceThrehold)
                 {
-                    EndBehavior(); 
+                    _self.SetAtomicAction(ActionType.AIRotate, _self, _target.transform.position, GameManager.FixedGameTime); 
+                }
+                _lastKnownPostion = _target.transform.position; 
+            }
+            else
+            {
+                Debug.Log("can't see"); 
+                _timeSinceSeenTarget += _checkInterval;
+                if (_timeSinceSeenTarget > _timeToLoseTarget)
+                {
+                    _self.SetAction(new Action(ActionType.DidntSeeTarget, true)); 
                 }
             }
         }
+        if(_timeSinceLastCheck < 0)
+        {
+            _timeSinceLastCheck += _checkInterval;
+        }
     }
-    public void EndBehavior()
+    void AttemptToFire()
     {
-
-    }
-    public void StartBehavior(IAI self, ITargetable _target)
-    {
-
-    }
-    void ShouldFireCheck()
-    {
-        if(Math.Abs(Util.AngleBetweenVector3(transform.forward, _target.Position - transform.forward, transform.up)) < _firingAngle)
+        
+        if (Math.Abs(_rotation) < _firingAngle)
         {
             if (!_shouldFire)
             {
-                _self.SetAction(new Action(ActionType.PullTrigger), true);
+                Debug.Log("starting fire"); 
+                _self.SetAction(new Action(ActionType.PullTrigger, true), true);
                 _shouldFire = true; 
             }
         }else
         {
             if (_shouldFire)
             {
+                Debug.Log("ending fire"); 
                 _shouldFire = false;
-                _self.SetAction(new Action(ActionType.ReleaseTrigger), true); 
+                _self.SetAction(new Action(ActionType.ReleaseTrigger, true), true); 
             }
         }
     }
-
-    public List<IAction> Act(float _deltaTime, Transform _trans)
+    public List<IAction> StartPlay(float _deltaTime)
     {
-        throw new NotImplementedException();
+        CheckIfStillSeeing(_deltaTime);
+        return null;
+    }
+    public List<IAction> Act(float _deltaTime)
+    {
+        if(_combat != null)
+        {
+            AttemptToFire(); 
+            _self.SetAction(_combat.PullTrigger(GameManager.FixedGameTime, _target)); 
+        }
+        return null;
     }
 
-    public void ReverseAct(float _deltaTime, Transform _trans)
+    public void ReverseAct(float _deltaTime)
     {
-        throw new NotImplementedException();
-    }
-
-    public void ReverseAction(IAction _action)
-    {
-        throw new NotImplementedException();
+        CheckIfStillSeeing(_deltaTime);
     }
 
     public IAction UseAction(IAction _action)
     {
-        throw new NotImplementedException();
+        switch (_action.Type)
+        {
+            case ActionType.SawTarget:
+                SawTarget(_action);
+                break;
+            case ActionType.DidntSeeTarget:
+                DidntSeeTarget();
+                break;
+        }
+        return null; 
+    }
+    public void ReverseAction(IAction _action)
+    {
+        switch (_action.Type)
+        {
+            case ActionType.SawTarget:
+                ReverseSawTarget(_action);
+                break;
+            case ActionType.DidntSeeTarget:
+                ReverseDidntSeeTarget();
+                break;
+        }
     }
 }

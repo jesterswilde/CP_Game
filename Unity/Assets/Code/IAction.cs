@@ -11,4 +11,6 @@ public interface IAction {
     ITargetable Target { get; }
     Task Task { get; }
     Weapon Weapon { get; }
+    CombatState Combat { get; }
+    IBehavior Behavior { get; }
 }

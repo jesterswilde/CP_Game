@@ -31,7 +31,6 @@ public class Enemy : WibblyWobbly, IAI {
         }
         base.Play(_time); 
     }
-
     IAtomicAction GetAAFromAction(IAction _action)
     {
         switch (_action.Type)
@@ -139,10 +138,16 @@ public class Enemy : WibblyWobbly, IAI {
         _aaWait = new AAWait();
         _aaMoveTo = new AAMoveTo(this); 
         UseAction(new ValueAction(ActionType.AIWait, 0.5f), 0); 
-        RegisterWibblyWobbly(); 
+        RegisterWibblyWobbly();
+        _combat = GetComponent<CombatState>();
     }
     void Start()
     {
+    }
+
+    public void SetAtomicAction(ActionType _type, IAI _ai, Vector3 _target, float _time)
+    {
+        throw new NotImplementedException();
     }
 }
 
@@ -151,5 +156,6 @@ public enum AIActions
     LookAt,
     MoveFoward,
     Wait,
-    MoveTo
+    MoveTo,
+    Alert
 }

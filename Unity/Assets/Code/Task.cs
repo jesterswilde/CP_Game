@@ -33,6 +33,10 @@ public class Task : MonoBehaviour {
                     break; 
             }
         }
+        if (!_loop)
+        {
+            _enemy.SetAction(new Action(ActionType.UnsetTask, _dummy.Time)); 
+        }
         GameObject.Destroy(_go); 
     }
 }
