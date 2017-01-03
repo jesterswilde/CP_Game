@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 
+
 [RequireComponent(typeof(Inventory))]
 [RequireComponent(typeof(CombatState))]
 public class Character : WibblyWobbly {
@@ -16,7 +17,8 @@ public class Character : WibblyWobbly {
     [SerializeField]
     float _maxTargetDistance = 0.1f;
     ITargetable _currentTarget;
-    int _rollI; 
+    int _rollI;
+    bool _isExtracted; 
 
     CharacterState _state = new CharacterState();
     Renderer _renderer; 
@@ -26,6 +28,10 @@ public class Character : WibblyWobbly {
     Inventory _inventory;
 
     #region Time
+    bool CanAct()
+    {
+        return !_isDead && !_isExtracted;
+    }
     public override void Play(float _time)
     {
         if(_currentTarget != null)
@@ -36,26 +42,41 @@ public class Character : WibblyWobbly {
     }
     protected override void Act(float _deltaTime)
     {
-        transform.forward = _cam.CameraForward(_state.XRot);
-        Vector3 _move = ((_state.Forward * _state.CanForward) - (_state.Backward * _state.CanBackward)) * transform.forward +
-            ((_state.Right * _state.CanRight) - (_state.Left * _state.CanLeft)) * transform.right;
-        transform.position += new Vector3(_move.x, 0, _move.z).normalized * speed * _deltaTime;
+        if (CanAct())
+        {
+            transform.forward = _cam.CameraForward(_state.XRot);
+            Vector3 _move = ((_state.Forward * _state.CanForward) - (_state.Backward * _state.CanBackward)) * transform.forward +
+                ((_state.Right * _state.CanRight) - (_state.Left * _state.CanLeft)) * transform.right;
+            transform.position += new Vector3(_move.x, 0, _move.z).normalized * speed * _deltaTime;
+        }
     }
 
     protected override void ActReverse(float _deltaTime)
     {
-        transform.forward = _cam.CameraForward(_state.XRot);
-        Vector3 _move = ((_state.Forward * _state.CanForward) - (_state.Backward * _state.CanBackward)) * transform.forward + 
-            ((_state.Right * _state.CanRight) - (_state.Left * _state.CanLeft)) * transform.right;
-        transform.position += new Vector3(_move.x, 0, _move.z).normalized * speed * _deltaTime * -1;
+        if (CanAct())
+        {
+            transform.forward = _cam.CameraForward(_state.XRot);
+            Vector3 _move = ((_state.Forward * _state.CanForward) - (_state.Backward * _state.CanBackward)) * transform.forward + 
+                ((_state.Right * _state.CanRight) - (_state.Left * _state.CanLeft)) * transform.right;
+            transform.position += new Vector3(_move.x, 0, _move.z).normalized * speed * _deltaTime * -1;
+        }
     }
     protected override void UseAction(IAction _action, float _time)
     {
         switch (_action.Type)
         {
             case ActionType.Activate:
-                _action.Target.Activate(this);
+                Activate(_action.Target); 
                 return;
+            case ActionType.PickUp:
+                _inventory.PickUpItem(_action.Item);
+                return;
+            case ActionType.PutDown:
+                _inventory.RemoveItem(_action.Item);
+                return;
+            case ActionType.Extract:
+                _isExtracted = true;
+                return; 
         }
         SetAction(_combat.UseAction(_action), true); 
         _state.UseAction(_action);
@@ -65,7 +86,16 @@ public class Character : WibblyWobbly {
         switch (_action.Type)
         {
             case ActionType.Activate:
-                _action.Target.RewindActivation();
+                _action.Target.RewindActivation(_action);
+                return;
+            case ActionType.PickUp:
+                _inventory.RemoveItem(_action.Item);
+                return;
+            case ActionType.PutDown:
+                _inventory.PickUpItem(_action.Item);
+                return;
+            case ActionType.Extract:
+                _isExtracted = false;
                 return;
         }
         _combat.ReverseAction(_action);
@@ -73,13 +103,17 @@ public class Character : WibblyWobbly {
     }
     public override void SetAction(IAction _action)
     {
-        if (GameManager.CanAcceptPlayerInput)
+        if (GameManager.CanAcceptPlayerInput && CanAct())
         {
             base.SetAction(_action);
         }
     }
     #endregion
-
+    
+    public string PrintInventory()
+    {
+        return gameObject.name + " Escaped with: \n" + _inventory.PrintInventory(); 
+    }
     public void Die()
     {
         ClearState(); 
@@ -89,19 +123,16 @@ public class Character : WibblyWobbly {
 
     }
 
-    public void Activate()
+    public void Activate(ITargetable _target)
     {
-        if(_currentTarget != null && _currentTarget.isActivatable &&
-            (transform.position - _currentTarget.Position).magnitude < _currentTarget.MinDistanceToActivate)
+        float _dist = (transform.position - _target.Position).magnitude; 
+        if(_target != null && _target.isActivatable && _dist < _target.MinDistanceToActivate)
         {
-            Ray _ray = new Ray(transform.position, _currentTarget.Position - transform.position);
+            Ray _ray = new Ray(transform.position, _target.Position - transform.position);
             RaycastHit _hit; 
-            if(Physics.Raycast(_ray, out _hit, GameManager.CollMask))
+            if(!Physics.Raycast(_ray, out _hit, _dist, GameManager.CollMask))
             {
-                if(System.Object.ReferenceEquals(_hit.collider.gameObject, _currentTarget.Go))
-                {
-                    _currentTarget.Activate(this); 
-                }
+                SetAction(_currentTarget.Activate(this)); 
             }
         }
     }

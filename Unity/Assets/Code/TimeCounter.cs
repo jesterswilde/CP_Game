@@ -27,7 +27,10 @@ public class TimeCounter : MonoBehaviour {
 
     public static void UpdateTime(string _time)
     {
-        Text.text = _time.ToString();
+        if(Text != null)
+        {
+            Text.text = _time.ToString();
+        }
         if (GameManager.ShowingCtrlMenu)
         {
             Image.gameObject.SetActive(true); 

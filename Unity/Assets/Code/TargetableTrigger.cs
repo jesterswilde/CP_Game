@@ -7,14 +7,6 @@ public class TargetableTrigger : MonoBehaviour, ITargetable
 {
 
     public float MinDistanceToActivate { get { return _minDistanceToActivate;  } }
-    /*
-    [SerializeField]
-    Interactable _interactable;
-    [SerializeField]
-    LayerMask _collMask;
-    [SerializeField]
-    List<Task> _tasks = new List<Task>();
-    */
     [SerializeField]
     List<AlertList> _alertList = new List<AlertList>(); 
     [SerializeField]
@@ -36,11 +28,11 @@ public class TargetableTrigger : MonoBehaviour, ITargetable
     public CombatState Combat { get { return null; } }
     public GameObject Go { get { return gameObject; } }
 
-    public void Activate(Character _character)
+    public IAction Activate(Character _character)
     {
         if(_alertList.Count == 0)
         {
-            return; 
+            return null; 
         }
         if(_index < _alertList.Count)
         {
@@ -57,9 +49,10 @@ public class TargetableTrigger : MonoBehaviour, ITargetable
                 _index = 0;
                 Activate(_character); 
             }
-        } 
+        }
+        return null;
     }
-    public void RewindActivation()
+    public void RewindActivation(IAction _action)
     {
         _index--;
         if (_loop)

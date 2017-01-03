@@ -13,4 +13,5 @@ public interface IAction {
     Weapon Weapon { get; }
     CombatState Combat { get; }
     IBehavior Behavior { get; }
+    InvenItem Item { get; }
 }

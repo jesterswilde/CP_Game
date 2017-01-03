@@ -241,9 +241,13 @@ public class GameManager : MonoBehaviour {
     {
         _timeyWimeys.Add(_timey); 
     }
-    public static void RegisterTargetable(ITargetable _trigger)
+    public static void RegisterTargetable(ITargetable _target)
     {
-        _targetables.Add(_trigger); 
+        _targetables.Add(_target); 
+    }
+    public static void UnRegisterTargetable(ITargetable _target)
+    {
+        _targetables.Remove(_target); 
     }
     public static void TimeysApplyActions()
     {

@@ -40,6 +40,7 @@ public class Action : IAction{
     public Weapon Weapon { get { return null; } }
     public CombatState Combat { get { return null; } }
     public IBehavior Behavior { get { return null; } }
+    public InvenItem Item { get { return null; } }
 }
 
 public class ValueAction : IAction
@@ -86,6 +87,7 @@ public class ValueAction : IAction
     public Weapon Weapon { get { return null; } }
     public CombatState Combat { get { return null; } }
     public IBehavior Behavior { get { return null; } }
+    public InvenItem Item { get { return null; } }
 }
 public class VectorAction : IAction
 {
@@ -131,6 +133,7 @@ public class VectorAction : IAction
     public Weapon Weapon { get { return null; } }
     public CombatState Combat { get { return null; } }
     public IBehavior Behavior { get { return null; } }
+    public InvenItem Item { get { return null; } }
 }
 public class FutureActions : IAction
 {
@@ -162,6 +165,7 @@ public class FutureActions : IAction
     public Weapon Weapon { get { return null; } }
     public CombatState Combat { get { return null; } }
     public IBehavior Behavior { get { return null; } }
+    public InvenItem Item { get { return null; } }
 }
 
 public class TargetedAction : IAction
@@ -196,6 +200,7 @@ public class TargetedAction : IAction
     public Weapon Weapon { get { return null; } }
     public CombatState Combat { get { return null; } }
     public IBehavior Behavior { get { return null; } }
+    public InvenItem Item { get { return null; } }
 }
 
 public class TaskAction : IAction
@@ -230,6 +235,7 @@ public class TaskAction : IAction
     public Weapon Weapon { get { return null; } }
     public CombatState Combat { get { return null; } }
     public IBehavior Behavior { get { return null; } }
+    public InvenItem Item { get { return null; } }
 }
 
 public class WeaponAction : IAction
@@ -264,6 +270,7 @@ public class WeaponAction : IAction
     public Weapon Weapon { get { return _weapon; } }
     public CombatState Combat { get { return null; } }
     public IBehavior Behavior { get { return null; } }
+    public InvenItem Item { get { return null; } }
 }
 
 
@@ -299,6 +306,7 @@ public class CombatAction : IAction
     public Weapon Weapon { get { return null; } }
     public CombatState Combat { get { return _combat; } }
     public IBehavior Behavior { get { return null; } }
+    public InvenItem Item { get { return null; } }
 }
 
 public class BehaviorAction : IAction
@@ -333,6 +341,42 @@ public class BehaviorAction : IAction
     public Weapon Weapon { get { return null; } }
     public CombatState Combat { get { return null; } }
     public IBehavior Behavior { get { return _behavior; } }
+    public InvenItem Item { get { return null; } }
+}
+
+public class ItemAction : IAction
+{
+    float _time;
+    bool _isExternal = false;
+    ActionType _type;
+    InvenItem _item;
+
+    public ItemAction(ActionType type, InvenItem item)
+    {
+        _type = type;
+        _item = item; 
+        _time = GameManager.FixedGameTime;
+    }
+    public ItemAction(ActionType type, InvenItem item, bool external)
+    {
+        _type = type;
+        _item = item;
+        _isExternal = external;
+        _time = GameManager.FixedGameTime;
+    }
+
+    public bool IsExternal { get { return _isExternal; } }
+    public float Time { get { return _time; } }
+    public ActionType Type { get { return _type; } }
+    public HistoryNode PossibleFuture { get { return null; } }
+    public float Value { get { return float.NaN; } }
+    public Vector3 Vector { get { return Vector3.zero; } }
+    public ITargetable Target { get { return null; } }
+    public Task Task { get { return null; } }
+    public Weapon Weapon { get { return null; } }
+    public CombatState Combat { get { return null; } }
+    public IBehavior Behavior { get { return null; } }
+    public InvenItem Item { get { return _item; } }
 }
 
 public enum ActionType
@@ -354,6 +398,8 @@ public enum ActionType
     LeftUnblocked,
     RightBlocked,
     RightUnblocked,
+    PickUp,
+    PutDown,
     PullTrigger,
     ReleaseTrigger,
     Clear,
@@ -363,6 +409,7 @@ public enum ActionType
     TakeDamage,
     ShotBy,
     Die,
+    Extract,
     SetTask,
     UnsetTask,
     BSeekAndShoot,

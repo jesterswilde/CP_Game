@@ -262,12 +262,12 @@ public class Turret : Interactable, ITargetable {
         }
     }
 
-    public void RewindActivation()
+    public void RewindActivation(IAction _action)
     {
         throw new NotImplementedException();
     }
 
-    public void Activate(Character _character)
+    public IAction Activate(Character _character)
     {
         throw new NotImplementedException();
     }
