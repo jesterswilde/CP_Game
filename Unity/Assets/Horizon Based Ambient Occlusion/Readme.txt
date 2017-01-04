@@ -49,6 +49,10 @@ For any support request, please drop me an email at jimmikaelkael@gmail.com
 Changelog
 -----------------------------------------------------------------------------
 
+1.8
+  - Fix bad rendering path detection in builds
+  - Explicitely declare _NoiseTex as shader property
+
 1.7
   - Added downsampled blur setting
   - Added quarter resolution setting

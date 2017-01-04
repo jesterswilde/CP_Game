@@ -3,6 +3,7 @@
 	Properties {
 		_MainTex ("", 2D) = "" {}
 		_HBAOTex ("", 2D) = "" {}
+		_NoiseTex("", 2D) = "" {}
 	}
 
 	CGINCLUDE

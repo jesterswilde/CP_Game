@@ -7,31 +7,31 @@ using System.Reflection;
 [CustomEditor(typeof(HBAO))]
 public class HBAO_Editor : Editor
 {
-    private HBAO_Trial m_HBAO;
+    private HBAO m_HBAO;
     private Texture2D m_HBAOTex;
     private GUIStyle m_SettingsGroupStyle;
     private GUIStyle m_TitleLabelStyle;
     private int m_SelectedPreset;
     // settings group <setting, property reference>
     private Dictionary<FieldInfo, List<SerializedProperty>> m_GroupFields = new Dictionary<FieldInfo, List<SerializedProperty>>();
-    private readonly Dictionary<int, HBAO_Trial.Preset> m_Presets = new Dictionary<int, HBAO_Trial.Preset>()
+    private readonly Dictionary<int, HBAO.Preset> m_Presets = new Dictionary<int, HBAO.Preset>()
     {
-        { 0, HBAO_Trial.Preset.Normal },
-        { 1, HBAO_Trial.Preset.FastPerformance },
-        { 2, HBAO_Trial.Preset.FastestPerformance },
-        { 3, HBAO_Trial.Preset.Custom },
-        { 4, HBAO_Trial.Preset.HighQuality },
-        { 5, HBAO_Trial.Preset.HighestQuality }
+        { 0, HBAO.Preset.Normal },
+        { 1, HBAO.Preset.FastPerformance },
+        { 2, HBAO.Preset.FastestPerformance },
+        { 3, HBAO.Preset.Custom },
+        { 4, HBAO.Preset.HighQuality },
+        { 5, HBAO.Preset.HighestQuality }
     };
 
 
     void OnEnable()
     {
-        m_HBAO = (HBAO_Trial)target;
+        m_HBAO = (HBAO)target;
         m_HBAOTex = Resources.Load<Texture2D>("hbao");
 
-        var settingsGroups = typeof(HBAO_Trial).GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
-                .Where(x => x.GetCustomAttributes(typeof(HBAO_Trial.SettingsGroup), false).Any());
+        var settingsGroups = typeof(HBAO).GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
+                .Where(x => x.GetCustomAttributes(typeof(HBAO.SettingsGroup), false).Any());
         foreach (var group in settingsGroups)
         {
             foreach (var setting in group.FieldType.GetFields(BindingFlags.Instance | BindingFlags.Public))
@@ -50,10 +50,6 @@ public class HBAO_Editor : Editor
 
     public override void OnInspectorGUI()
     {
-        RenderingPath _renderingPath = m_HBAO.GetComponent<Camera>().renderingPath;
-        m_HBAO.isDeferred = _renderingPath == RenderingPath.DeferredShading || (_renderingPath == RenderingPath.UsePlayerSettings &&
-                            UnityEditor.PlayerSettings.renderingPath == RenderingPath.DeferredShading);
-
         serializedObject.Update();
 
         SetStyles();
@@ -92,7 +88,7 @@ public class HBAO_Editor : Editor
                     continue;
 
                 // presets is a special case
-                if (group.Key.FieldType == typeof(HBAO_Trial.Presets))
+                if (group.Key.FieldType == typeof(HBAO.Presets))
                 {
                     GUILayout.Space(6.0f);
                     m_SelectedPreset = GUILayout.SelectionGrid(m_SelectedPreset, m_Presets.Values.Select(x => ObjectNames.NicifyVariableName(x.ToString())).ToArray(), 3);
@@ -115,27 +111,27 @@ public class HBAO_Editor : Editor
                 foreach (var field in group.Value)
                 {
                     // hide real presets
-                    if (group.Key.FieldType == typeof(HBAO_Trial.Presets))
+                    if (group.Key.FieldType == typeof(HBAO.Presets))
                         continue;
 
                     // hide resolution when deinterleaved HBAO is on
-                    if (group.Key.FieldType == typeof(HBAO_Trial.GeneralSettings) && field.name == "resolution")
+                    if (group.Key.FieldType == typeof(HBAO.GeneralSettings) && field.name == "resolution")
                     {
-                        if (m_HBAO.generalSettings.deinterleaving != HBAO_Trial.Deinterleaving.Disabled)
+                        if (m_HBAO.generalSettings.deinterleaving != HBAO.Deinterleaving.Disabled)
                         {
                             continue;
                         }
                     }
                     // hide noise type when deinterleaved HBAO is on
-                    else if (group.Key.FieldType == typeof(HBAO_Trial.GeneralSettings) && field.name == "noiseType")
+                    else if (group.Key.FieldType == typeof(HBAO.GeneralSettings) && field.name == "noiseType")
                     {
-                        if (m_HBAO.generalSettings.deinterleaving != HBAO_Trial.Deinterleaving.Disabled)
+                        if (m_HBAO.generalSettings.deinterleaving != HBAO.Deinterleaving.Disabled)
                         {
                             continue;
                         }
                     }
                     // warn about distance falloff greater than max distance
-                    else if (group.Key.FieldType == typeof(HBAO_Trial.AOSettings) && field.name == "baseColor")
+                    else if (group.Key.FieldType == typeof(HBAO.AOSettings) && field.name == "baseColor")
                     {
                         if (m_HBAO.aoSettings.distanceFalloff > m_HBAO.aoSettings.maxDistance)
                         {
@@ -144,7 +140,7 @@ public class HBAO_Editor : Editor
                         }
                     }
                     // hide albedoMultiplier when not in deferred
-                    else if (group.Key.FieldType == typeof(HBAO_Trial.ColorBleedingSettings) && field.name == "albedoMultiplier")
+                    else if (group.Key.FieldType == typeof(HBAO.ColorBleedingSettings) && field.name == "albedoMultiplier")
                     {
                         RenderingPath renderingPath = m_HBAO.GetComponent<Camera>().renderingPath;
                         if (renderingPath != RenderingPath.DeferredShading &&

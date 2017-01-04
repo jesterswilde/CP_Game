@@ -22,16 +22,19 @@ ModelImporter:
     2300004: lower_arm
     2300006: main_rotate
     2300008: upper_arm
+    2300010: //RootNode
     3300000: barrell
     3300002: base
     3300004: lower_arm
     3300006: main_rotate
     3300008: upper_arm
+    3300010: //RootNode
     4300000: lower_arm
     4300002: main_rotate
     4300004: base
     4300006: barrell
     4300008: upper_arm
+    4300010: turret
   materials:
     importMaterials: 1
     materialName: 0
