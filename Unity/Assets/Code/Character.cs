@@ -80,6 +80,15 @@ public class Character : WibblyWobbly {
         }
         SetAction(_combat.UseAction(_action), true); 
         _state.UseAction(_action);
+        switch (_action.Type)
+        {
+            case ActionType.TakeDamage:
+                if (_playerControlled)
+                {
+                    TimeCounter.TookDamage(this);
+                }
+                break;
+        }
     }
     protected override void ReverseAction(IAction _action, float _time)
     {
@@ -100,6 +109,15 @@ public class Character : WibblyWobbly {
         }
         _combat.ReverseAction(_action);
         _state.ReverseAction(_action);
+        switch (_action.Type)
+        {
+            case ActionType.TakeDamage:
+                if (_playerControlled)
+                {
+                    TimeCounter.TookDamage(this);
+                }
+                break;
+        }
     }
     public override void SetAction(IAction _action)
     {
@@ -125,14 +143,18 @@ public class Character : WibblyWobbly {
 
     public void Activate(ITargetable _target)
     {
-        float _dist = (transform.position - _target.Position).magnitude; 
+        float _dist = 0; 
+        if(_target != null)
+        {
+            _dist = (transform.position - _target.Position).magnitude; 
+        }
         if(_target != null && _target.isActivatable && _dist < _target.MinDistanceToActivate)
         {
             Ray _ray = new Ray(transform.position, _target.Position - transform.position);
             RaycastHit _hit; 
             if(!Physics.Raycast(_ray, out _hit, _dist, GameManager.CollMask))
             {
-                SetAction(_currentTarget.Activate(this)); 
+                SetAction(_target.Activate(this)); 
             }
         }
     }

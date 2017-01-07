@@ -213,6 +213,7 @@ public class GameManager : MonoBehaviour {
         Character _nextCharacter = _characters[_characterIndex];
         JumpToTime(_nextCharacter.GetHeadTimestamp()); 
         SetActiveCharacter(_nextCharacter);
+        TimeCounter.SwitchedToCharacter(_nextCharacter); 
     }
     public static void SetActiveCharacter(int index)
     {
@@ -295,7 +296,7 @@ public class GameManager : MonoBehaviour {
             _activeCharacter.SetAction(PlayerInput.ActionButtons(_activeCharacter)); 
             _activeCharacter.ApplyActions(); 
         }
-        TimeCounter.UpdateTime(_gameTime + " | " + _fixedGameTime);
+        TimeCounter.UpdateTime(_fixedGameTime.ToString());
         _camController.UpdateCamera();
         UpdateFixedTimestep(); 
     }
@@ -333,7 +334,6 @@ public class GameManager : MonoBehaviour {
         Cursor.visible = false; 
         SetSpeed(GameSettings.ForwardSpeed); 
         SetActiveCharacter(_characters[_characterIndex]);
+        TimeCounter.SwitchedToCharacter(_characters[_characterIndex]); 
     }
-
-
 }

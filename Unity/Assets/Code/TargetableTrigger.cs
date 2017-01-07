@@ -39,7 +39,7 @@ public class TargetableTrigger : MonoBehaviour, ITargetable
             AlertList _alerts = _alertList[_index]; 
             foreach(AlertActions _alert in _alerts.alerts)
             {
-                _alert.Interactable.ExternalTrigger(_alert.Task, _alert.Enter, _character);
+                _alert.Interactable.ExternalTrigger(_alert.EnterTask, _alert.Enter, _character);
             }
             _index++;
         }else

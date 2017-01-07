@@ -110,7 +110,6 @@ public class Interactable : WibblyWobbly, IAI {
             case ActionType.AIRotateUnset:
                 _currentAction = new AARotate(this);
                 _currentAction.ReverseAction(_action, _time);
-                Debug.Log(_action.Value);
                 break; 
             case ActionType.AIMoveToUnset:
                 _currentAction = new AAMoveTo(this);

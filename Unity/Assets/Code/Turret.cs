@@ -72,7 +72,6 @@ public class Turret : Interactable, ITargetable {
     {
         if (!_isAlerted && _isActive)
         {
-            Debug.Log("alerting"); 
             UnloadAll();
             SetAction(new Action(ActionType.Alert, true)); 
             BSeekAndShoot _behavior = new BSeekAndShoot();
@@ -128,11 +127,9 @@ public class Turret : Interactable, ITargetable {
         switch (_action.Type)
         {
             case ActionType.BSeekAndShoot:
-                Debug.Log("setting"); 
                 _currentBehavior = _action.Behavior; 
                 break;
             case ActionType.BSeekAndShootUnset:
-                Debug.Log("unsetting"); 
                 _currentBehavior = null;
                 break;
             case ActionType.SawPlayer:

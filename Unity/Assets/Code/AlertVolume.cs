@@ -17,6 +17,7 @@ public class AlertVolume : MonoBehaviour {
         if (Util.LayerMaskContainsLayer(_collMask, _coll.gameObject.layer))
         {
             _count++;
+            Debug.Log("Launcing " + _count);
             if (_count == 1)
             {
                 Character _character = _coll.gameObject.GetComponent<Character>(); 
@@ -26,7 +27,7 @@ public class AlertVolume : MonoBehaviour {
                 }
                 foreach(AlertActions _target in _alerts)
                 {
-                    _target.Interactable.ExternalTrigger(_target.Task, _target.Enter, _character); 
+                    _target.Interactable.ExternalTrigger(_target.EnterTask, _target.Enter, _character); 
                 }
             }
         }
@@ -36,6 +37,7 @@ public class AlertVolume : MonoBehaviour {
         if (Util.LayerMaskContainsLayer(_collMask, _coll.gameObject.layer))
         {
             _count--;
+            Debug.Log("Unlaunching: " + _count); 
             if (_count == 0)
             {
                 Character _character = _coll.gameObject.GetComponent<Character>();
@@ -45,7 +47,7 @@ public class AlertVolume : MonoBehaviour {
                 }
                 foreach (AlertActions _target in _alerts)
                 {
-                    _target.Interactable.ExternalTrigger(_target.Task, _target.Exit, _character);
+                    _target.Interactable.ExternalTrigger(_target.ExitTask, _target.Exit, _character);
                 }
             }
         }
@@ -62,19 +64,23 @@ public struct AlertActions
     [SerializeField]
     Interactable _interact;
     [SerializeField]
-    Task _task;
+    Task _enterTask;
+    [SerializeField]
+    Task _exitTask; 
     [SerializeField]
     TriggerType _enter;
     [SerializeField]
     TriggerType _exit; 
     public Interactable Interactable { get { return _interact; } }
-    public Task Task { get { return _task; } }
+    public Task EnterTask { get { return _enterTask; } }
+    public Task ExitTask { get { return _exitTask; } }
     public TriggerType Enter { get { return _enter;  } }
     public TriggerType Exit { get { return _exit;  } }
-    AlertActions(Interactable interact, Task task, TriggerType enter, TriggerType exit)
+    AlertActions(Interactable interact, Task enterTask, Task exitTask, TriggerType enter, TriggerType exit)
     {
         _interact = interact;
-        _task = task;
+        _enterTask = enterTask;
+        _exitTask = exitTask;
         _enter = enter;
         _exit = exit;  
     }

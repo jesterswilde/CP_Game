@@ -12,7 +12,6 @@ public class SRand  {
     {
         int _value = _values[index];
         index = (index + 1) % _values.Length;
-        Debug.Log("Roll: " + index + " | "  +_value); 
         return _value;
     }
     public static void ReverseRoll(ref int index)

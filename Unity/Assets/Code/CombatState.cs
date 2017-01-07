@@ -7,9 +7,11 @@ public delegate void SetActionDelegate(IAction _action, bool _determinOrigin);
 public class CombatState : MonoBehaviour {
 
     [SerializeField]
-    float _health = 20;
+    float _maximumHealth = 20;
+    public float MaximumHealth { get { return _maximumHealth; } }
     [SerializeField]
     float _currentHealth;
+    public float CurrentHealth { get { return _currentHealth; } }
     [SerializeField]
     float _dodge = 5; 
     public float Dodge { get { return _dodge; } }
@@ -80,7 +82,6 @@ public class CombatState : MonoBehaviour {
     }
     public void SetCallbacks(SetActionDelegate _delegate)
     {
-        Debug.Log(name); 
         _actionDelegate = _delegate;
     }
 
@@ -119,7 +120,6 @@ public class CombatState : MonoBehaviour {
     }
     public void FireWeapon(IAction _action)
     {
-        Debug.Log("firing weapon"); 
         CombatState _target = _action.Combat;
         if (_target != null)
         {
@@ -130,17 +130,14 @@ public class CombatState : MonoBehaviour {
                 float _dc = Math.Max(5f, _accuracy + _weaponAccuracy - _coverAmount - _target.Dodge);
                 if (SRand.Roll(ref _rollI) <= _dc)
                 {
-                    Debug.Log(_dc + " | Hit");
                     _target.SetAction(new WeaponAction(ActionType.ShotBy, _inventory.SelectedWeapon, true), true); 
                 }
                 else
                 {
-                    Debug.Log(_dc + " | MIssed");
                 }
             }
             else
             {
-                Debug.Log("object had cover");
             }
         }
     }
@@ -160,7 +157,6 @@ public class CombatState : MonoBehaviour {
 
     Action TakeDamage(float _damage)
     {
-        Debug.Log("Alas, I am shot");
         if (!_isDead)
         {
             _currentHealth -= _damage;
@@ -178,7 +174,6 @@ public class CombatState : MonoBehaviour {
     }
     public void Die()
     {
-        Debug.Log("Hrk, I am dead");
         _isDead = true;
         _renderer.enabled = false;
     }
@@ -193,7 +188,6 @@ public class CombatState : MonoBehaviour {
     {
         if (!_isDead)
         {
-            Debug.Log("Got shot"); 
             return new ValueAction(ActionType.TakeDamage, _bullet.Damage - Math.Max(0, _damageReduction - _bullet.AP), true);
         }
         return null; 
@@ -203,7 +197,7 @@ public class CombatState : MonoBehaviour {
 
     void Awake()
     {
-        _currentHealth = _health;
+        _currentHealth = _maximumHealth;
         _inventory = GetComponent<Inventory>();
         _renderer = GetComponent<Renderer>(); 
         if(_vitalPoints.Length > 0)

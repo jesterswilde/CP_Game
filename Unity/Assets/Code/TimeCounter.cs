@@ -11,20 +11,38 @@ public class TimeCounter : MonoBehaviour {
     Text _sliderValue;
     [SerializeField]
     Image _image;
+    [SerializeField]
+    HealthHex[] _hexes; 
     static Text Text;
     static Slider Slider;
     static Text SliderValue;
-    static Image Image;  
+    static Image Image;
+    static HealthHex[] Hexes;
     static float _speed = 1; 
     public static float Speed { get { return _speed; } }
     void Awake()
-    {
+    { 
         Text = _text;
         Slider = _slider;
         SliderValue = _sliderValue;
-        Image = _image;  
+        Image = _image;
+        Hexes = _hexes; 
     }
-
+    public static void SwitchedToCharacter(Character _character)
+    {
+        for (int i = 0; i < Hexes.Length; i++)
+        {
+            Hexes[i].SetExtVisibility(i < _character.Combat.MaximumHealth);
+        }
+        TookDamage(_character);
+    }
+    public static void TookDamage(Character _character)
+    {
+        for (int i = 0; i < Hexes.Length; i++)
+        {
+            Hexes[i].SetIntVisibility(i < _character.Combat.CurrentHealth);
+        }
+    }
     public static void UpdateTime(string _time)
     {
         if(Text != null)
@@ -33,7 +51,7 @@ public class TimeCounter : MonoBehaviour {
         }
         if (GameManager.ShowingCtrlMenu)
         {
-            Image.gameObject.SetActive(true); 
+            Image.gameObject.SetActive(true);
             Slider.maxValue = GameSettings.Speeds[GameSettings.Speeds.Length - 1];
             Slider.minValue = GameSettings.Speeds[0]; 
             float _maxY = Screen.height;
@@ -49,3 +67,11 @@ public class TimeCounter : MonoBehaviour {
         }
     }
 }
+/*
+ * Get ahold of hexes*
+ * On character change, hide excess hexes (in excess of max health of active character)
+ * On damage (or character change) hide inner hex
+ * 
+ * */
+
+ 

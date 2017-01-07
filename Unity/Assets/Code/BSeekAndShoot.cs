@@ -83,7 +83,6 @@ public class BSeekAndShoot : IBehavior
             }
             else
             {
-                Debug.Log("can't see"); 
                 _timeSinceSeenTarget += _checkInterval;
                 if (_timeSinceSeenTarget > _timeToLoseTarget)
                 {
@@ -103,7 +102,6 @@ public class BSeekAndShoot : IBehavior
         {
             if (!_shouldFire)
             {
-                Debug.Log("starting fire"); 
                 _self.SetAction(new Action(ActionType.PullTrigger, true), true);
                 _shouldFire = true; 
             }
