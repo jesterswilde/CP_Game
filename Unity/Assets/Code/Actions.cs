@@ -216,6 +216,12 @@ public class TaskAction : IAction
         _task = task;
         _time = GameManager.FixedGameTime;
     }
+    public TaskAction(ActionType type, Task task, float _time)
+    {
+        _type = type;
+        _task = task;
+        _time = _time;
+    }
     public TaskAction(ActionType type, Task task, bool external)
     {
         _type = type;

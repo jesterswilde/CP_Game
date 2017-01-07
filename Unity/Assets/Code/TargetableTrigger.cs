@@ -41,6 +41,7 @@ public class TargetableTrigger : MonoBehaviour, ITargetable
             {
                 _alert.Interactable.ExternalTrigger(_alert.EnterTask, _alert.Enter, _character);
             }
+            Debug.Log("Triggered: " + _index); 
             _index++;
         }else
         {
@@ -62,6 +63,7 @@ public class TargetableTrigger : MonoBehaviour, ITargetable
                 _index = _alertList.Count -1; 
             }
         }
+        Debug.Log("Untriggerd " + _index); 
     }
     public void Targeted()
     {

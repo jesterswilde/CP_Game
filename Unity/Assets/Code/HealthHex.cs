@@ -8,23 +8,8 @@ public class HealthHex : MonoBehaviour
     Image[] _hexExterior;
     [SerializeField]
     Image[] _hexInterior;
-    bool _extHidden = false;
-    bool _intHidden = false;
 
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.H)){
-            _extHidden = !_extHidden; 
-            SetExtVisibility(_extHidden); 
-        }
-        if (Input.GetKeyDown(KeyCode.J))
-        {
-            _intHidden = !_intHidden; 
-            SetIntVisibility(_intHidden); 
-        }
-
-    }
-
+    
     public void SetExtVisibility(bool visibility)
     {
         for (int i = 0; i < _hexExterior.Length; i++)

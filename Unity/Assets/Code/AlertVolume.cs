@@ -17,7 +17,6 @@ public class AlertVolume : MonoBehaviour {
         if (Util.LayerMaskContainsLayer(_collMask, _coll.gameObject.layer))
         {
             _count++;
-            Debug.Log("Launcing " + _count);
             if (_count == 1)
             {
                 Character _character = _coll.gameObject.GetComponent<Character>(); 
@@ -31,13 +30,14 @@ public class AlertVolume : MonoBehaviour {
                 }
             }
         }
+        Debug.Log("Launcing " + _count);
+
     }
     void OnTriggerExit(Collider _coll)
     {
         if (Util.LayerMaskContainsLayer(_collMask, _coll.gameObject.layer))
         {
             _count--;
-            Debug.Log("Unlaunching: " + _count); 
             if (_count == 0)
             {
                 Character _character = _coll.gameObject.GetComponent<Character>();
@@ -51,6 +51,8 @@ public class AlertVolume : MonoBehaviour {
                 }
             }
         }
+        Debug.Log("Unlaunching: " + _count);
+
     }
 }
 [Serializable]
