@@ -2,6 +2,7 @@
 using System.Collections;
 using System;
 using System.Collections.Generic;
+using System.Linq; 
 
 [RequireComponent(typeof(GameSettings))]
 [RequireComponent(typeof(Combat))]
@@ -168,18 +169,22 @@ public class GameManager : MonoBehaviour {
         SetSpeed(0);
         _canAcceptPlayerInput = true;
     }
-    static void CheckReplaying()
+    static void ShouldPause()
     {
-        if (_isReplaying && _activeCharacter != null && _activeCharacter.IsPastMostRecentAction())
+        if (GameSpeed > 0 && !Input.GetKey(KeyCode.Space))
         {
-            _isReplaying = false;
-            SetSpeed(0);
-            return;
-        }
-        if (!_isReplaying && _activeCharacter != null && !_activeCharacter.IsPastMostRecentAction())
+            if(!PlayerInput.GetAbsKeyboardState().Aggregate((result, current) => current || result) &&
+                _activeCharacter != null && _activeCharacter.IsPastMostRecentAction())
+            {
+                SetSpeed(0); 
+            }
+        }else
         {
-            _isReplaying = true;
-            return;
+            if(_activeCharacter != null && _activeCharacter.IsPastMostRecentAction() &&
+                PlayerInput.GetAbsKeyboardState().Aggregate((result, current) => current || result))
+            {
+                SetSpeed(GameSettings.ForwardSpeed); 
+            }
         }
     }
     static void Play(float _time)
@@ -278,7 +283,7 @@ public class GameManager : MonoBehaviour {
     
     // Update is called once per frame
     void Update () {
-        //CheckReplaying();
+        ShouldPause(); 
         _totalUpdateTime += Time.deltaTime;
         _gameTime = _fixedGameTime; 
         if (Input.GetKeyDown(KeyCode.Backspace))

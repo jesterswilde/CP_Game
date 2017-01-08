@@ -95,7 +95,10 @@ public class Character : WibblyWobbly {
         switch (_action.Type)
         {
             case ActionType.Activate:
-                _action.Target.RewindActivation(_action);
+                if(_action.Target != null)
+                {
+                    _action.Target.RewindActivation(_action);
+                }
                 return;
             case ActionType.PickUp:
                 _inventory.RemoveItem(_action.Item);

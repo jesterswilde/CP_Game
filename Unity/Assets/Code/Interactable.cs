@@ -187,7 +187,7 @@ public class Interactable : WibblyWobbly, IAI {
         if (GameManager.IsPlaying)
         {
             UnloadAll(); 
-            SetAction(new TaskAction(ActionType.SetTask, _task)); 
+            //SetAction(new TaskAction(ActionType.SetTask, _task)); 
             _task.SimulateTask(this, GameManager.FixedGameTime); 
         }
     }
