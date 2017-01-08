@@ -12,7 +12,8 @@ public class PlayerInput {
             Input.GetKey(KeyCode.D),
             Input.GetKey(KeyCode.S),
             Input.GetKey(KeyCode.A),
-            Input.GetMouseButton(0) && !Input.GetKey(KeyCode.LeftShift)
+            Input.GetMouseButton(0) && !Input.GetKey(KeyCode.LeftShift),
+            Input.GetKey(KeyCode.E)
         };
     }
     public static void CheckSpeedButtons()
