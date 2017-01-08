@@ -66,9 +66,11 @@ public class Character : WibblyWobbly {
         switch (_action.Type)
         {
             case ActionType.Activate:
+                Debug.Log("trying to activate"); 
                 Activate(_action.Target); 
                 return;
             case ActionType.PickUp:
+                Debug.Log("picking up"); 
                 _inventory.PickUpItem(_action.Item);
                 return;
             case ActionType.PutDown:
@@ -157,7 +159,7 @@ public class Character : WibblyWobbly {
             RaycastHit _hit; 
             if(!Physics.Raycast(_ray, out _hit, _dist, GameManager.CollMask))
             {
-                SetAction(_target.Activate(this)); 
+                SetExternalAction(_target.Activate(this)); 
             }
         }
     }
