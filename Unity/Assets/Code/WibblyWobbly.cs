@@ -61,7 +61,7 @@ public abstract class WibblyWobbly : MonoBehaviour {
     }
     public virtual void SetExternalAction(IAction _action)
     {
-        if (GameManager.IsPlaying)
+        if (GameManager.IsPlaying && _action != null)
         {
             _history.InsertAfterPointer(_action); 
         }
