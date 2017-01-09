@@ -15,6 +15,10 @@ public class GameCamera : MonoBehaviour {
     void Awake()
     {
         _blur = GetComponent<UnityStandardAssets.ImageEffects.BlurOptimized>();
+        if(_blur == null)
+        {
+            _blur = GetComponentInChildren<UnityStandardAssets.ImageEffects.BlurOptimized>(); 
+        }
         t = this; 
     }
     void LateUpdate()
