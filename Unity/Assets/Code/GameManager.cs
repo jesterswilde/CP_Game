@@ -27,6 +27,7 @@ public class GameManager : MonoBehaviour {
     static Character _activeCharacter;
     public static Character ActiveCharacter { get { return _activeCharacter; } }
     static List<Character> _characters = new List<Character>();
+    public static List<Character> Characters { get { return _characters; } } 
     static int _characterIndex = 0;
     static List<WibblyWobbly> _timeyWimeys = new List<WibblyWobbly>();
     static List<ITargetable> _targetables = new List<ITargetable>();

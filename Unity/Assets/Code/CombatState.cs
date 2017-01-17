@@ -122,8 +122,6 @@ public class CombatState : MonoBehaviour {
     }
     public void FireWeapon(IAction _action)
     {
-        Debug.Log("Firing weapon"); 
-         new Effect(_inventory.SelectedWeapon.MuzzleFlash, GunTrans.position, GunTrans.rotation); 
         CombatState _target = _action.Combat;
         if (_target != null)
         {

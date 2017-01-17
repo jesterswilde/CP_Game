@@ -40,6 +40,12 @@ public class Character : WibblyWobbly {
         }
         base.Play(_time);
     }
+
+    internal string toString()
+    {
+        throw new NotImplementedException();
+    }
+
     protected override void Act(float _deltaTime)
     {
         if (CanAct())
