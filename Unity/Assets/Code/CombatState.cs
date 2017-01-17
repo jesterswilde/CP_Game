@@ -120,6 +120,7 @@ public class CombatState : MonoBehaviour {
     }
     public void FireWeapon(IAction _action)
     {
+        Debug.Log("firing"); 
         CombatState _target = _action.Combat;
         if (_target != null)
         {
