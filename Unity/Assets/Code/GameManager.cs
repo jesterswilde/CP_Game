@@ -119,7 +119,7 @@ public class GameManager : MonoBehaviour {
                 _activeCharacter.ClearState();
             }
             _isPaused = true;
-            _isPlaying = false; 
+            _isPlaying = false;
         }
     }
     public static void ShowCtrlMenu(bool _show)
@@ -193,6 +193,7 @@ public class GameManager : MonoBehaviour {
         {
             _character.Play(_time); 
         }
+        EffectsManager.Play(_time); 
     }
     static void Rewind(float _time)
     {
@@ -204,6 +205,7 @@ public class GameManager : MonoBehaviour {
         {
             _character.Rewind(_time); 
         }
+        EffectsManager.Play(_time); 
     }
     #endregion
 

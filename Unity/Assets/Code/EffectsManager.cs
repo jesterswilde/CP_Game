@@ -7,7 +7,7 @@ public class EffectsManager : MonoBehaviour {
 
     [SerializeField]
     Object[] _effectPrefabs; 
-    static Dictionary<string, Object> Effects;
+    static Dictionary<string, Object> Effects = new Dictionary<string, Object>();
     static uint _seed = 0;
     static List<Effect> _runningEffects = new List<Effect>();
     static Stack<Effect> _endedEffects = new Stack<Effect>();
@@ -20,7 +20,14 @@ public class EffectsManager : MonoBehaviour {
     }
     public static GameObject CreateEffect(string _name, Vector3 _loc, Quaternion _rot)
     {
-        return Instantiate(Effects[_name], _loc, _rot) as GameObject; 
+        if (Effects.ContainsKey(_name))
+        {
+            return Instantiate(Effects[_name], _loc, _rot) as GameObject;
+        }else
+        {
+            Debug.Log("dont have name: " + _name);
+            return null; 
+        }
     }
     public static uint GetSeed()
     {
@@ -45,9 +52,9 @@ public class EffectsManager : MonoBehaviour {
     }
     public static void Play(float _time)
     {
-        foreach(Effect _effect in _runningEffects)
+        for(int i = _runningEffects.Count - 1; i >= 0; i--)
         {
-            _effect.Play(_time); 
+            _runningEffects[i].Play(_time); 
         }
         while (true)
         {
@@ -60,32 +67,6 @@ public class EffectsManager : MonoBehaviour {
             }
         }
     }
-    public static void ChangePlaySpeed(float _newSpeed)
-    {
-        if(_newSpeed == 0 && _playSpeed != 0)
-        {
-            foreach(Effect _effect in _runningEffects)
-            {
-                _effect.Pause(); 
-            }
-        }
-        else if(_newSpeed != 0 && _playSpeed == 0)
-        {
-            foreach (Effect _effect in _runningEffects)
-            {
-                _effect.Resume();
-            }
-        }
-        if(_newSpeed != _playSpeed)
-        {
-            foreach (Effect _effect in _runningEffects)
-            {
-                _playSpeed = _newSpeed; 
-                _effect.ChangeSpeed(_playSpeed);
-            }
-        }
-    }
-
     void Awake()
     {
         for(int i = 0; i < _effectPrefabs.Length; i++)

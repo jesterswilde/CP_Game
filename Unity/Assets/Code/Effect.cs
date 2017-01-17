@@ -16,6 +16,8 @@ public class Effect {
     Quaternion _rot;
     float _endedAt; 
     public float EndedAt { get { return _endedAt; } }
+    bool _isPlaying = true; 
+    public bool IsPlaying { get { return _isPlaying; } }
 
     public Effect(string name)
     {
@@ -69,6 +71,10 @@ public class Effect {
         {
             _go.transform.parent = _parent; 
         }
+        if(_go == null)
+        {
+            return; 
+        }
         ParticleSystem _goPs = _go.GetComponent<ParticleSystem>(); 
         if(_goPs != null)
         {
@@ -81,6 +87,11 @@ public class Effect {
             _ps.playbackSpeed = EffectsManager.PlaySpeed; 
         }
         EffectsManager.RegisterEffect(this); 
+        for(int i = 0; i < _particles.Count; i++)
+        {
+            _particles[i].Stop(); 
+        }
+        Debug.Log("Created effect " + _particles.Count);  
     }
 
     public void Play(float _gametime)
@@ -89,39 +100,21 @@ public class Effect {
         {
             DeleteSelf(); 
         }
-        if(!_particles.Any((_ps) => _ps.IsAlive()))
+        else if(!_particles.Any((_ps) => _ps.IsAlive() ||  _ps.time < 1))
         {
-            EndEffect(); 
-        }
-    }
-    public void ChangeSpeed(float _speed)
-    {
-        foreach(ParticleSystem _ps in _particles)
+            Debug.Log("ending"); 
+            EndEffect();
+        }else
         {
-            _ps.playbackSpeed = _speed; 
-        }
-    }
-    public void Pause()
-    {
-        foreach(ParticleSystem _ps in _particles)
-        {
-            _ps.Pause();
-        }
-    }
-    public void Resume()
-    {
-        foreach(ParticleSystem _ps in _particles)
-        {
-            _ps.Play(); 
+            for(int i = 0; i < _particles.Count; i++)
+            {
+                _particles[i].Simulate(_gametime - _createdAt); 
+            }
         }
     }
     public void ReloadEffect(float _time)
     {
         CreateEffect(); 
-        foreach(ParticleSystem _ps in _particles)
-        {
-            _ps.time = _time - _createdAt; 
-        }
     }
     void EndEffect()
     {
@@ -132,7 +125,7 @@ public class Effect {
         }
         _particles.Clear();
         EffectsManager.UnregisterEffect(this);
-        EffectsManager.EffectEnded(this); 
+        EffectsManager.EffectEnded(this);
     }
     void DeleteSelf()
     {
