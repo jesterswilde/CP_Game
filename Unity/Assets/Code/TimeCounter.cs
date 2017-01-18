@@ -15,17 +15,25 @@ public class TimeCounter : MonoBehaviour {
     [SerializeField]
     HealthHex[] _hexes;
     [SerializeField]
-    Text[] _charaName;
+    Text[] _charaNames;
+    [SerializeField]
+    Color _activeColor;
+    [SerializeField]
+    Color _inactiveColor;
     static Text Text;
     static Slider Slider;
     static Text SliderValue;
     static Image Image;
     static HealthHex[] Hexes;
-    static Text[] CharaName;
+    static Text[] CharaNames;
     static List<TimelineUI> _timelines = new List<TimelineUI>();
+    static Color ActiveColor;
+    static Color InactiveColor;
     static float _speed = 1;
     static float _mostFutureTime = 0;
     public static float Speed { get { return _speed; } }
+    public static Color AColor { get { return ActiveColor; } }
+    public static Color IColor { get { return InactiveColor; } }
     void Awake()
     { 
         Text = _text;
@@ -33,7 +41,9 @@ public class TimeCounter : MonoBehaviour {
         SliderValue = _sliderValue;
         Image = _image;
         Hexes = _hexes;
-        CharaName = _charaName;
+        CharaNames = _charaNames;
+        ActiveColor = _activeColor;
+        InactiveColor = _inactiveColor;
     }
     void Start()
     {
@@ -46,10 +56,15 @@ public class TimeCounter : MonoBehaviour {
             Hexes[i].SetExtVisibility(i < _character.Combat.MaximumHealth);
         }
         TookDamage(_character);
-        for (int i = 0; i < CharaName.Length; i++)
+        for (int i = 0; i < CharaNames.Length; i++)
         {
-            CharaName[i].text = _character.name;
+            CharaNames[i].text = _character.name;
         }
+        for (int i = 0; i < _timelines.Count; i++)
+        {
+            _timelines[i].SwitchedToCharacter(_character);
+        }
+     
 
     }
     public static void TookDamage(Character _character)
@@ -86,9 +101,17 @@ public class TimeCounter : MonoBehaviour {
     {
         _timelines.Add(_timeline);
     }
-    public static void UpdateTime(string _time)
+    static void UpdateTimelines(float _time)
+    {
+        for (int i = 0; i < _timelines.Count; i++)
+        {
+            _timelines[i].UpdateTimeline(_time, _mostFutureTime);
+        }
+    }
+    public static void UpdateTime(float _time)
     {
         UpdateFuturePoint();
+        UpdateTimelines(_time);
         if (Text != null)
         {
             Text.text = _time.ToString();

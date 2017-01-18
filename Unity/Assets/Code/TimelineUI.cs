@@ -13,7 +13,11 @@ public class TimelineUI : MonoBehaviour {
     Text _charaTime;
     [SerializeField]
     Image[] _frozenElements;
+    [SerializeField]
+    Slider _slider;
     string _playerName;
+    bool _isActive;
+    float _characterTime;
 
     void Awake()
     {
@@ -39,8 +43,8 @@ public class TimelineUI : MonoBehaviour {
         {
             _frozenElements[i].enabled = visibility;
         }
-        _timelineFill.enabled = visibility;
         _charaTime.enabled = visibility;
+        _slider.gameObject.SetActive(visibility);
     }
 
     public void SetCharaHexVisibility(bool visibility)
@@ -49,5 +53,27 @@ public class TimelineUI : MonoBehaviour {
         {
             _activeCharaHex[i].enabled = visibility;
         }
+    }
+    public void SwitchedToCharacter(Character _character)
+    {
+        _isActive = _character.name == _playerName;
+         SetCharaHexVisibility(_isActive);
+        if (_isActive)
+        {
+            _timelineFill.color = TimeCounter.AColor;
+        }
+        else
+        {
+            _timelineFill.color = TimeCounter.IColor;
+        }
+    }
+    public void UpdateTimeline(float _currentTime, float _maxTime)
+    {
+        if (_isActive)
+        {
+            _characterTime = _currentTime;
+        }
+        _slider.value = _characterTime / _maxTime;
+        _charaTime.text = System.Math.Round(_characterTime, 2).ToString("0.00");
     }
 }
