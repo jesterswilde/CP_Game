@@ -34,7 +34,8 @@ public class PlayerInput {
         {
             GameManager.SetSpeed(GameSettings.RewindSpeed);
         }
-        if (Input.GetMouseButtonUp(0) && Input.GetKey(KeyCode.LeftShift))
+        if (Input.GetMouseButtonUp(0) && Input.GetKey(KeyCode.LeftShift)
+            || Input.GetMouseButton(0) && Input.GetKeyUp(KeyCode.LeftShift))
         {
             GameManager.SetSpeed(GameSettings.ForwardSpeed);
         }

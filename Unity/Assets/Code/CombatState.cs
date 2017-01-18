@@ -25,8 +25,10 @@ public class CombatState : MonoBehaviour {
     Transform[] _vitalPoints;
     bool _isDead = false;
     Renderer _renderer;
-    int _rollI; 
-
+    int _rollI;
+    [SerializeField]
+    Transform _gunTrans;
+    public Transform GunTrans { get { return _gunTrans != null ? _gunTrans : transform; } set { _gunTrans = value; } }
     bool _pullingTrigger; 
     public bool PullingTrigger { get { return _pullingTrigger; } }
     SetActionDelegate _actionDelegate;
@@ -120,12 +122,11 @@ public class CombatState : MonoBehaviour {
     }
     public void FireWeapon(IAction _action)
     {
-        Debug.Log("firing"); 
         CombatState _target = _action.Combat;
         if (_target != null)
         {
             float _coverAmount;
-            if (_target.CoverAmount(transform.position, out _coverAmount))
+            if (_target.CoverAmount(GunTrans.position, out _coverAmount))
             {
                 float _weaponAccuracy = _inventory.SelectedWeapon.Accuracy - _inventory.SelectedWeapon.AccuracyLoss(Vector3.Distance(transform.position, _target.transform.position));
                 float _dc = Math.Max(5f, _accuracy + _weaponAccuracy - _coverAmount - _target.Dodge);
