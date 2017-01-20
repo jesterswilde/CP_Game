@@ -304,7 +304,7 @@ public class GameManager : MonoBehaviour {
             _activeCharacter.SetAction(PlayerInput.ActionButtons(_activeCharacter)); 
             _activeCharacter.ApplyActions(); 
         }
-        TimeCounter.UpdateTime(_fixedGameTime.ToString());
+        TimeCounter.UpdateTime(_fixedGameTime);
         _camController.UpdateCamera();
         UpdateFixedTimestep(); 
     }
