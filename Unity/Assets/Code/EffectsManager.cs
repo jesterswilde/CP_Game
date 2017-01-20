@@ -16,7 +16,14 @@ public class EffectsManager : MonoBehaviour {
 
     public static GameObject CreateEffect(string _name)
     {
-        return Instantiate(Effects[_name]) as GameObject;
+        if (Effects.ContainsKey(_name)){
+            return Instantiate(Effects[_name]) as GameObject;
+        }
+        else
+        {
+            Debug.Log("dont have name: " + _name);
+            return null;
+        }
     }
     public static GameObject CreateEffect(string _name, Vector3 _loc, Quaternion _rot)
     {

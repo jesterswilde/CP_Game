@@ -60,6 +60,7 @@ public class Effect {
 
     void CreateEffect()
     {
+        Debug.Log("creating effect"); 
         if(_hasLocation)
         {
             _go = EffectsManager.CreateEffect(_name, _loc, _rot);

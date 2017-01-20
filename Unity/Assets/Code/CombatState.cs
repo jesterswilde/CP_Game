@@ -32,6 +32,8 @@ public class CombatState : MonoBehaviour {
     bool _pullingTrigger; 
     public bool PullingTrigger { get { return _pullingTrigger; } }
     SetActionDelegate _actionDelegate;
+    [SerializeField]
+    string _muzzleFlash;
     
 
     public IAction UseAction(IAction _action)
@@ -122,6 +124,7 @@ public class CombatState : MonoBehaviour {
     }
     public void FireWeapon(IAction _action)
     {
+        new Effect(_muzzleFlash, GunTrans.position, GunTrans.rotation);
         CombatState _target = _action.Combat;
         if (_target != null)
         {
