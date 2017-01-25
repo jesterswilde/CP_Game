@@ -11,27 +11,167 @@ ModelImporter:
     100006: factory_server_entrance
     100008: factory_server_ground
     100010: factory_server_walls_ceiling
+    100012: Box024
+    100014: Box025
+    100016: Box026
+    100018: Box027
+    100020: factory_building_A
+    100022: factory_building_B
+    100024: factory_building_C
+    100026: factory_building_C_window
+    100028: factory_building_D
+    100030: factory_building_E
+    100032: factory_building_F
+    100034: factory_building_F_window
+    100036: factory_building_G
+    100038: factory_building_H
+    100040: factory_building_H_window
+    100042: factory_building_I
+    100044: factory_building_J
+    100046: factory_building_K
+    100048: factory_building_L
+    100050: factory_building_M
+    100052: factory_building_N
+    100054: factory_fence_buildings
+    100056: factory_fence_highway
+    100058: factory_ground
+    100060: factory_highway
+    100062: light_street_glow
+    100064: window_B
+    100066: window_B_glass
     400000: //RootNode
     400002: factory_server_console_A
     400004: factory_server_console_A_glow
     400006: factory_server_entrance
     400008: factory_server_ground
     400010: factory_server_walls_ceiling
+    400012: Box024
+    400014: Box025
+    400016: Box026
+    400018: Box027
+    400020: factory_building_A
+    400022: factory_building_B
+    400024: factory_building_C
+    400026: factory_building_C_window
+    400028: factory_building_D
+    400030: factory_building_E
+    400032: factory_building_F
+    400034: factory_building_F_window
+    400036: factory_building_G
+    400038: factory_building_H
+    400040: factory_building_H_window
+    400042: factory_building_I
+    400044: factory_building_J
+    400046: factory_building_K
+    400048: factory_building_L
+    400050: factory_building_M
+    400052: factory_building_N
+    400054: factory_fence_buildings
+    400056: factory_fence_highway
+    400058: factory_ground
+    400060: factory_highway
+    400062: light_street_glow
+    400064: window_B
+    400066: window_B_glass
     2300000: factory_server_console_A
     2300002: factory_server_console_A_glow
     2300004: factory_server_entrance
     2300006: factory_server_ground
     2300008: factory_server_walls_ceiling
+    2300010: Box024
+    2300012: Box025
+    2300014: Box026
+    2300016: Box027
+    2300018: factory_building_A
+    2300020: factory_building_B
+    2300022: factory_building_C
+    2300024: factory_building_C_window
+    2300026: factory_building_D
+    2300028: factory_building_E
+    2300030: factory_building_F
+    2300032: factory_building_F_window
+    2300034: factory_building_G
+    2300036: factory_building_H
+    2300038: factory_building_H_window
+    2300040: factory_building_I
+    2300042: factory_building_J
+    2300044: factory_building_K
+    2300046: factory_building_L
+    2300048: factory_building_M
+    2300050: factory_building_N
+    2300052: factory_fence_buildings
+    2300054: factory_fence_highway
+    2300056: factory_ground
+    2300058: factory_highway
+    2300060: light_street_glow
+    2300062: window_B
+    2300064: window_B_glass
     3300000: factory_server_console_A
     3300002: factory_server_console_A_glow
     3300004: factory_server_entrance
     3300006: factory_server_ground
     3300008: factory_server_walls_ceiling
+    3300010: Box024
+    3300012: Box025
+    3300014: Box026
+    3300016: Box027
+    3300018: factory_building_A
+    3300020: factory_building_B
+    3300022: factory_building_C
+    3300024: factory_building_C_window
+    3300026: factory_building_D
+    3300028: factory_building_E
+    3300030: factory_building_F
+    3300032: factory_building_F_window
+    3300034: factory_building_G
+    3300036: factory_building_H
+    3300038: factory_building_H_window
+    3300040: factory_building_I
+    3300042: factory_building_J
+    3300044: factory_building_K
+    3300046: factory_building_L
+    3300048: factory_building_M
+    3300050: factory_building_N
+    3300052: factory_fence_buildings
+    3300054: factory_fence_highway
+    3300056: factory_ground
+    3300058: factory_highway
+    3300060: light_street_glow
+    3300062: window_B
+    3300064: window_B_glass
     4300000: factory_server_walls_ceiling
     4300002: factory_server_entrance
     4300004: factory_server_ground
     4300006: factory_server_console_A
     4300008: factory_server_console_A_glow
+    4300010: factory_building_A
+    4300012: factory_building_B
+    4300014: factory_building_E
+    4300016: factory_building_D
+    4300018: factory_building_F
+    4300020: factory_building_G
+    4300022: factory_building_I
+    4300024: factory_building_H
+    4300026: factory_building_C
+    4300028: factory_building_K
+    4300030: factory_building_L
+    4300032: factory_building_N
+    4300034: factory_building_M
+    4300036: factory_ground
+    4300038: factory_highway
+    4300040: factory_fence_buildings
+    4300042: factory_fence_highway
+    4300044: factory_building_C_window
+    4300046: factory_building_J
+    4300048: Box024
+    4300050: Box025
+    4300052: Box026
+    4300054: Box027
+    4300056: window_B
+    4300058: window_B_glass
+    4300060: factory_building_F_window
+    4300062: factory_building_H_window
+    4300064: light_street_glow
   materials:
     importMaterials: 1
     materialName: 0
@@ -78,6 +218,7 @@ ModelImporter:
   importAnimation: 1
   copyAvatar: 0
   humanDescription:
+    serializedVersion: 2
     human: []
     skeleton: []
     armTwist: 0.5
@@ -88,7 +229,10 @@ ModelImporter:
     legStretch: 0.05
     feetSpacing: 0
     rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
     hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 0
   lastHumanDescriptionAvatarSource: {instanceID: 0}
   animationType: 0
   humanoidOversampling: 1
