@@ -31,6 +31,7 @@ public class GameManager : MonoBehaviour {
     static int _characterIndex = 0;
     static List<WibblyWobbly> _timeyWimeys = new List<WibblyWobbly>();
     static List<ITargetable> _targetables = new List<ITargetable>();
+    static List<IManager> _managers = new List<IManager>(); 
     [SerializeField]
     ObserverCam ob;
     static ObserverCam _obCam;
@@ -246,9 +247,21 @@ public class GameManager : MonoBehaviour {
     {
         _characters.Add(_character); 
     }
+    public static void UnRegisterCharacter(Character _character)
+    {
+        _characters.Remove(_character); 
+    }
+    public static void ClearCharacters()
+    {
+        _characters.Clear(); 
+    }
     public static void RegisterWibblyWobbly(WibblyWobbly _timey)
     {
         _timeyWimeys.Add(_timey); 
+    }
+    public static void UnRegisterWibblyWobbly(WibblyWobbly _timey)
+    {
+        _timeyWimeys.Remove(_timey); 
     }
     public static void RegisterTargetable(ITargetable _target)
     {
@@ -257,6 +270,14 @@ public class GameManager : MonoBehaviour {
     public static void UnRegisterTargetable(ITargetable _target)
     {
         _targetables.Remove(_target); 
+    }
+    public static void RegisterManager(IManager _manager)
+    {
+        _managers.Add(_manager); 
+    }
+    public static void UnRegisterManager(IManager _manager)
+    {
+        _managers.Remove(_manager); 
     }
     public static void TimeysApplyActions()
     {
@@ -288,7 +309,11 @@ public class GameManager : MonoBehaviour {
     void Update () {
         ShouldPause(); 
         _totalUpdateTime += Time.deltaTime;
-        _gameTime = _fixedGameTime; 
+        _gameTime = _fixedGameTime;
+        for (int i = 0; i < _managers.Count; i++)
+        {
+            _managers[i].UpdateManager(_gameTime, Time.deltaTime);
+        }
         if (Input.GetKeyDown(KeyCode.Backspace))
         {
             Observe();
@@ -319,6 +344,10 @@ public class GameManager : MonoBehaviour {
             _fixedGameTime += GameSettings.FixedTimestep * _dir;
             _fixedGameTime = Mathf.Max(_fixedGameTime, 0); 
         }
+        for(int i = 0; i < _managers.Count; i++)
+        {
+            _managers[i].FixedUpdateManager(_fixedGameTime, Time.fixedDeltaTime); 
+        }
         if (_isPlaying && !_isPaused)
         {
             Play(_fixedGameTime);
@@ -342,6 +371,10 @@ public class GameManager : MonoBehaviour {
         Cursor.visible = false; 
         SetSpeed(GameSettings.ForwardSpeed); 
         SetActiveCharacter(_characters[_characterIndex]);
-        TimeCounter.SwitchedToCharacter(_characters[_characterIndex]); 
+        TimeCounter.SwitchedToCharacter(_characters[_characterIndex]);
+        for (int i = 0; i < _managers.Count; i++)
+        {
+            _managers[i].StartManager();
+        }
     }
 }

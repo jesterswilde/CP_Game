@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic; 
 
 public class Util {
 
@@ -17,5 +18,16 @@ public class Util {
     public static bool LayerMaskContainsLayer(LayerMask _mask, int _layer)
     {
         return (_mask.value & 1 << _layer) > 0; 
+    }
+    public static List<T> GetComponents<T>(GameObject _go)
+    {
+        List<T> _list = new List<T>();
+        T _component = _go.GetComponent<T>();
+        if(_component != null)
+        {
+            _list.Add(_component); 
+        }
+        _list.AddRange(_go.GetComponentsInChildren<T>());
+        return _list; 
     }
 }
