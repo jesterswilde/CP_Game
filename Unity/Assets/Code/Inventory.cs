@@ -32,7 +32,6 @@ public class Inventory : MonoBehaviour {
     }
     public void PickUpItem(InvenItem _item)
     {
-        Debug.Log(_item); 
         if (_items.ContainsKey(_item.ItemName))
         {
             _items[_item.ItemName] += _item.Amount;

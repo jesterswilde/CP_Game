@@ -26,3 +26,5 @@ public struct AttackableDist
         _dist = dist; 
     }
 }
+
+public delegate void callback();

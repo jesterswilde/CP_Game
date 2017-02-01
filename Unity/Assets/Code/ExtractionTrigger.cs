@@ -23,11 +23,11 @@ public class ExtractionTrigger : MonoBehaviour, ITargetable {
 
     public Vector3 Position { get { return transform.position; } }
 
-    public IAction Activate(Character _character)
+    public List<IAction> Activate(Character _character)
     {
         _extractedCharacters.Push(_character);
         Debug.Log(_extractedCharacters.Aggregate("Extracting...\n", (_result, _char) => _result += _char.PrintInventory())); 
-        return new Action(ActionType.Extract, true); 
+        return new List<IAction> { new Action(ActionType.Extract, true) }; 
     }
 
     public void RewindActivation(IAction _action)

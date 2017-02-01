@@ -44,6 +44,22 @@ public abstract class WibblyWobbly : MonoBehaviour {
             _actionsToBeConsumed.AddRange(_actions); 
         }
     }
+    public virtual void SetAction(List<IAction> _actions, bool _determinExternal)
+    {
+        if (CanAddActions() && _actions.Count > 0)
+        {
+            for(int i = 0; i < _actions.Count; i++)
+            {
+                if (_actions[i].IsExternal)
+                {
+                    SetExternalAction(_actions[i]);
+                }else
+                {
+                    SetAction(_actions[i]); 
+                }
+            }
+        }
+    }
     public virtual void ApplyActions()
     {
         if (CanAddActions())
@@ -64,6 +80,16 @@ public abstract class WibblyWobbly : MonoBehaviour {
         if (GameManager.IsPlaying && _action != null)
         {
             _history.InsertAfterPointer(_action); 
+        }
+    }
+    public virtual void SetExternalAction(List<IAction> _actions)
+    {
+        if (GameManager.IsPlaying && _actions != null)
+        {
+            for(int i = 0; i < _actions.Count; i++)
+            {
+                _history.InsertAfterPointer(_actions[i]); 
+            }
         }
     }
     protected float _prevTime;

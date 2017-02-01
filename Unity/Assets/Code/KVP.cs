@@ -11,6 +11,8 @@ public class GenericKVP<K, V>
 }
 [Serializable]
 public class StringObjectKVP : GenericKVP<string, UnityEngine.Object> { }
+[Serializable]
+public class StringIntKVP : GenericKVP<string, int> { }; 
 
 [CustomPropertyDrawer(typeof(StringObjectKVP))]
 public class StringObjectDrawer : PropertyDrawer

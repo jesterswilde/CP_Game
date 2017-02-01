@@ -26,6 +26,7 @@ public class Character : WibblyWobbly {
     [SerializeField]
     bool _playerControlled = false;
     Inventory _inventory;
+    public Inventory Inventory { get { return _inventory; } }
 
     #region Time
     bool CanAct()
@@ -72,11 +73,9 @@ public class Character : WibblyWobbly {
         switch (_action.Type)
         {
             case ActionType.Activate:
-                Debug.Log("trying to activate"); 
                 Activate(_action.Target); 
                 return;
             case ActionType.PickUp:
-                Debug.Log("picking up"); 
                 _inventory.PickUpItem(_action.Item);
                 return;
             case ActionType.PutDown:

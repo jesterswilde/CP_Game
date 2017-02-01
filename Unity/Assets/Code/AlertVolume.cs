@@ -11,6 +11,7 @@ public class AlertVolume : MonoBehaviour {
     [SerializeField]
     LayerMask _collMask;
     int _count = 0;
+    RequiredItems _requiredItems; 
 
     void OnTriggerEnter(Collider _coll)
     {
@@ -19,19 +20,13 @@ public class AlertVolume : MonoBehaviour {
             _count++;
             if (_count == 1)
             {
-                Character _character = _coll.gameObject.GetComponent<Character>(); 
-                if(_character == null)
-                {
-                    _character = GetComponentInParent<Character>(); 
-                }
+                Character _character = Util.GetComponentInHierarchy<Character>(_coll.gameObject); 
                 foreach(AlertActions _target in _alerts)
                 {
                     _target.Interactable.ExternalTrigger(_target.EnterTask, _target.Enter, _character); 
                 }
             }
         }
-        Debug.Log("Launcing " + _count);
-
     }
     void OnTriggerExit(Collider _coll)
     {
@@ -40,11 +35,7 @@ public class AlertVolume : MonoBehaviour {
             _count--;
             if (_count == 0)
             {
-                Character _character = _coll.gameObject.GetComponent<Character>();
-                if (_character == null)
-                {
-                    _character = GetComponentInParent<Character>();
-                }
+                Character _character = Util.GetComponentInHierarchy<Character>(_coll.gameObject); 
                 foreach (AlertActions _target in _alerts)
                 {
                     _target.Interactable.ExternalTrigger(_target.ExitTask, _target.Exit, _character);
@@ -53,6 +44,10 @@ public class AlertVolume : MonoBehaviour {
         }
         Debug.Log("Unlaunching: " + _count);
 
+    }
+    void Awake()
+    {
+        _requiredItems = GetComponent<RequiredItems>(); 
     }
 }
 [Serializable]

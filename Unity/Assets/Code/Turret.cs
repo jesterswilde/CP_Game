@@ -264,7 +264,7 @@ public class Turret : Interactable, ITargetable {
         throw new NotImplementedException();
     }
 
-    public IAction Activate(Character _character)
+    public List<IAction> Activate(Character _character)
     {
         throw new NotImplementedException();
     }

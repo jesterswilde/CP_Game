@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
+using System.Collections.Generic; 
 
 public class Item : MonoBehaviour, ITargetable {
     [SerializeField]
@@ -19,7 +20,8 @@ public class Item : MonoBehaviour, ITargetable {
     Renderer _renderer;
     Collider _collider;
     CombatState _combat;
-    Color _baseColor; 
+    Color _baseColor;
+    RequiredItems _requiredItems; 
 
     public bool IsVisible
     { get { return _renderer.isVisible; }}
@@ -77,7 +79,7 @@ public class Item : MonoBehaviour, ITargetable {
 
     public void Targeted()
     {
-        _renderer.material.color = Color.yellow; 
+        _renderer.material.color = ColorManager.ItemColor; 
     }
 
     public void UnTargeted()
@@ -85,12 +87,20 @@ public class Item : MonoBehaviour, ITargetable {
         _renderer.material.color = _baseColor; 
     }
 
-    public IAction Activate(Character _character)
+    public List<IAction> Activate(Character _character)
     {
-        if (!_isHeld)
+        if(_requiredItems == null || _requiredItems.HasRequiredItems(_character))
         {
-            Debug.Log("activating");
-           return new ItemAction(ActionType.PickUp, new InvenItem(this), true);
+            List<IAction> _actions = new List<IAction>();
+            if(_requiredItems != null && _requiredItems.UseItems() != null)
+            {
+                _actions.AddRange(_requiredItems.UseItems()); 
+            }
+            if (!_isHeld)
+            {
+                _actions.Add(new ItemAction(ActionType.PickUp, new InvenItem(this), true));
+               return _actions;
+            }
         }
         return null; 
     }
@@ -117,6 +127,7 @@ public class Item : MonoBehaviour, ITargetable {
         _renderer = GetComponent<Renderer>();
         _collider = GetComponent<Collider>(); 
         _baseColor = _renderer.material.color;
+        _requiredItems = GetComponent<RequiredItems>(); 
     }
     void Start()
     {

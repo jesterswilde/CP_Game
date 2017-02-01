@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public interface ITargetable {
     void Targeted();
@@ -9,7 +10,7 @@ public interface ITargetable {
     bool isActivatable { get; }
     bool isAttackable { get; }
     CombatState Combat { get; }
-    IAction Activate(Character _character);
+    List<IAction> Activate(Character _character);
     void RewindActivation(IAction _action);
     GameObject Go { get; }
     float MinDistanceToActivate { get; }

@@ -19,6 +19,7 @@ public class TargetableTrigger : MonoBehaviour, ITargetable
     Material _mat;
     Color _startingColor;
     Renderer _renderer;
+    RequiredItems _requiredItems;
     public bool IsVisible { get { return _renderer.isVisible; } }
 
     public Vector3 Position { get { return transform.position; } }
@@ -28,27 +29,37 @@ public class TargetableTrigger : MonoBehaviour, ITargetable
     public CombatState Combat { get { return null; } }
     public GameObject Go { get { return gameObject; } }
 
-    public IAction Activate(Character _character)
+    public List<IAction> Activate(Character _character)
     {
         if(_alertList.Count == 0)
         {
             return null; 
         }
-        if(_index < _alertList.Count)
+        if(_requiredItems == null || _requiredItems.HasRequiredItems(_character))
         {
-            AlertList _alerts = _alertList[_index]; 
-            foreach(AlertActions _alert in _alerts.alerts)
+            if(_index < _alertList.Count)
             {
-                _alert.Interactable.ExternalTrigger(_alert.EnterTask, _alert.Enter, _character);
+                AlertList _alerts = _alertList[_index]; 
+                foreach(AlertActions _alert in _alerts.alerts)
+                {
+                    _alert.Interactable.ExternalTrigger(_alert.EnterTask, _alert.Enter, _character);
+                }
+                Debug.Log("Triggered: " + _index); 
+                _index++;
+            }else
+            {
+                if (_loop)
+                {
+                    _index = 0;
+                    Activate(_character);
+                }else
+                {
+                    _index++; 
+                }
             }
-            Debug.Log("Triggered: " + _index); 
-            _index++;
-        }else
-        {
-            if (_loop)
+            if(_requiredItems != null)
             {
-                _index = 0;
-                Activate(_character); 
+                return _requiredItems.UseItems(); 
             }
         }
         return null;
@@ -82,6 +93,7 @@ public class TargetableTrigger : MonoBehaviour, ITargetable
         {
             throw new System.Exception(gameObject.name + " has no interactable object"); 
         }
+        _requiredItems = GetComponent<RequiredItems>(); 
         _renderer = GetComponent<Renderer>();
     }
     void Start()

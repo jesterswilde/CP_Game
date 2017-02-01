@@ -13,15 +13,17 @@ public class StageComponent : MonoBehaviour {
     Character _character;
     List<Renderer> _renderers;
     List<Collider> _colliders;
+    StageChangeActivate _activator; 
 
     bool _isActive = true;
     bool _isReplaying = false;
     bool _isInactive = false;  
     public void LoadNewStage(int _stage)
     {
-
+        Debug.Log("Loading new stage"); 
         if (_activeStages.Contains(_stage))
         {
+            Debug.Log("Activating");
             Activate();
         }else
         {
@@ -30,6 +32,7 @@ public class StageComponent : MonoBehaviour {
                 SetToReplay();
             }else
             {
+                Debug.Log("Deactivating"); 
                 Deactivate(); 
             }
         }
@@ -56,6 +59,10 @@ public class StageComponent : MonoBehaviour {
                 {
                     GameManager.RegisterWibblyWobbly(_character);
                     GameManager.RegisterCharacter(_character); 
+                }
+                if(_activator != null)
+                {
+                    _activator.CanActivate = true; 
                 }
             }
             if (_isReplaying)
@@ -92,6 +99,10 @@ public class StageComponent : MonoBehaviour {
                 {
                     GameManager.RegisterWibblyWobbly(_character);
                 }
+                if (_activator != null)
+                {
+                    _activator.CanActivate = true;
+                }
             }
             if (_isActive)
             {
@@ -117,7 +128,11 @@ public class StageComponent : MonoBehaviour {
             {
                 _renderers[i].enabled = false;
             }
-            
+            if (_activator != null)
+            {
+                _activator.CanActivate = false;
+            }
+
         }
         if (_interactable != null)
         {
@@ -128,12 +143,17 @@ public class StageComponent : MonoBehaviour {
             GameManager.UnRegisterWibblyWobbly(_character);
             GameManager.UnRegisterCharacter(_character);
         }
+        _isActive = false;
+        _isReplaying = false;
+        _isInactive = true; 
     }
     void Awake()
     {
         _renderers = Util.GetComponents<Renderer>(gameObject);
         _colliders = Util.GetComponents<Collider>(gameObject);
         _interactable = GetComponent<Interactable>();
-        _character = GetComponent<Character>(); 
+        _character = GetComponent<Character>();
+        _activator = GetComponent<StageChangeActivate>(); 
+        StageManager.RegisterStageComponent(this); 
     }
 }

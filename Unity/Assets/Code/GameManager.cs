@@ -41,6 +41,7 @@ public class GameManager : MonoBehaviour {
     public static bool IsPlaying { get { return _isPlaying; } }
     static bool _isPaused = false; 
     public static bool IsPaused { get { return _isPaused; } }
+    static callback _jumpCB; 
     static bool _showingCtrlMenu = false; 
     public static bool ShowingCtrlMenu { get { return _showingCtrlMenu; } }
     static bool _canAcceptPlayerInput = true; 
@@ -92,7 +93,7 @@ public class GameManager : MonoBehaviour {
     }
     #endregion
 
-    #region TIme
+    #region Time
     public static void SetSpeed(float _speed)
     {
         _gameSpeed = _speed; 
@@ -151,7 +152,7 @@ public class GameManager : MonoBehaviour {
         }
     }
 
-    static void JumpToTime(float _time)
+    public static void JumpToTime(float _time)
     {
         float _timeGap = _time - GameManager.GameTime;
         int _dir = (_timeGap >= 0) ? 1 : -1;
@@ -159,17 +160,28 @@ public class GameManager : MonoBehaviour {
         _jumpDuration = _timeGap / _jumpSpeed;
         SetSpeed(_jumpSpeed);
         _canAcceptPlayerInput = false;
+        Debug.Log("Jumping " + _jumpSpeed + " | " + _jumpDuration); 
         GameManager.t.StartJump(_jumpDuration);
     }
-    public void StartJump(float _duration)
+    public static void JumpToTime(float _time, callback _cb)
+    {
+        JumpToTime(_time);
+        _jumpCB = _cb; 
+    }
+    void StartJump(float _duration)
     {
         Invoke("EndJump", _duration);
     }
-    public void EndJump()
+    void EndJump()
     {
         _gameTime = _fixedGameTime; 
         SetSpeed(0);
         _canAcceptPlayerInput = true;
+        if(_jumpCB != null)
+        {
+            _jumpCB();
+            _jumpCB = null; 
+        }
     }
     static void ShouldPause()
     {
@@ -182,7 +194,7 @@ public class GameManager : MonoBehaviour {
             }
         }else
         {
-            if(_activeCharacter != null && _activeCharacter.IsPastMostRecentAction() &&
+            if(_activeCharacter != null && _activeCharacter.IsPastMostRecentAction() && _canAcceptPlayerInput &&
                 PlayerInput.GetAbsKeyboardState().Aggregate((result, current) => current || result))
             {
                 SetSpeed(GameSettings.ForwardSpeed); 

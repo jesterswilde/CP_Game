@@ -19,6 +19,15 @@ public class Util {
     {
         return (_mask.value & 1 << _layer) > 0; 
     }
+    public static T GetComponentInHierarchy<T>(GameObject _go)
+    {
+        T _t = _go.GetComponent<T>();
+        if(_t == null)
+        {
+            _t = _go.GetComponentInChildren<T>(); 
+        }
+        return _t; 
+    }
     public static List<T> GetComponents<T>(GameObject _go)
     {
         List<T> _list = new List<T>();
