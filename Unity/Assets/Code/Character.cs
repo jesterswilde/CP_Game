@@ -54,7 +54,12 @@ public class Character : WibblyWobbly {
             transform.forward = _cam.CameraForward(_state.XRot);
             Vector3 _move = ((_state.Forward * _state.CanForward) - (_state.Backward * _state.CanBackward)) * transform.forward +
                 ((_state.Right * _state.CanRight) - (_state.Left * _state.CanLeft)) * transform.right;
-            transform.position += new Vector3(_move.x, 0, _move.z).normalized * speed * _deltaTime;
+            Vector3 _projectedMove = Vector3.ProjectOnPlane(_move, _state.GroundNormal);
+            if (_state.IsGrounded == 0)
+            {
+                _projectedMove = new Vector3(_projectedMove.x, -10, _projectedMove.z); 
+            }
+            transform.position += _projectedMove.normalized * speed * _deltaTime;
         }
     }
 
@@ -65,13 +70,21 @@ public class Character : WibblyWobbly {
             transform.forward = _cam.CameraForward(_state.XRot);
             Vector3 _move = ((_state.Forward * _state.CanForward) - (_state.Backward * _state.CanBackward)) * transform.forward + 
                 ((_state.Right * _state.CanRight) - (_state.Left * _state.CanLeft)) * transform.right;
-            transform.position += new Vector3(_move.x, 0, _move.z).normalized * speed * _deltaTime * -1;
+            Vector3 _projectedMove = Vector3.ProjectOnPlane(_move, _state.GroundNormal);
+            if (_state.IsGrounded == 0)
+            {
+                _projectedMove = new Vector3(_projectedMove.x, -10, _projectedMove.z);
+            }
+            transform.position += _projectedMove.normalized * speed * _deltaTime * -1;
         }
     }
     protected override void UseAction(IAction _action, float _time)
     {
         switch (_action.Type)
         {
+            case ActionType.StandingOnSurface:
+                SetExternalAction(new VectorAction(ActionType.LeavingSurface, _state.GroundNormal, true));
+                break; 
             case ActionType.Activate:
                 Activate(_action.Target); 
                 return;

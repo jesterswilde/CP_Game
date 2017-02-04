@@ -14,7 +14,9 @@ public class CharacterState
     int _canMoveForward = 1;
     int _canMoveBackward = 1;
     int _canMoveLeft = 1;
-    int _canMoveRight = 1; 
+    int _canMoveRight = 1;
+    int _isGrounded = 0;
+    Vector3 _groundNormal = Vector3.zero; 
     Vector3 _prevPos = Vector3.zero;
     Quaternion _prevRot = new Quaternion();
 
@@ -22,11 +24,13 @@ public class CharacterState
     public int Backward { get { return _backward; } set { _backward = value; } }
     public int Left { get { return _left; } set { _left = value; } }
     public int Right { get { return _right; } set { _left = value; } }
+    public Vector3 GroundNormal { get { return _groundNormal; } }
     public bool PullingTrigger { get { return _pullingTrigger; } }
     public int CanForward { get { return _canMoveForward; } }
     public int CanBackward { get { return _canMoveBackward; } }
     public int CanLeft { get { return _canMoveLeft; } }
     public int CanRight { get { return _canMoveRight; } }
+    public int IsGrounded { get { return _isGrounded; } }
     public float XRot { get { return _rotX; } }
     public Vector3 PrevPos { get { return _prevPos; } set { _prevPos = value; } }
     public Quaternion PrevRot { get { return _prevRot; } set { _prevRot = value; } }
@@ -161,6 +165,16 @@ public class CharacterState
             case ActionType.PressRight:
                 _right = 1;
                 break;
+            case ActionType.StandingOnSurface:
+                _groundNormal = _action.Vector;
+                Debug.Log("Standing on " + _action.Vector); 
+                break; 
+            case ActionType.IsGrounded:
+                _isGrounded = 1;
+                break;
+            case ActionType.IsFalling:
+                _isGrounded = 0;
+                break; 
             case ActionType.ReleaseRight:
                 _right = 0;
                 break;
@@ -209,6 +223,16 @@ public class CharacterState
             case ActionType.LeftUnblocked:
                 _canMoveLeft = 0;
                 break;
+            case ActionType.IsGrounded:
+                _isGrounded = 0;
+                break;
+            case ActionType.IsFalling:
+                _isGrounded = 1;
+                break;
+            case ActionType.LeavingSurface:
+                _groundNormal = _action.Vector;
+                Debug.Log("Leaving " + _action.Vector); 
+                break; 
             case ActionType.PressForward:
                 _forward = 0;
                 break;
