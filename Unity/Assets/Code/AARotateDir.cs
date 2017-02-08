@@ -27,21 +27,21 @@ public class AARotateDir : IAtomicAction
         _enemy.transform.Rotate(new Vector3(0, _rotAmount, 0));
     }
 
-    public void ReverseAction(IAction _action, float _time)
+    public void ReverseAction(Action _action, float _time)
     {
         _dir = (_action.Value > 0) ? 1 : -1;
     }
 
-    public void UseAction(IAction _action, float _time)
+    public void UseAction(Action _action, float _time)
     {
         _dir = (_action.Value > 0) ? 1 : -1;
     }
-    public IAction Unset()
+    public Action Unset()
     {
         return new ValueAction(ActionType.AIRotateDirUnset, _dir * 1f);
     }
 
-    public static IAction CreateAction(Transform _enemy, Vector3 _target, float _time)
+    public static Action CreateAction(Transform _enemy, Vector3 _target, float _time)
     {
         Vector3 _currentForward = _enemy.forward;
         Vector3 _tempTarget = new Vector3(_target.x, 0, _target.z);

@@ -87,11 +87,11 @@ public class Item : MonoBehaviour, ITargetable {
         _renderer.material.color = _baseColor; 
     }
 
-    public List<IAction> Activate(Character _character)
+    public List<Action> Activate(Character _character)
     {
         if(_requiredItems == null || _requiredItems.HasRequiredItems(_character))
         {
-            List<IAction> _actions = new List<IAction>();
+            List<Action> _actions = new List<Action>();
             if(_requiredItems != null && _requiredItems.UseItems() != null)
             {
                 _actions.AddRange(_requiredItems.UseItems()); 
@@ -105,7 +105,7 @@ public class Item : MonoBehaviour, ITargetable {
         return null; 
     }
 
-    public void RewindActivation(IAction _action)
+    public void RewindActivation(Action _action)
     {
         if (_isHeld)
         {
@@ -113,12 +113,12 @@ public class Item : MonoBehaviour, ITargetable {
         }
     }
 
-    public void SetAction(IAction _action)
+    public void SetAction(Action _action)
     {
         throw new NotImplementedException();
     }
 
-    public void SetAction(IAction _action, bool _evaluatSource)
+    public void SetAction(Action _action, bool _evaluatSource)
     {
         throw new NotImplementedException();
     }

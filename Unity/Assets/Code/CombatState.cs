@@ -3,7 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-public delegate void SetActionDelegate(IAction _action, bool _determinOrigin);
+public delegate void SetActionDelegate(Action _action, bool _determinOrigin);
 public class CombatState : MonoBehaviour {
 
     [SerializeField]
@@ -36,7 +36,7 @@ public class CombatState : MonoBehaviour {
     string _muzzleFlash;
     
 
-    public IAction UseAction(IAction _action)
+    public Action UseAction(Action _action)
     {
         switch (_action.Type)
         {
@@ -59,7 +59,7 @@ public class CombatState : MonoBehaviour {
         }
         return null; 
     }
-    public void ReverseAction(IAction _action)
+    public void ReverseAction(Action _action)
     {
         switch (_action.Type)
         {
@@ -80,7 +80,7 @@ public class CombatState : MonoBehaviour {
                 break;
         }
     }
-    public void SetAction(IAction _action, bool _determinOrigin)
+    public void SetAction(Action _action, bool _determinOrigin)
     {
         _actionDelegate(_action, _determinOrigin);
     }
@@ -89,24 +89,24 @@ public class CombatState : MonoBehaviour {
         _actionDelegate = _delegate;
     }
 
-    public List<IAction> ActionsToReset(List<IAction> _actions)
+    public List<Action> ActionsToReset(List<Action> _actions)
     {
         if (PullingTrigger)
         {
-            _actions.Add(new Action(ActionType.ReleaseTrigger));
+            _actions.Add(new BasicAction(ActionType.ReleaseTrigger));
         }
         return _actions; 
     }
-    public List<IAction> SetStateToKeyboard(List<IAction> _actions)
+    public List<Action> SetStateToKeyboard(List<Action> _actions)
     {
         bool[] _keyboard = PlayerInput.GetAbsKeyboardState();
         if (_keyboard[4] && !_pullingTrigger)
         {
-            _actions.Add(new Action(ActionType.PullTrigger));
+            _actions.Add(new BasicAction(ActionType.PullTrigger));
         }
         if (!_keyboard[4] && _pullingTrigger)
         {
-            _actions.Add(new Action(ActionType.ReleaseTrigger));
+            _actions.Add(new BasicAction(ActionType.ReleaseTrigger));
         }
         return _actions;
     }
@@ -122,7 +122,7 @@ public class CombatState : MonoBehaviour {
         }
         return null;
     }
-    public void FireWeapon(IAction _action)
+    public void FireWeapon(Action _action)
     {
         new Effect(_muzzleFlash, GunTrans.position, GunTrans.rotation);
         CombatState _target = _action.Combat;
@@ -146,7 +146,7 @@ public class CombatState : MonoBehaviour {
             }
         }
     }
-    public void ReverseFire(IAction _action)
+    public void ReverseFire(Action _action)
     {
         SRand.ReverseRoll(ref _rollI);
         _inventory.SelectedWeapon.ReverseFireWeapon();
@@ -160,14 +160,14 @@ public class CombatState : MonoBehaviour {
         return _vitals.AmountOfBodyExposed(gunPos, out accuracyLoss);
     }
 
-    Action TakeDamage(float _damage)
+    BasicAction TakeDamage(float _damage)
     {
         if (!_isDead)
         {
             _currentHealth -= _damage;
             if (_currentHealth < 0 && !_isDead)
             {
-                return new Action(ActionType.Die, true);
+                return new BasicAction(ActionType.Die, true);
             }
         }
         return null;

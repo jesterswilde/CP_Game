@@ -78,7 +78,7 @@ public class Character : WibblyWobbly {
             transform.position += _projectedMove.normalized * speed * _deltaTime * -1;
         }
     }
-    protected override void UseAction(IAction _action, float _time)
+    protected override void UseAction(Action _action, float _time)
     {
         switch (_action.Type)
         {
@@ -110,7 +110,7 @@ public class Character : WibblyWobbly {
                 break;
         }
     }
-    protected override void ReverseAction(IAction _action, float _time)
+    protected override void ReverseAction(Action _action, float _time)
     {
         switch (_action.Type)
         {
@@ -142,7 +142,7 @@ public class Character : WibblyWobbly {
                 break;
         }
     }
-    public override void SetAction(IAction _action)
+    public override void SetAction(Action _action)
     {
         if (GameManager.CanAcceptPlayerInput && CanAct())
         {
@@ -193,7 +193,7 @@ public class Character : WibblyWobbly {
     {
         return _cam.XRot - _state.XRot;
     }
-    public IAction CreateTargetAction()
+    public Action CreateTargetAction()
     {
         return new TargetedAction(ActionType.Activate, _currentTarget); 
     }
@@ -208,7 +208,7 @@ public class Character : WibblyWobbly {
         _playerControlled = false;
         GetComponent<MeshRenderer>().material.color = Color.white;
         SetAction(_state.ActionsToReset()); 
-        _history.AddToHead(new Action(ActionType.Clear, _history.HeadAction.Time)); 
+        _history.AddToHead(new BasicAction(ActionType.Clear, _history.HeadAction.Time)); 
     }
     public float GetHeadTimestamp()
     {
@@ -245,7 +245,7 @@ public class Character : WibblyWobbly {
 
         // Use this for initialization
     void Start () {
-        SetAction(new Action(ActionType.Null));
+        SetAction(new BasicAction(ActionType.Null));
         _rollI =  SRand.GetStartingIndex(); 
 	}
     void Awake()

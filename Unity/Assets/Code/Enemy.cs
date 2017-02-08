@@ -31,7 +31,7 @@ public class Enemy : WibblyWobbly, IAI {
         }
         base.Play(_time); 
     }
-    IAtomicAction GetAAFromAction(IAction _action)
+    IAtomicAction GetAAFromAction(Action _action)
     {
         switch (_action.Type)
         {
@@ -55,7 +55,7 @@ public class Enemy : WibblyWobbly, IAI {
         }
         return null;
     }
-    IAtomicAction RewindAAFromAction(IAction _action)
+    IAtomicAction RewindAAFromAction(Action _action)
     {
         switch (_action.Type)
         {
@@ -76,7 +76,7 @@ public class Enemy : WibblyWobbly, IAI {
         }
         return null;
     }
-    protected override void UseAction(IAction _action, float _time)
+    protected override void UseAction(Action _action, float _time)
     {
         IAtomicAction _aa = GetAAFromAction(_action);
         _currentAA = _aa;
@@ -86,7 +86,7 @@ public class Enemy : WibblyWobbly, IAI {
         }
     }
 
-    protected override void ReverseAction(IAction _action, float _time)
+    protected override void ReverseAction(Action _action, float _time)
     {
         IAtomicAction _aa = RewindAAFromAction(_history.PointerAction);
         _currentAA = _aa; 
@@ -111,7 +111,7 @@ public class Enemy : WibblyWobbly, IAI {
             _currentAA.ActReverse(_deltaTIme); 
         }
     }
-    public override void SetAction(IAction _action)
+    public override void SetAction(Action _action)
     {
         if(GetAAFromAction(_action) != null && _currentAA != null)
         {
@@ -119,7 +119,7 @@ public class Enemy : WibblyWobbly, IAI {
         } 
         base.SetAction(_action);
     }
-    public override void SetExternalAction(IAction _action)
+    public override void SetExternalAction(Action _action)
     {
         if (_validControllers.Contains(_action.Type)){
             base.SetExternalAction(_action);

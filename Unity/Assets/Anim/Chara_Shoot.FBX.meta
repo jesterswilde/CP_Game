@@ -1,0 +1,236 @@
+fileFormatVersion: 2
+guid: b9c6be1d60fb8a24e9b8e1ff650b6748
+timeCreated: 1486358919
+licenseType: Free
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: chara_belt
+    100002: chara_body
+    100004: chara_hair
+    100006: chara_pouch_01
+    100008: chara_pouch_01 1
+    100010: chara_pouch_01 2
+    100012: chara_pouch_lgt_01
+    100014: chara_pouch_lgt_02
+    100016: chara_pouch_lgt_03
+    100018: //RootNode
+    100020: chara_visor
+    100022: wHead
+    100024: wLCalf
+    100026: wLCollarbone
+    100028: wLDigit11
+    100030: wLDigit12
+    100032: wLDigit13
+    100034: wLDigit21
+    100036: wLDigit22
+    100038: wLDigit23
+    100040: wLDigit31
+    100042: wLDigit32
+    100044: wLDigit33
+    100046: wLDigit41
+    100048: wLDigit42
+    100050: wLDigit43
+    100052: wLDigit51
+    100054: wLDigit52
+    100056: wLDigit53
+    100058: wLFoot
+    100060: wLForearm
+    100062: wLPalm
+    100064: wLPlatform
+    100066: wLThigh
+    100068: wLtoe1
+    100070: wLUpperarm
+    100072: wNeck1
+    100074: wNeck2
+    100076: wPelvis
+    100078: wRCalf
+    100080: wRCollarbone
+    100082: wRDigit11
+    100084: wRDigit12
+    100086: wRDigit13
+    100088: wRDigit21
+    100090: wRDigit22
+    100092: wRDigit23
+    100094: wRDigit31
+    100096: wRDigit32
+    100098: wRDigit33
+    100100: wRDigit41
+    100102: wRDigit42
+    100104: wRDigit43
+    100106: wRDigit51
+    100108: wRDigit52
+    100110: wRDigit53
+    100112: wRFoot
+    100114: wRForearm
+    100116: wRibcage
+    100118: wRPalm
+    100120: wRPlatform
+    100122: wRThigh
+    100124: wRtoe1
+    100126: wRUpperarm
+    100128: wSpine1
+    100130: wSpine2
+    100132: wSpine3
+    100134: wSpine4
+    400000: chara_belt
+    400002: chara_body
+    400004: chara_hair
+    400006: chara_pouch_01
+    400008: chara_pouch_01 1
+    400010: chara_pouch_01 2
+    400012: chara_pouch_lgt_01
+    400014: chara_pouch_lgt_02
+    400016: chara_pouch_lgt_03
+    400018: //RootNode
+    400020: chara_visor
+    400022: wHead
+    400024: wLCalf
+    400026: wLCollarbone
+    400028: wLDigit11
+    400030: wLDigit12
+    400032: wLDigit13
+    400034: wLDigit21
+    400036: wLDigit22
+    400038: wLDigit23
+    400040: wLDigit31
+    400042: wLDigit32
+    400044: wLDigit33
+    400046: wLDigit41
+    400048: wLDigit42
+    400050: wLDigit43
+    400052: wLDigit51
+    400054: wLDigit52
+    400056: wLDigit53
+    400058: wLFoot
+    400060: wLForearm
+    400062: wLPalm
+    400064: wLPlatform
+    400066: wLThigh
+    400068: wLtoe1
+    400070: wLUpperarm
+    400072: wNeck1
+    400074: wNeck2
+    400076: wPelvis
+    400078: wRCalf
+    400080: wRCollarbone
+    400082: wRDigit11
+    400084: wRDigit12
+    400086: wRDigit13
+    400088: wRDigit21
+    400090: wRDigit22
+    400092: wRDigit23
+    400094: wRDigit31
+    400096: wRDigit32
+    400098: wRDigit33
+    400100: wRDigit41
+    400102: wRDigit42
+    400104: wRDigit43
+    400106: wRDigit51
+    400108: wRDigit52
+    400110: wRDigit53
+    400112: wRFoot
+    400114: wRForearm
+    400116: wRibcage
+    400118: wRPalm
+    400120: wRPlatform
+    400122: wRThigh
+    400124: wRtoe1
+    400126: wRUpperarm
+    400128: wSpine1
+    400130: wSpine2
+    400132: wSpine3
+    400134: wSpine4
+    2300000: chara_pouch_lgt_01
+    2300002: chara_pouch_lgt_02
+    2300004: chara_pouch_lgt_03
+    3300000: chara_pouch_lgt_01
+    3300002: chara_pouch_lgt_02
+    3300004: chara_pouch_lgt_03
+    4300000: chara_body
+    4300002: chara_hair
+    4300004: chara_visor
+    4300006: chara_belt
+    4300008: chara_pouch_01
+    4300010: chara_pouch_01
+    4300012: chara_pouch_01
+    4300014: chara_pouch_lgt_01
+    4300016: chara_pouch_lgt_02
+    4300018: chara_pouch_lgt_03
+    7400000: Take 001
+    9500000: //RootNode
+    13700000: chara_belt
+    13700002: chara_body
+    13700004: chara_hair
+    13700006: chara_pouch_01
+    13700008: chara_pouch_01 1
+    13700010: chara_pouch_01 2
+    13700012: chara_visor
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

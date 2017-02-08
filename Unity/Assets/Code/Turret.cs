@@ -46,13 +46,13 @@ public class Turret : Interactable, ITargetable {
                 case TriggerType.Activate:
                     if (!_isActive)
                     {
-                        SetExternalAction(new Action(ActionType.Activate, true));
+                        SetExternalAction(new BasicAction(ActionType.Activate, true));
                     }
                     break;
                 case TriggerType.Deactivate:
                     if (_isActive)
                     {
-                        SetExternalAction(new Action(ActionType.Deactivate, true)); 
+                        SetExternalAction(new BasicAction(ActionType.Deactivate, true)); 
                     }
                     break;
                 case TriggerType.Alert:
@@ -61,7 +61,7 @@ public class Turret : Interactable, ITargetable {
                 case TriggerType.UnAlert:
                     if(_isActive && _isAlerted)
                     {
-                        SetExternalAction(new Action(ActionType.UnAlert, true)); 
+                        SetExternalAction(new BasicAction(ActionType.UnAlert, true)); 
                     }
                     break; 
             }
@@ -73,7 +73,7 @@ public class Turret : Interactable, ITargetable {
         if (!_isAlerted && _isActive)
         {
             UnloadAll();
-            SetAction(new Action(ActionType.Alert, true)); 
+            SetAction(new BasicAction(ActionType.Alert, true)); 
             BSeekAndShoot _behavior = new BSeekAndShoot();
             SetAction(new BehaviorAction(ActionType.BSeekAndShoot, _behavior, true));
             _behavior.StartBehavior(this, _target);
@@ -95,11 +95,11 @@ public class Turret : Interactable, ITargetable {
             SetAction(new TaskAction(ActionType.UnsetTask, _currentTask, true));
         }
     }
-    void Alert(IAction _action)
+    void Alert(Action _action)
     {
         _isAlerted = true; 
     }
-    void UnAlert(IAction _action)
+    void UnAlert(Action _action)
     {
         _isAlerted = false; 
         if(_currentBehavior != null)
@@ -107,13 +107,13 @@ public class Turret : Interactable, ITargetable {
             SetAction(_currentBehavior.EndBehavior()); 
         }
     }
-    void Activate(IAction _action)
+    void Activate(Action _action)
     {
         _renderer.material = _defaultMat;
         _baseColor = _renderer.material.color; 
         _isActive = true;
     }
-    void Deactivate(IAction _action)
+    void Deactivate(Action _action)
     {
         _renderer.material = GameSettings.InactiveMaterial;
         _baseColor = _renderer.material.color; 
@@ -122,7 +122,7 @@ public class Turret : Interactable, ITargetable {
 
 
 
-    protected override void UseAction(IAction _action, float _time)
+    protected override void UseAction(Action _action, float _time)
     {
         switch (_action.Type)
         {
@@ -159,7 +159,7 @@ public class Turret : Interactable, ITargetable {
         base.UseAction(_action, _time); 
     }
 
-    protected override void ReverseAction(IAction _action, float _time)
+    protected override void ReverseAction(Action _action, float _time)
     {
         switch (_action.Type)
         {
@@ -249,22 +249,22 @@ public class Turret : Interactable, ITargetable {
     {
         GameManager.RegisterTargetable(this);
         GameManager.RegisterWibblyWobbly(this);
-        SetAction(new Action(ActionType.Null));
+        SetAction(new BasicAction(ActionType.Null));
         if (_isActive)
         {
-            Activate(new Action(ActionType.Null));
+            Activate(new BasicAction(ActionType.Null));
         }else
         {
-            Deactivate(new Action(ActionType.Null)); 
+            Deactivate(new BasicAction(ActionType.Null)); 
         }
     }
 
-    public void RewindActivation(IAction _action)
+    public void RewindActivation(Action _action)
     {
         throw new NotImplementedException();
     }
 
-    public List<IAction> Activate(Character _character)
+    public List<Action> Activate(Character _character)
     {
         throw new NotImplementedException();
     }

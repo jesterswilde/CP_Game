@@ -52,7 +52,7 @@ public class Interactable : WibblyWobbly, IAI {
         }
     }
 
-    protected override void UseAction(IAction _action, float _time)
+    protected override void UseAction(Action _action, float _time)
     {
         switch (_action.Type)
         {
@@ -99,7 +99,7 @@ public class Interactable : WibblyWobbly, IAI {
         }
     }
 
-    protected override void ReverseAction(IAction _action, float _time)
+    protected override void ReverseAction(Action _action, float _time)
     {
         switch (_action.Type)
         {
@@ -178,7 +178,7 @@ public class Interactable : WibblyWobbly, IAI {
             SetTask(_task);
         }
     }
-    public override void SetExternalAction(IAction _action)
+    public override void SetExternalAction(Action _action)
     {
         base.SetExternalAction(_action);
     }
@@ -193,7 +193,7 @@ public class Interactable : WibblyWobbly, IAI {
     }
     void Awake()
     {
-        _history.AddToHead(new Action(ActionType.Null));
+        _history.AddToHead(new BasicAction(ActionType.Null));
         RegisterWibblyWobbly();
         _combat = GetComponent<CombatState>();
         _defaultTask = _currentTask; 

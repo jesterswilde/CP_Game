@@ -23,24 +23,24 @@ public class ExtractionTrigger : MonoBehaviour, ITargetable {
 
     public Vector3 Position { get { return transform.position; } }
 
-    public List<IAction> Activate(Character _character)
+    public List<Action> Activate(Character _character)
     {
         _extractedCharacters.Push(_character);
         Debug.Log(_extractedCharacters.Aggregate("Extracting...\n", (_result, _char) => _result += _char.PrintInventory())); 
-        return new List<IAction> { new Action(ActionType.Extract, true) }; 
+        return new List<Action> { new BasicAction(ActionType.Extract, true) }; 
     }
 
-    public void RewindActivation(IAction _action)
+    public void RewindActivation(Action _action)
     {
         _extractedCharacters.Pop();
     }
 
-    public void SetAction(IAction _action)
+    public void SetAction(Action _action)
     {
         throw new NotImplementedException();
     }
 
-    public void SetAction(IAction _action, bool _evaluatSource)
+    public void SetAction(Action _action, bool _evaluatSource)
     {
         throw new NotImplementedException();
     }

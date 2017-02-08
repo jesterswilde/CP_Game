@@ -29,20 +29,20 @@ public class BSeekAndShoot : IBehavior
     }
     void ReturnControl()
     {
-        _self.SetAction(new Action(ActionType.UnAlert, true)); 
+        _self.SetAction(new BasicAction(ActionType.UnAlert, true)); 
     }
-    public IAction EndBehavior()
+    public Action EndBehavior()
     {
         return new BehaviorAction(ActionType.BSeekAndShootUnset, this, true); 
     }
-    void SawTarget(IAction _action)
+    void SawTarget(Action _action)
     {
         if (!float.IsNaN(_action.Value))
         {
             _timeSinceSeenTarget = 0;
         }
     }
-    void ReverseSawTarget(IAction _action)
+    void ReverseSawTarget(Action _action)
     {
         if (float.IsNaN(_action.Value))
         {
@@ -86,7 +86,7 @@ public class BSeekAndShoot : IBehavior
                 _timeSinceSeenTarget += _checkInterval;
                 if (_timeSinceSeenTarget > _timeToLoseTarget)
                 {
-                    _self.SetAction(new Action(ActionType.DidntSeeTarget, true)); 
+                    _self.SetAction(new BasicAction(ActionType.DidntSeeTarget, true)); 
                 }
             }
         }
@@ -102,7 +102,7 @@ public class BSeekAndShoot : IBehavior
         {
             if (!_shouldFire)
             {
-                _self.SetAction(new Action(ActionType.PullTrigger, true), true);
+                _self.SetAction(new BasicAction(ActionType.PullTrigger, true), true);
                 _shouldFire = true; 
             }
         }else
@@ -111,16 +111,16 @@ public class BSeekAndShoot : IBehavior
             {
                 Debug.Log("ending fire"); 
                 _shouldFire = false;
-                _self.SetAction(new Action(ActionType.ReleaseTrigger, true), true); 
+                _self.SetAction(new BasicAction(ActionType.ReleaseTrigger, true), true); 
             }
         }
     }
-    public List<IAction> StartPlay(float _deltaTime)
+    public List<Action> StartPlay(float _deltaTime)
     {
         CheckIfStillSeeing(_deltaTime);
         return null;
     }
-    public List<IAction> Act(float _deltaTime)
+    public List<Action> Act(float _deltaTime)
     {
         if(_combat != null)
         {
@@ -135,7 +135,7 @@ public class BSeekAndShoot : IBehavior
         CheckIfStillSeeing(_deltaTime);
     }
 
-    public IAction UseAction(IAction _action)
+    public Action UseAction(Action _action)
     {
         switch (_action.Type)
         {
@@ -148,7 +148,7 @@ public class BSeekAndShoot : IBehavior
         }
         return null; 
     }
-    public void ReverseAction(IAction _action)
+    public void ReverseAction(Action _action)
     {
         switch (_action.Type)
         {

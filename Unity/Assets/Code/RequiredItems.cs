@@ -14,11 +14,11 @@ public class RequiredItems : MonoBehaviour {
     {
         return _requiredItems.All((StringIntKVP _kvp) => _character.Inventory.HasItem(_kvp.Key, _kvp.Value));
     }
-    public List<IAction> UseItems()
+    public List<Action> UseItems()
     {
         if (_consumesItems)
         {
-            List<IAction> _actions = new List<IAction>(); 
+            List<Action> _actions = new List<Action>(); 
             for(int i = 0; i < _requiredItems.Count; i++)
             {
                 _actions.Add(new ItemAction(ActionType.PutDown, new InvenItem(_requiredItems[i].Key, _requiredItems[i].Value)));

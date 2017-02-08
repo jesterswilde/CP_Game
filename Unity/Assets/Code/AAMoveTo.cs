@@ -25,12 +25,12 @@ public class AAMoveTo : IAtomicAction {
         _enemy.transform.position -= _dir * _enemy.MoveSpeed * _deltaTime;
     }
 
-    void CalculateFinishTime(IAction _action)
+    void CalculateFinishTime(Action _action)
     {
         _finishesAt = _action.Time + _action.Vector.magnitude / _enemy.MoveSpeed;
     }
 
-    public void ReverseAction(IAction _action, float _time)
+    public void ReverseAction(Action _action, float _time)
     {
         _dir = _action.Vector.normalized; 
         _maxVector = _action.Vector;
@@ -38,18 +38,18 @@ public class AAMoveTo : IAtomicAction {
         CalculateFinishTime(_action);
     }
 
-    public void UseAction(IAction _action, float _time)
+    public void UseAction(Action _action, float _time)
     {
         _remaining = _action.Vector;
         _maxVector = _action.Vector;
         _dir = _action.Vector.normalized; 
         CalculateFinishTime(_action);
     }
-    public IAction Unset()
+    public Action Unset()
     {
         return new VectorAction(ActionType.AIMoveToUnset, _maxVector); 
     }
-    public static IAction CreateAction(Transform _enemy, Vector3 _target, float _time)
+    public static Action CreateAction(Transform _enemy, Vector3 _target, float _time)
     {
         return new ValueAction(ActionType.AIMoveForward, Vector3.Distance(_enemy.transform.position, _target), _time);
     }

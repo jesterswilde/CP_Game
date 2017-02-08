@@ -19,7 +19,7 @@ public class DummyEnemy : MonoBehaviour {
     {
         _time += _addedTime; 
     }
-    public void SetAction(IAction _action)
+    public void SetAction(Action _action)
     {
         _enemy.SetAction(_action); 
     }

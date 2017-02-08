@@ -12,9 +12,9 @@ public class History {
     int _count = 0; 
     public int Count { get { return _count;  } }
 
-    public IAction TailAction  { get{ return (_tail != null) ? _tail.Action : null; } }
-    public IAction HeadAction { get { return (_head != null) ? _head.Action : null; } }
-    public IAction PointerAction { get { return (_pointer != null) ? _pointer.Action : null; } }
+    public Action TailAction  { get{ return (_tail != null) ? _tail.Action : null; } }
+    public Action HeadAction { get { return (_head != null) ? _head.Action : null; } }
+    public Action PointerAction { get { return (_pointer != null) ? _pointer.Action : null; } }
 
     HistoryNode ChopTail()
     {
@@ -33,7 +33,7 @@ public class History {
         }
         return null; 
     }
-    public void AddToHead(IAction _action)
+    public void AddToHead(Action _action)
     {
         _count++;
         HistoryNode _newHead = new HistoryNode(_action);
@@ -50,7 +50,7 @@ public class History {
             _head = _newHead;
         }
     }
-    public void InsertAfterPointer(IAction _action)
+    public void InsertAfterPointer(Action _action)
     {
         _count++;
         if(_head == null)

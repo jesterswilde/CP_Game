@@ -47,7 +47,7 @@ public class TriggerVolume : MonoBehaviour {
                     _timeyWimey.SetExternalAction(new ValueAction(_enter, _enterValue, true));
                     return;
                 }
-                _timeyWimey.SetExternalAction(new Action(_enter, true));
+                _timeyWimey.SetExternalAction(new BasicAction(_enter, true));
             }
         }
     }
@@ -69,7 +69,7 @@ public class TriggerVolume : MonoBehaviour {
                     _timeyWimey.SetExternalAction(new ValueAction(_exit, _exitValue, true));
                     return; 
                 }
-                _timeyWimey.SetExternalAction(new Action(_exit, true));
+                _timeyWimey.SetExternalAction(new BasicAction(_exit, true));
             }
         }
     }

@@ -30,7 +30,7 @@ public class AARotate : IAtomicAction
         _remainingRotation -= _rotAmount; 
     }
 
-    public void ReverseAction(IAction _action, float _time)
+    public void ReverseAction(Action _action, float _time)
     {
         _remainingRotation = _action.Value - (_time - _action.Time) * _enemy.RotationSpeed;
         _maxRotation = _action.Value;
@@ -38,24 +38,24 @@ public class AARotate : IAtomicAction
         CalculateFinishTime(_action); 
     }
 
-    public void UseAction(IAction _action, float _time)
+    public void UseAction(Action _action, float _time)
     {
         _remainingRotation = _action.Value;
         _maxRotation = _action.Value;
         _dir = (_action.Value > 0) ? 1 : -1;
         CalculateFinishTime(_action);
     }
-    void CalculateFinishTime(IAction _action)
+    void CalculateFinishTime(Action _action)
     {
         _finishesAt = _action.Time + Math.Abs(_action.Value) / _enemy.RotationSpeed;
     }
 
-    public IAction Unset()
+    public Action Unset()
     {
         return new ValueAction(ActionType.AIRotateUnset, _maxRotation, true); 
     }
 
-    public static IAction CreateAction(Transform _enemy, Vector3 _target, float _time)
+    public static Action CreateAction(Transform _enemy, Vector3 _target, float _time)
     {
         Vector3 _currentForward = _enemy.forward;
         Vector3 _tempTarget = new Vector3(_target.x, 0, _target.z); 

@@ -22,7 +22,7 @@ public class GroundDetector : MonoBehaviour {
             _surfaces.Add(_coll);
             if(_surfaces.Count == 1)
             {
-                _character.SetExternalAction(new Action(ActionType.IsGrounded, true));
+                _character.SetExternalAction(new BasicAction(ActionType.IsGrounded, true));
             }
             _character.SetExternalAction(new VectorAction(ActionType.StandingOnSurface, _coll.transform.up, true)); 
         }
@@ -36,7 +36,7 @@ public class GroundDetector : MonoBehaviour {
             if (_surfaces.Count == 0)
             {
                 _character.SetExternalAction(new VectorAction(ActionType.LeavingSurface, _coll.transform.up, true)); 
-                _character.SetExternalAction(new Action(ActionType.IsFalling, true));
+                _character.SetExternalAction(new BasicAction(ActionType.IsFalling, true));
             }else
             {
                 _character.SetExternalAction(new VectorAction(ActionType.StandingOnSurface, _surfaces.Last().transform.up, true)); 

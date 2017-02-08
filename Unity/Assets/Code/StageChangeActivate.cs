@@ -25,11 +25,11 @@ public class StageChangeActivate : MonoBehaviour, ITargetable {
 
     bool _canActivate = true; 
     public bool CanActivate { get { return _canActivate; } set { _canActivate = value; } }
-    public List<IAction> Activate(Character _character)
+    public List<Action> Activate(Character _character)
     {
         if (_canActivate)
         {
-            List<IAction> _actions = new List<IAction> { new Action(ActionType.Null) }; //adding null to not rewind. 
+            List<Action> _actions = new List<Action> { new BasicAction(ActionType.Null) }; //adding null to not rewind. 
             if(_requiredItems == null || _requiredItems.HasRequiredItems(_character))
             {
                 StageManager.ChangeStage(_stage); 
@@ -44,17 +44,17 @@ public class StageChangeActivate : MonoBehaviour, ITargetable {
         return null; 
     }
 
-    public void RewindActivation(IAction _action)
+    public void RewindActivation(Action _action)
     {
         
     }
 
-    public void SetAction(IAction _action)
+    public void SetAction(Action _action)
     {
         throw new NotImplementedException();
     }
 
-    public void SetAction(IAction _action, bool _evaluatSource)
+    public void SetAction(Action _action, bool _evaluatSource)
     {
         throw new NotImplementedException();
     }

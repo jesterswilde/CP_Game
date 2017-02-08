@@ -35,62 +35,62 @@ public class CharacterState
     public Vector3 PrevPos { get { return _prevPos; } set { _prevPos = value; } }
     public Quaternion PrevRot { get { return _prevRot; } set { _prevRot = value; } }
 
-    public List<IAction> ActionsToReset()
+    public List<Action> ActionsToReset()
     {
-        List<IAction> _actions = new List<IAction>(); 
+        List<Action> _actions = new List<Action>(); 
         if(Forward == 1)
         {
-            _actions.Add(new Action(ActionType.ReleaseForward));
+            _actions.Add(new BasicAction(ActionType.ReleaseForward));
         }
         if(Backward == 1)
         {
-            _actions.Add(new Action(ActionType.ReleaseBack));
+            _actions.Add(new BasicAction(ActionType.ReleaseBack));
         }
         if(Left == 1)
         {
-            _actions.Add(new Action(ActionType.ReleaseLeft));
+            _actions.Add(new BasicAction(ActionType.ReleaseLeft));
         }
         if(Right == 1)
         {
-            _actions.Add(new Action(ActionType.ReleaseRight));
+            _actions.Add(new BasicAction(ActionType.ReleaseRight));
         }
         return _actions; 
     }
-    public List<IAction> SetStateToKeyboard()
+    public List<Action> SetStateToKeyboard()
     {
         bool[] _keyboard = PlayerInput.GetAbsKeyboardState(); 
-        List<IAction> _actions = new List<IAction>(); 
+        List<Action> _actions = new List<Action>(); 
         if(_keyboard[0] && _forward == 0)
         {
-            _actions.Add(new Action(ActionType.PressForward));
+            _actions.Add(new BasicAction(ActionType.PressForward));
         }
         if(!_keyboard[0] && _forward == 1)
         {
-            _actions.Add(new Action(ActionType.ReleaseForward));
+            _actions.Add(new BasicAction(ActionType.ReleaseForward));
         }
         if (_keyboard[1] && _right == 0)
         {
-            _actions.Add(new Action(ActionType.PressRight));
+            _actions.Add(new BasicAction(ActionType.PressRight));
         }
         if (!_keyboard[1] && _right == 1)
         {
-            _actions.Add(new Action(ActionType.ReleaseRight));
+            _actions.Add(new BasicAction(ActionType.ReleaseRight));
         }
         if (_keyboard[2] && _backward == 0)
         {
-            _actions.Add(new Action(ActionType.PressBack));
+            _actions.Add(new BasicAction(ActionType.PressBack));
         }
         if (!_keyboard[2] && _backward == 1)
         {
-            _actions.Add(new Action(ActionType.ReleaseBack));
+            _actions.Add(new BasicAction(ActionType.ReleaseBack));
         }
         if (_keyboard[3] && _left == 0)
         {
-            _actions.Add(new Action(ActionType.PressLeft)); 
+            _actions.Add(new BasicAction(ActionType.PressLeft)); 
         }
         if (!_keyboard[3] && _left == 1)
         {
-            _actions.Add(new Action(ActionType.ReleaseLeft));
+            _actions.Add(new BasicAction(ActionType.ReleaseLeft));
         }
         return _actions; 
     }
@@ -116,7 +116,7 @@ public class CharacterState
         _right = _base.Right;
         _left = _base.Right; 
     }
-    public void UseAction(IAction _action)
+    public void UseAction(Action _action)
     {
         switch (_action.Type)
         {
@@ -195,7 +195,7 @@ public class CharacterState
         }
     }
 
-    public void ReverseAction(IAction _action)
+    public void ReverseAction(Action _action)
     {
         switch (_action.Type)
         {

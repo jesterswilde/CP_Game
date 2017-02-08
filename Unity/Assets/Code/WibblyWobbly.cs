@@ -5,10 +5,10 @@ using System.Collections.Generic;
 public abstract class WibblyWobbly : MonoBehaviour {
 
     protected History _history = new History();
-    protected List<IAction> _actionsToBeConsumed = new List<IAction>();
+    protected List<Action> _actionsToBeConsumed = new List<Action>();
     protected CombatState _combat; 
-    protected abstract void UseAction(IAction _action, float _time);
-    protected abstract void ReverseAction(IAction _action, float _time); 
+    protected abstract void UseAction(Action _action, float _time);
+    protected abstract void ReverseAction(Action _action, float _time); 
     protected abstract void Act(float _deltaTime);
     protected abstract void ActReverse(float _deltaTIme);
     public CombatState Combat { get { return _combat; } }
@@ -16,7 +16,7 @@ public abstract class WibblyWobbly : MonoBehaviour {
     {
         GameManager.RegisterWibblyWobbly(this); 
     }
-    public virtual void SetAction(IAction _action, bool _determineExternal)
+    public virtual void SetAction(Action _action, bool _determineExternal)
     {
         if(_action == null)
         {
@@ -30,21 +30,21 @@ public abstract class WibblyWobbly : MonoBehaviour {
             SetAction(_action); 
         }
     }
-    public virtual void SetAction(IAction _action)
+    public virtual void SetAction(Action _action)
     {
         if (CanAddActions() && _action != null)
         {
             _actionsToBeConsumed.Add(_action); 
         }
     }
-    public virtual void SetAction(List<IAction> _actions)
+    public virtual void SetAction(List<Action> _actions)
     {
         if (CanAddActions() && _actions.Count > 0)
         {
             _actionsToBeConsumed.AddRange(_actions); 
         }
     }
-    public virtual void SetAction(List<IAction> _actions, bool _determinExternal)
+    public virtual void SetAction(List<Action> _actions, bool _determinExternal)
     {
         if (CanAddActions() && _actions.Count > 0)
         {
@@ -75,14 +75,14 @@ public abstract class WibblyWobbly : MonoBehaviour {
     {
         return (_history.HeadAction == null || GameManager.IsPlaying && _history.IsPointerAtHead());
     }
-    public virtual void SetExternalAction(IAction _action)
+    public virtual void SetExternalAction(Action _action)
     {
         if (GameManager.IsPlaying && _action != null)
         {
             _history.InsertAfterPointer(_action); 
         }
     }
-    public virtual void SetExternalAction(List<IAction> _actions)
+    public virtual void SetExternalAction(List<Action> _actions)
     {
         if (GameManager.IsPlaying && _actions != null)
         {

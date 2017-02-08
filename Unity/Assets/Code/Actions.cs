@@ -2,54 +2,54 @@
 using System.Collections;
 using System;
 
-public class Action : IAction{
-    ActionType _action;
-    float _time;
-    bool _isExternal; 
+public abstract class Action
+{
+    protected ActionType _action;
+    protected float _time;
+    protected bool _isExternal; 
+    public ActionType Type { get { return _action; } }
+    public float Time { get { return _time; } }
+    public bool IsExternal { get { return _isExternal; } }
+    public virtual float Value { get { return float.NaN; } }
+    public virtual Vector3 Vector { get { return Vector3.zero; } }
+    public virtual HistoryNode PossibleFuture { get { return null; } }
+    public virtual ITargetable Target { get { return null; } }
+    public virtual Task Task { get { return null; } }
+    public virtual Weapon Weapon { get { return null; } }
+    public virtual CombatState Combat { get { return null; } }
+    public virtual IBehavior Behavior { get { return null; } }
+    public virtual InvenItem Item { get { return null; } }
+    public virtual int IValue { get { return int.MinValue; } }
+}
+public class BasicAction : Action{
 
-    public Action(ActionType _actionType)
+    public BasicAction(ActionType _actionType)
     {
         _action = _actionType;
         _time = GameManager.FixedGameTime;
     }
-    public Action(ActionType _actionType, bool isExternal)
+    public BasicAction(ActionType _actionType, bool isExternal)
     {
         _action = _actionType;
         _time = GameManager.FixedGameTime;
         _isExternal = isExternal; 
     }
-    public Action(ActionType _actionType, float time, bool isExternal)
+    public BasicAction(ActionType _actionType, float time, bool isExternal)
     {
         _action = _actionType;
         _time = time;
         _isExternal = isExternal;
     }
-    public Action(ActionType _actionType, float time)
+    public BasicAction(ActionType _actionType, float time)
     {
         _action = _actionType;
         _time = time;
     }
-    public ActionType Type { get { return _action; } }
-    public float Time { get { return _time; } }
-    public float Value { get { return float.NaN; } }
-    public Vector3 Vector { get { return Vector3.zero; } }
-    public bool IsExternal { get { return _isExternal; } }
-    public HistoryNode PossibleFuture { get { return null; } }
-    public ITargetable Target { get { return null; } }
-    public Task Task { get { return null; } }
-    public Weapon Weapon { get { return null; } }
-    public CombatState Combat { get { return null; } }
-    public IBehavior Behavior { get { return null; } }
-    public InvenItem Item { get { return null; } }
 }
 
-public class ValueAction : IAction
+public class ValueAction : Action
 {
-    ActionType _action;
-    float _time;
     float _value;
-    bool _isExternal; 
-
     public ValueAction(ActionType _actionType, float value)
     {
         _action = _actionType;
@@ -76,25 +76,11 @@ public class ValueAction : IAction
         _time = time;
         _isExternal = isExternal; 
     }
-    public ActionType Type { get { return _action; } }
-    public float Time { get { return _time; } }
-    public float Value { get { return _value; } }
-    public Vector3 Vector { get { return Vector3.zero; } }
-    public bool IsExternal { get { return _isExternal; } }
-    public HistoryNode PossibleFuture { get { return null; } }
-    public ITargetable Target { get { return null; } }
-    public Task Task { get { return null; } }
-    public Weapon Weapon { get { return null; } }
-    public CombatState Combat { get { return null; } }
-    public IBehavior Behavior { get { return null; } }
-    public InvenItem Item { get { return null; } }
+    public override float Value { get { return _value; } }
 }
-public class VectorAction : IAction
+public class VectorAction : Action
 {
-    ActionType _action;
-    float _time;
     Vector3 _vector;
-    bool _isExternal; 
 
     public VectorAction(ActionType _actionType, Vector3 vector)
     {
@@ -122,267 +108,182 @@ public class VectorAction : IAction
         _isExternal = isExternal;
         time = _time; 
     }
-    public ActionType Type { get { return _action; } }
-    public float Time { get { return _time; } }
-    public float Value { get { return float.NaN; } }
-    public Vector3 Vector { get { return _vector; } }
-    public bool IsExternal { get { return _isExternal; } }
-    public HistoryNode PossibleFuture { get { return null; } }
-    public ITargetable Target { get { return null; } }
-    public Task Task { get { return null; } }
-    public Weapon Weapon { get { return null; } }
-    public CombatState Combat { get { return null; } }
-    public IBehavior Behavior { get { return null; } }
-    public InvenItem Item { get { return null; } }
+    public override Vector3 Vector { get { return _vector; } }
 }
-public class FutureActions : IAction
+public class FutureActions : Action
 {
-    bool _isExternal = true;
     HistoryNode _future;
-    float _time;
-    ActionType _type; 
 
     public FutureActions(ActionType type, HistoryNode future)
     {
-        _type = type;
+        _action = type;
         _future = future;
         _time = GameManager.FixedGameTime;
     }
     public FutureActions(ActionType type, HistoryNode future, float time)
     {
-        _type = type; 
+        _action = type; 
         _future = future;
         _time = time; 
     }
-    public bool IsExternal {get{ return _isExternal; }}
-    public float Time { get { return _time; } }
-    public ActionType Type{get{return _type;}}
-    public HistoryNode PossibleFuture { get { return _future; } }
-    public float Value {get{return float.NaN;}}
-    public Vector3 Vector { get { return Vector3.zero; } }
-    public ITargetable Target { get { return null; } }
-    public Task Task { get { return null; } }
-    public Weapon Weapon { get { return null; } }
-    public CombatState Combat { get { return null; } }
-    public IBehavior Behavior { get { return null; } }
-    public InvenItem Item { get { return null; } }
+    public override HistoryNode PossibleFuture { get { return _future; } }
 }
 
-public class TargetedAction : IAction
+public class TargetedAction : Action
 {
-    float _time;
-    bool _isExternal = false;
-    ActionType _type;
     ITargetable _target;
 
     public TargetedAction(ActionType type, ITargetable target)
     {
-        _type = type;
+        _action = type;
         _target = target;
         _time = GameManager.FixedGameTime; 
     }
     public TargetedAction(ActionType type, ITargetable target, bool external)
     {
-        _type = type;
+        _action = type;
         _target = target;
         _isExternal = external;
         _time = GameManager.FixedGameTime; 
     }
 
-    public bool IsExternal { get { return _isExternal; } }
-    public float Time { get { return _time; } }
-    public ActionType Type { get { return _type; } }
-    public HistoryNode PossibleFuture { get { return null; } }
-    public float Value { get { return float.NaN; } }
-    public Vector3 Vector { get { return Vector3.zero; } }
-    public ITargetable Target { get { return _target; } }
-    public Task Task { get { return null; } }
-    public Weapon Weapon { get { return null; } }
-    public CombatState Combat { get { return null; } }
-    public IBehavior Behavior { get { return null; } }
-    public InvenItem Item { get { return null; } }
+    public override ITargetable Target { get { return _target; } }
 }
 
-public class TaskAction : IAction
+public class TaskAction : Action
 {
-    float _time;
-    bool _isExternal = false;
-    ActionType _type;
     Task _task;
 
     public TaskAction(ActionType type, Task task)
     {
-        _type = type;
+        _action = type;
         _task = task;
         _time = GameManager.FixedGameTime;
     }
-    public TaskAction(ActionType type, Task task, float _time)
+    public TaskAction(ActionType type, Task task, float time)
     {
-        _type = type;
+        _action = type;
         _task = task;
-        _time = _time;
+        _time = time;
     }
     public TaskAction(ActionType type, Task task, bool external)
     {
-        _type = type;
+        _action = type;
         _task = task;
         _isExternal = external;
         _time = GameManager.FixedGameTime;
     }
-
-    public bool IsExternal { get { return _isExternal; } }
-    public float Time { get { return _time; } }
-    public ActionType Type { get { return _type; } }
-    public HistoryNode PossibleFuture { get { return null; } }
-    public float Value { get { return float.NaN; } }
-    public Vector3 Vector { get { return Vector3.zero; } }
-    public ITargetable Target { get { return null; } }
-    public Task Task { get { return _task; } }
-    public Weapon Weapon { get { return null; } }
-    public CombatState Combat { get { return null; } }
-    public IBehavior Behavior { get { return null; } }
-    public InvenItem Item { get { return null; } }
+    public override Task Task { get { return _task; } }
 }
 
-public class WeaponAction : IAction
+public class WeaponAction : Action
 {
-    float _time;
-    bool _isExternal = false;
-    ActionType _type;
     Weapon _weapon; 
 
     public WeaponAction(ActionType type, Weapon weapon)
     {
-        _type = type;
+        _action = type;
         _weapon = weapon; 
         _time = GameManager.FixedGameTime;
     }
     public WeaponAction(ActionType type, Weapon weapon, bool external)
     {
-        _type = type;
+        _action = type;
         _weapon = weapon;
         _isExternal = external;
         _time = GameManager.FixedGameTime;
     }
 
-    public bool IsExternal { get { return _isExternal; } }
-    public float Time { get { return _time; } }
-    public ActionType Type { get { return _type; } }
-    public HistoryNode PossibleFuture { get { return null; } }
-    public float Value { get { return float.NaN; } }
-    public Vector3 Vector { get { return Vector3.zero; } }
-    public ITargetable Target { get { return null; } }
-    public Task Task { get { return null; } }
-    public Weapon Weapon { get { return _weapon; } }
-    public CombatState Combat { get { return null; } }
-    public IBehavior Behavior { get { return null; } }
-    public InvenItem Item { get { return null; } }
+    public override Weapon Weapon { get { return _weapon; } }
 }
 
 
-public class CombatAction : IAction
+public class CombatAction : Action
 {
-    float _time;
-    bool _isExternal = false;
-    ActionType _type;
     CombatState _combat;
 
     public CombatAction(ActionType type, CombatState combat)
     {
-        _type = type;
+        _action= type;
         _combat = combat;
         _time = GameManager.FixedGameTime;
     }
     public CombatAction(ActionType type, CombatState combat, bool external)
     {
-        _type = type;
+        _action = type;
         _combat = combat; 
         _isExternal = external;
         _time = GameManager.FixedGameTime;
     }
 
-    public bool IsExternal { get { return _isExternal; } }
-    public float Time { get { return _time; } }
-    public ActionType Type { get { return _type; } }
-    public HistoryNode PossibleFuture { get { return null; } }
-    public float Value { get { return float.NaN; } }
-    public Vector3 Vector { get { return Vector3.zero; } }
-    public ITargetable Target { get { return null; } }
-    public Task Task { get { return null; } }
-    public Weapon Weapon { get { return null; } }
-    public CombatState Combat { get { return _combat; } }
-    public IBehavior Behavior { get { return null; } }
-    public InvenItem Item { get { return null; } }
+    public override CombatState Combat { get { return _combat; } }
 }
 
-public class BehaviorAction : IAction
+public class BehaviorAction : Action
 {
-    float _time;
-    bool _isExternal = false;
-    ActionType _type;
+
     IBehavior _behavior;
 
     public BehaviorAction(ActionType type, IBehavior behavior)
     {
-        _type = type;
+        _action = type;
         _behavior = behavior; 
         _time = GameManager.FixedGameTime;
     }
     public BehaviorAction(ActionType type, IBehavior behavior, bool external)
     {
-        _type = type;
+        _action = type;
         _behavior = behavior; 
         _isExternal = external;
         _time = GameManager.FixedGameTime;
     }
 
-    public bool IsExternal { get { return _isExternal; } }
-    public float Time { get { return _time; } }
-    public ActionType Type { get { return _type; } }
-    public HistoryNode PossibleFuture { get { return null; } }
-    public float Value { get { return float.NaN; } }
-    public Vector3 Vector { get { return Vector3.zero; } }
-    public ITargetable Target { get { return null; } }
-    public Task Task { get { return null; } }
-    public Weapon Weapon { get { return null; } }
-    public CombatState Combat { get { return null; } }
     public IBehavior Behavior { get { return _behavior; } }
-    public InvenItem Item { get { return null; } }
 }
 
-public class ItemAction : IAction
+public class ItemAction : Action
 {
-    float _time;
-    bool _isExternal = false;
-    ActionType _type;
     InvenItem _item;
 
     public ItemAction(ActionType type, InvenItem item)
     {
-        _type = type;
+        _action = type;
         _item = item; 
         _time = GameManager.FixedGameTime;
     }
     public ItemAction(ActionType type, InvenItem item, bool external)
     {
-        _type = type;
+        _action = type;
         _item = item;
         _isExternal = external;
         _time = GameManager.FixedGameTime;
     }
 
-    public bool IsExternal { get { return _isExternal; } }
-    public float Time { get { return _time; } }
-    public ActionType Type { get { return _type; } }
-    public HistoryNode PossibleFuture { get { return null; } }
-    public float Value { get { return float.NaN; } }
-    public Vector3 Vector { get { return Vector3.zero; } }
-    public ITargetable Target { get { return null; } }
-    public Task Task { get { return null; } }
-    public Weapon Weapon { get { return null; } }
-    public CombatState Combat { get { return null; } }
-    public IBehavior Behavior { get { return null; } }
-    public InvenItem Item { get { return _item; } }
+    public override InvenItem Item { get { return _item; } }
+}
+
+public class AnimAction : Action
+{
+    int _int;
+    float _value; 
+
+    public AnimAction(ActionType type, int integer, float value)
+    {
+        _action = type;
+        _int = integer;
+        _value = value; 
+        _time = GameManager.FixedGameTime;
+    }
+    public AnimAction(ActionType type, int integer, float value, bool external)
+    {
+        _action = type;
+        _int = integer;
+        _value = value; 
+        _isExternal = external;
+        _time = GameManager.FixedGameTime;
+    }
+    public override int IValue { get { return _int; } }
+    public override float Value { get { return _value; } }
 }
 
 public enum ActionType
@@ -419,6 +320,7 @@ public enum ActionType
     TakeDamage,
     ShotBy,
     Die,
+    AnimEnded, 
     Extract,
     SetTask,
     UnsetTask,

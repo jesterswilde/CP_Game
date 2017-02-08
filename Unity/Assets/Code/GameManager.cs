@@ -154,7 +154,7 @@ public class GameManager : MonoBehaviour {
 
     public static void JumpToTime(float _time)
     {
-        _activeCharacter.SetAction(new Action(ActionType.Null)); 
+        _activeCharacter.SetAction(new BasicAction(ActionType.Null)); 
         TimeysApplyActions(); 
         float _timeGap = _time - GameManager.GameTime;
         int _dir = (_timeGap >= 0) ? 1 : -1;

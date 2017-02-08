@@ -17,30 +17,30 @@ public class AAWait : IAtomicAction
     {
         _remainingWait += _deltaTIme; 
     }
-    void CalculateFinishTime(IAction _action)
+    void CalculateFinishTime(Action _action)
     {
         _finishesAt = _action.Time + _action.Value; 
     }
-    public void ReverseAction(IAction _action, float _time)
+    public void ReverseAction(Action _action, float _time)
     {
         _maxWait = _action.Value; 
         _remainingWait = _action.Time + _action.Value - _time;
         CalculateFinishTime(_action);  
     }
 
-    public void UseAction(IAction _action, float _time)
+    public void UseAction(Action _action, float _time)
     {
         _maxWait = _action.Value;  
         _remainingWait = _action.Time + _action.Value - _time;
         CalculateFinishTime(_action);
     }
 
-    public IAction Unset()
+    public Action Unset()
     {
         return new ValueAction(ActionType.AIWaitUnset, _maxWait);
     }
 
-    public static IAction CreateAction(Enemy _enemy, float _value, float _time)
+    public static Action CreateAction(Enemy _enemy, float _value, float _time)
     {
         return new ValueAction(ActionType.AIWait, _value, _time); 
     }

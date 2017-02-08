@@ -56,7 +56,7 @@ public class PlayerInput {
             }
         }
     }
-    public static IAction ActionButtons(Character _activeCharacter)
+    public static Action ActionButtons(Character _activeCharacter)
     {
         if(_activeCharacter != null)
         {
@@ -68,7 +68,7 @@ public class PlayerInput {
         return null; 
     }
 
-    public static IAction GetActionInputs()
+    public static Action GetActionInputs()
     {
         if (GameManager.ActiveCharacter.WillRotate())
         {

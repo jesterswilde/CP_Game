@@ -29,7 +29,7 @@ public class TargetableTrigger : MonoBehaviour, ITargetable
     public CombatState Combat { get { return null; } }
     public GameObject Go { get { return gameObject; } }
 
-    public List<IAction> Activate(Character _character)
+    public List<Action> Activate(Character _character)
     {
         if(_alertList.Count == 0)
         {
@@ -64,7 +64,7 @@ public class TargetableTrigger : MonoBehaviour, ITargetable
         }
         return null;
     }
-    public void RewindActivation(IAction _action)
+    public void RewindActivation(Action _action)
     {
         _index--;
         if (_loop)
@@ -101,12 +101,12 @@ public class TargetableTrigger : MonoBehaviour, ITargetable
         GameManager.RegisterTargetable(this); 
     }
 
-    public void SetAction(IAction _action)
+    public void SetAction(Action _action)
     {
         throw new NotImplementedException();
     }
 
-    public void SetAction(IAction _action, bool _evaluatSource)
+    public void SetAction(Action _action, bool _evaluatSource)
     {
         throw new NotImplementedException();
     }

@@ -25,30 +25,30 @@ public class AAMoveForward : IAtomicAction
         _enemy.transform.position -= _enemy.transform.forward * _enemy.MoveSpeed * _deltaTime; 
     }
 
-    void CalculateFinishTime(IAction _action)
+    void CalculateFinishTime(Action _action)
     {
         _finishesAt = _action.Time + _action.Value / _enemy.MoveSpeed; 
     }
 
-    public void ReverseAction(IAction _action, float _time)
+    public void ReverseAction(Action _action, float _time)
     {
         _distance = _action.Value - (_action.Time - _time) * _enemy.MoveSpeed;
         _maxDistance = _action.Value;
         CalculateFinishTime(_action); 
     }
 
-    public void UseAction(IAction _action, float _time)
+    public void UseAction(Action _action, float _time)
     {
         _distance = _action.Value;
         _maxDistance = _action.Value;
         CalculateFinishTime(_action);
     }
-    public IAction Unset()
+    public Action Unset()
     {
         return new ValueAction(ActionType.AIMoveForwardUnset, _maxDistance); 
     }
 
-    public static IAction CreateAction(Transform _enemy, Vector3 _target, float _time)
+    public static Action CreateAction(Transform _enemy, Vector3 _target, float _time)
     {
         return new ValueAction(ActionType.AIMoveForward, Vector3.Distance(_enemy.transform.position, _target), _time); 
     }
