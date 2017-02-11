@@ -35,7 +35,6 @@ public class CharAnim : MonoBehaviour {
         }
         float _normalizedDelta = deltaTime / _anim.GetCurrentAnimatorClipInfo(0)[0].clip.length * _anim.GetCurrentAnimatorStateInfo(0).normalizedTime;
         float _normal = _anim.GetCurrentAnimatorStateInfo(0).normalizedTime - _normalizedDelta;
-        _anim.play
     }
     void Awake()
     {
