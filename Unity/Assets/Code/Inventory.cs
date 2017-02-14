@@ -4,6 +4,8 @@ using System.Collections.Generic;
 
 public class Inventory : MonoBehaviour {
 
+    [SerializeField]
+    StringIntKVP[] _startingItems; 
     List<Weapon> _weapons = new List<Weapon>();
     Dictionary<string, float> _items = new Dictionary<string, float>(); 
     int _weaponIndex = 0; 
@@ -76,5 +78,9 @@ public class Inventory : MonoBehaviour {
     void Awake()
     {
         _weapons.AddRange(GetComponentsInChildren<Weapon>());
+        foreach(StringIntKVP _item in _startingItems)
+        {
+            _items[_item.Key] = _item.Value; 
+        }
     }
 }

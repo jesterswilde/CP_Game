@@ -20,7 +20,6 @@ public class ImageCutoutComp : MonoBehaviour {
         float _dist = Mathf.Min((Camera.main.transform.position - transform.position).magnitude, _maxDistance);
         _pos.z = 1 - _dist / _maxDistance;
         _mat.SetVector("_CenterPoint", _pos);
-        Debug.Log(_pos); 
     }
 
 
