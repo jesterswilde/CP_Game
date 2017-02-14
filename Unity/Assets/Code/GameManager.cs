@@ -203,11 +203,8 @@ public class GameManager : MonoBehaviour {
     }
     static void Play()
     {
-        Debug.Log(GameSettings.MaxLevelTime); 
         if(GameSettings.MaxLevelTime > 0 && _fixedGameTime > GameSettings.MaxLevelTime)
         {
-            Debug.Log("over time"); 
-            _fixedGameTime = GameSettings.MaxLevelTime;
             SetSpeed(0);
             return; 
         }

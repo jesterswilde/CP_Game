@@ -1,7 +1,8 @@
-﻿Shader "Unlit/Streaks"
+﻿Shader "Custom/ImageCutout"
 {
 	Properties
 	{
+		_CenterPoint("Center", Vector) = (0,0,0,0) 
 		_MainTex ("Texture", 2D) = "white" {}
 	}
 	SubShader
@@ -30,6 +31,7 @@
 			};
 
 			sampler2D _MainTex;
+			fixed4 _CenterPoint; 
 			
 			v2f vert (appdata v)
 			{
@@ -41,8 +43,8 @@
 			
 			fixed4 frag (v2f i) : SV_Target
 			{
-				float2 correctedUV = i.screenSpace.xy / i.screenSpace.w;
-				fixed4 col = tex2D(_MainTex, correctedUV);
+				float2 offset = i.screenSpace.xy / i.screenSpace.w - _CenterPoint.xy;
+				fixed4 col = tex2D(_MainTex,offset + _CenterPoint.xy * _CenterPoint.z);
 				return col;
 			}
 			ENDCG
