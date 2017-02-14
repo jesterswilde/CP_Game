@@ -201,25 +201,33 @@ public class GameManager : MonoBehaviour {
             }
         }
     }
-    static void Play(float _time)
+    static void Play()
     {
+        Debug.Log(GameSettings.MaxLevelTime); 
+        if(GameSettings.MaxLevelTime > 0 && _fixedGameTime > GameSettings.MaxLevelTime)
+        {
+            Debug.Log("over time"); 
+            _fixedGameTime = GameSettings.MaxLevelTime;
+            SetSpeed(0);
+            return; 
+        }
         foreach(WibblyWobbly _character in _timeyWimeys)
         {
-            _character.Play(_time); 
+            _character.Play(_fixedGameTime); 
         }
-        EffectsManager.Play(_time); 
+        EffectsManager.Play(_fixedGameTime); 
     }
-    static void Rewind(float _time)
+    static void Rewind()
     {
-        if(_gameTime < 0)
+        if(_fixedGameTime < 0)
         {
-            _gameTime = 0; 
+            _fixedGameTime = 0; 
         }
         foreach(WibblyWobbly _character in _timeyWimeys)
         {
-            _character.Rewind(_time); 
+            _character.Rewind(_fixedGameTime); 
         }
-        EffectsManager.Play(_time); 
+        EffectsManager.Play(_fixedGameTime); 
     }
     #endregion
 
@@ -362,11 +370,11 @@ public class GameManager : MonoBehaviour {
         }
         if (_isPlaying && !_isPaused)
         {
-            Play(_fixedGameTime);
+            Play();
         }
         if (!_isPaused && !_isPlaying)
         {
-            Rewind(_fixedGameTime);
+            Rewind();
         }
         
     }

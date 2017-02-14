@@ -50,6 +50,7 @@ public class GameSettings : MonoBehaviour {
 
 	void Awake()
     {
+        _maxLevelTime = maxLevelTime; 
         _targetMask = targetMask; 
         _rewindSpeed = rewindSpeed;
         _speeds = speeds;

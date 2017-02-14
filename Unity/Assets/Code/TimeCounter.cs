@@ -48,6 +48,7 @@ public class TimeCounter : MonoBehaviour {
     void Start()
     {
         SetCharaToTimeline();
+        _mostFutureTime = GameSettings.MaxLevelTime; 
     }
     public static void SwitchedToCharacter(Character _character)
     {
