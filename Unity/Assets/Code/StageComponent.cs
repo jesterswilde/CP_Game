@@ -11,8 +11,8 @@ public class StageComponent : MonoBehaviour {
     int[] _replayStages; 
     Interactable _interactable;
     Character _character;
-    List<Renderer> _renderers;
-    List<Collider> _colliders;
+    List<Renderer> _renderers = new List<Renderer>();
+    List<Collider> _colliders = new List<Collider>();
     StageChangeActivate _activator; 
 
     bool _isActive = true;
@@ -149,8 +149,14 @@ public class StageComponent : MonoBehaviour {
     }
     void Awake()
     {
-        _renderers = Util.GetComponents<Renderer>(gameObject);
-        _colliders = Util.GetComponents<Collider>(gameObject);
+        _renderers.AddRange(Util.GetComponents<Renderer>(gameObject).Where((Renderer _rend) =>
+        {
+            return _rend.enabled; 
+        }));
+        _colliders.AddRange(Util.GetComponents<Collider>(gameObject).Where((Collider _coll) =>
+        {
+            return _coll.enabled;
+        }));
         _interactable = GetComponent<Interactable>();
         _character = GetComponent<Character>();
         _activator = GetComponent<StageChangeActivate>(); 

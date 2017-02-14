@@ -167,7 +167,6 @@ public class CharacterState
                 break;
             case ActionType.StandingOnSurface:
                 _groundNormal = _action.Vector;
-                Debug.Log("Standing on " + _action.Vector); 
                 break; 
             case ActionType.IsGrounded:
                 _isGrounded = 1;
@@ -231,7 +230,6 @@ public class CharacterState
                 break;
             case ActionType.LeavingSurface:
                 _groundNormal = _action.Vector;
-                Debug.Log("Leaving " + _action.Vector); 
                 break; 
             case ActionType.PressForward:
                 _forward = 0;

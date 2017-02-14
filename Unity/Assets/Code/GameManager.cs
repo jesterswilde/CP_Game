@@ -53,22 +53,20 @@ public class GameManager : MonoBehaviour {
     #region Camera
     public static ITargetable GetTargeted(float _threshold)
     {
-        ITargetable _target = null; 
-        for(int i = 0; i < _targetables.Count; i++)
-        {
-            ITargetable _targetable = _targetables[i];
-            if (_targetable.IsVisible) 
+        Ray _ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit _hit; 
+        if(Physics.Raycast(_ray, out _hit,GameSettings.MaxTargetDistance, GameSettings.TargetMask)){
+            GameObject _go = _hit.collider.gameObject;
+            Component[] _comps = _go.GetComponents<Component>();
+            foreach(Component _comp in _comps)
             {
-                 Vector3 _point = Camera.main.WorldToViewportPoint(_targetable.Position);
-                float _dist = Mathf.Pow(_point.x - 0.5f, 2) + Mathf.Pow(_point.y - 0.5f, 2);
-                if(_dist < _threshold)
+                if(_comp is ITargetable)
                 {
-                    _threshold = _dist;
-                    _target = _targetable; 
+                    return _comp as ITargetable; 
                 }
             }
         }
-        return _target; 
+        return null; 
     }
     static void SwitchCamera(ICamera _next)
     {
