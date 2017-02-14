@@ -30,7 +30,9 @@ public class PlayerInput {
         {
             GameManager.ShowCtrlMenu(false); 
         }
-        if (Input.GetMouseButtonDown(0) && Input.GetKey(KeyCode.LeftShift))
+        if (Input.GetMouseButtonDown(0) && Input.GetKey(KeyCode.LeftShift) && GameManager.ActiveCharacter == null 
+            || Input.GetMouseButtonDown(0) && Input.GetKey(KeyCode.LeftShift) && GameManager.ActiveCharacter != null 
+            && GameManager.ActiveCharacter.CanRewind)
         {
             GameManager.SetSpeed(GameSettings.RewindSpeed);
         }
@@ -39,9 +41,9 @@ public class PlayerInput {
         {
             GameManager.SetSpeed(GameSettings.ForwardSpeed);
         }
-        if (Input.GetMouseButtonDown(1) && GameManager.ActiveCharacter != null && Input.GetKey(KeyCode.LeftShift))
+        if (Input.GetMouseButtonDown(1) && GameManager.ActiveCharacter != null 
+            && Input.GetKey(KeyCode.LeftShift) && GameManager.ActiveCharacter.CanDeleteFuture)
         {
-            GameManager.SetSpeed(GameSettings.ForwardSpeed);
             GameManager.ActiveCharacter.DeleteFuture();
         }
         if (Input.GetKeyDown(KeyCode.Space))

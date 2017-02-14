@@ -53,7 +53,7 @@ public class GameManager : MonoBehaviour {
     #region Camera
     public static ITargetable GetTargeted(float _threshold)
     {
-        Ray _ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        Ray _ray = Camera.main.ScreenPointToRay(new Vector3(Screen.width * 0.5f, Screen.height * 0.5f, 0));
         RaycastHit _hit; 
         if(Physics.Raycast(_ray, out _hit,GameSettings.MaxTargetDistance, GameSettings.TargetMask)){
             GameObject _go = _hit.collider.gameObject;

@@ -9,6 +9,12 @@ using System;
 public class Character : WibblyWobbly {
     [SerializeField]
     float speed = 5;
+    [SerializeField]
+    bool _canRewind = true; 
+    public bool CanRewind { get { return _canRewind; } }
+    [SerializeField]
+    bool _canDeleteFuture = true; 
+    public bool CanDeleteFuture { get { return _canDeleteFuture; } }
     bool _isDead = false; 
     CharacterCam _cam;
     public CharacterCam Cam { get { return _cam; } }
