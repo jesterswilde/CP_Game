@@ -43,8 +43,8 @@
 			
 			fixed4 frag (v2f i) : SV_Target
 			{
-				float2 offset = i.screenSpace.xy / i.screenSpace.w - _CenterPoint.xy;
-				fixed4 col = tex2D(_MainTex, 1 - offset + _CenterPoint.xy * _CenterPoint.z);
+				float2 offset = _CenterPoint.xy - i.screenSpace.xy / i.screenSpace.w;
+				fixed4 col = tex2D(_MainTex, (_CenterPoint.xy * _CenterPoint.z / 2 + offset));
 				return col;
 			}
 			ENDCG

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[ExecuteInEditMode]
 public class ImageCutoutComp : MonoBehaviour {
 
     [SerializeField]
@@ -11,7 +10,7 @@ public class ImageCutoutComp : MonoBehaviour {
 
     void Awake()
     {
-        _mat = GetComponent<Renderer>().sharedMaterial; 
+        _mat = GetComponent<Renderer>().material; 
     }
     void Update()
     {
