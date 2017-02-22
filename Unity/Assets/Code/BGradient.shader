@@ -42,7 +42,8 @@
 				o.uv = i.uv; 
 				o.depthUV = i.uv;
 				#if UNITY_UV_STARTS_AT_TOP
-				o.depthUV.y = 1 - o.depthUV.y;
+				if (_MainTex_TexelSize.y < 0)
+					o.depthUV.y = 1 - o.depthUV.y;
 				#endif
 				return o; 
 			}
