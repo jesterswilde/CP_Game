@@ -52,6 +52,10 @@ public class AAMoveForward : IAtomicAction
     {
         return new ValueAction(ActionType.AIMoveForward, Vector3.Distance(_enemy.transform.position, _target), _time); 
     }
+    public Action CreateAction()
+    {
+        return new ValueAction(ActionType.AIMoveForward, _distance); 
+    }
     public static void SimulateAction(DummyEnemy _enemy, Vector3 _target)
     {
         float _distance = Vector3.Distance(_enemy.transform.position, _target);

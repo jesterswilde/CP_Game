@@ -6,7 +6,8 @@ public class AAMoveTo : IAtomicAction {
     IAI _enemy;
     Vector3 _maxVector;
     Vector3 _dir; 
-    Vector3 _remaining; 
+    Vector3 _remaining;
+    Vector3 _target; 
     float _finishesAt;
     public float FinishesAt { get { return _finishesAt; } }
     public AAMoveTo(IAI enemy)
@@ -42,7 +43,8 @@ public class AAMoveTo : IAtomicAction {
     {
         _remaining = _action.Vector;
         _maxVector = _action.Vector;
-        _dir = _action.Vector.normalized; 
+        _dir = _action.Vector.normalized;
+        _target = _action.OriginalVec;  
         CalculateFinishTime(_action);
     }
     public Action Unset()
@@ -51,14 +53,18 @@ public class AAMoveTo : IAtomicAction {
     }
     public static Action CreateAction(Transform _enemy, Vector3 _target, float _time)
     {
-        return new ValueAction(ActionType.AIMoveForward, Vector3.Distance(_enemy.transform.position, _target), _time);
+        return new ValueAction(ActionType.AIMoveTo, Vector3.Distance(_enemy.transform.position, _target), _time);
+    }
+    public Action CreateAction()
+    {
+        return new DirTargetAction(ActionType.AIMoveTo, _remaining, _target);
     }
     public static void SimulateAction(DummyEnemy _enemy, Vector3 _target)
     {
         Vector3 _toVector  = _target - _enemy.transform.position;
         _enemy.transform.position = _target;
-        _enemy.SetAction(new VectorAction(ActionType.AIMoveTo, _toVector, _enemy.Time));
+        _enemy.SetAction(new DirTargetAction(ActionType.AIMoveTo, _toVector, _target, _enemy.Time));
         _enemy.AddToTIme(_toVector.magnitude / _enemy.MoveSpeed);
-        _enemy.SetAction(new VectorAction(ActionType.AIMoveToUnset, _toVector, _enemy.Time));
+        _enemy.SetAction(new DirTargetAction(ActionType.AIMoveToUnset, _toVector, _target, _enemy.Time));
     }
 }

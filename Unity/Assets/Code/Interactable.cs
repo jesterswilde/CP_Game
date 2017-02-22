@@ -13,7 +13,9 @@ public class Interactable : WibblyWobbly, IAI {
     public float RotationSpeed { get { return _rotationSpeed; } }
     [SerializeField]
     protected Task _currentTask;
-    protected Task _defaultTask; 
+    protected Task _defaultTask;
+    protected HistoryNode _interruptedBranch;
+    protected Task _interruptedTask; 
 
     public override void Play(float _time)
     {
@@ -31,14 +33,14 @@ public class Interactable : WibblyWobbly, IAI {
             _currentAction.Act(_deltaTime);
         }else
         {
-            if(_currentTask != null && _history.IsPointerAtHead())
+            if (_currentTask != null && _history.IsPointerAtHead())
             {
-                SetTask(_currentTask);
-            }else
+                PlayTask(_currentTask);
+            } else
             {
-                if(_defaultTask != null && _history.IsPointerAtHead())
+                if (_defaultTask != null && _history.IsPointerAtHead())
                 {
-                    SetTask(_defaultTask); 
+                    SetTask(_defaultTask);
                 }
             }
         }
@@ -81,6 +83,14 @@ public class Interactable : WibblyWobbly, IAI {
                 break;
             case ActionType.UnsetTask:
                 _currentTask = null;
+                break;
+            case ActionType.ReloadInterruptedTask:
+                if(_currentTask != null)
+                {
+                    SetExternalAction(new TaskAction(ActionType.UnsetTask, _currentTask));
+                }
+                _currentTask = _interruptedTask;
+                _interruptedTask = null;
                 break;
             case ActionType.SpliceFuture:
                 _history.SpliceOffPossibleFuture();
@@ -126,8 +136,17 @@ public class Interactable : WibblyWobbly, IAI {
             case ActionType.UnsetTask:
                 _currentTask = _action.Task;
                 break;
+            case ActionType.UnsetTaskInterruption:
+                _interruptedTask = _action.Task;
+                break; 
+            case ActionType.UnsetInterruption:
+                _interruptedBranch = _action.PossibleFuture;
+                break; 
             case ActionType.SetTask:
                 _currentTask = null;
+                break;
+            case ActionType.ReloadInterruptedTask:
+                _interruptedTask = _action.Task;
                 break; 
             case ActionType.AIMoveForward:
             case ActionType.AIMoveTo:
@@ -151,10 +170,12 @@ public class Interactable : WibblyWobbly, IAI {
         if (_currentAction != null)
         {
             SetAction(_currentAction.Unset());
+            _currentAction = null; 
         }
         if (_currentTask != null)
         {
             SetAction(new TaskAction(ActionType.UnsetTask, _currentTask, true));
+            _currentTask = null; 
         }
     }
     public void SetAtomicAction(ActionType _type, IAI _ai, Vector3 _target, float _time)
@@ -176,6 +197,39 @@ public class Interactable : WibblyWobbly, IAI {
         if(_task != null)
         {
             SetTask(_task);
+        }else
+        {
+            switch (_trigger)
+            {
+                case TriggerType.Interrupt:
+                    HistoryNode _oldNode = _interruptedBranch;
+                    Task _oldTask = _interruptedTask; 
+                    if(_currentAction != null)
+                    {
+                       _interruptedBranch = _history.CreateBranch(_currentAction.CreateAction());
+                    }else
+                    {
+                        _interruptedBranch = null; 
+                    }
+                    _interruptedTask = _currentTask;
+                    UnloadAll();
+                    SetExternalAction(new BasicAction(ActionType.Null, float.MaxValue, true)); 
+                    SetExternalAction(new FutureActions(ActionType.UnsetInterruption, _oldNode, true));
+                    if(_oldTask != null)
+                    {
+                        SetExternalAction(new TaskAction(ActionType.UnsetTaskInterruption, _oldTask, true)); 
+                    }
+                    break;
+                case TriggerType.Resume:
+                    if(_interruptedBranch != null)
+                    {
+                        UnloadAll();
+                        SetAction(new TaskAction(ActionType.ReloadInterruptedTask, _interruptedTask)); 
+                        SetAction(new FutureActions(ActionType.UnsetInterruption, _interruptedBranch, true));
+                        Task.ResumeTask(_interruptedBranch, this, GameManager.FixedGameTime);
+                    }
+                    break; 
+            }
         }
     }
     public override void SetExternalAction(Action _action)
@@ -187,8 +241,14 @@ public class Interactable : WibblyWobbly, IAI {
         if (GameManager.IsPlaying)
         {
             UnloadAll(); 
-            //SetAction(new TaskAction(ActionType.SetTask, _task)); 
             _task.SimulateTask(this, GameManager.FixedGameTime); 
+        }
+    }
+    public virtual void PlayTask(Task _task)
+    {
+        if (GameManager.IsPlaying)
+        {
+            _task.SimulateTask(this, GameManager.FixedGameTime);
         }
     }
     void Awake()
@@ -196,7 +256,10 @@ public class Interactable : WibblyWobbly, IAI {
         _history.AddToHead(new BasicAction(ActionType.Null));
         RegisterWibblyWobbly();
         _combat = GetComponent<CombatState>();
-        _defaultTask = _currentTask; 
+        if (_currentTask != null && _currentTask.Default)
+        {
+            _defaultTask = _currentTask; 
+        }
         if(_combat != null)
         {
             _combat.SetCallbacks(new SetActionDelegate(SetAction));

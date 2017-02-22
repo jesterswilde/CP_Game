@@ -50,6 +50,10 @@ public class AARotateDir : IAtomicAction
         _enemy.transform.forward = _currentForward;
         return new ValueAction(ActionType.AIRotateDir, Util.AngleBetweenVector3(_currentForward, _targetForward, _enemy.up), _time);
     }
+    public Action CreateAction()
+    {
+        return new ValueAction(ActionType.AIRotateDir, _dir); 
+    }
     public static void SimulateAction(DummyEnemy _enemy, Vector3 _target)
     {
         throw new Exception("Cannot be simulated"); 

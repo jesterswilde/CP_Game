@@ -44,6 +44,10 @@ public class AAWait : IAtomicAction
     {
         return new ValueAction(ActionType.AIWait, _value, _time); 
     }
+    public Action CreateAction()
+    {
+        return new ValueAction(ActionType.AIWait, _remainingWait);
+    }
     public static void SimulateAction(DummyEnemy _enemy, float _waitAmount)
     {
         _enemy.SetAction(new ValueAction(ActionType.AIWait, _waitAmount, _enemy.Time));

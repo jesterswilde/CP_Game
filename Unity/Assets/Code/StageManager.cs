@@ -15,7 +15,6 @@ public class StageManager : MonoBehaviour, IManager {
 
     void LoadStage()
     {
-        Debug.Log("loading stage " + _stage); 
         for(int i = 0; i < _stageComponents.Count; i++)
         {
             _stageComponents[i].LoadNewStage(_stage); 

@@ -20,6 +20,7 @@ public abstract class Action
     public virtual IBehavior Behavior { get { return null; } }
     public virtual InvenItem Item { get { return null; } }
     public virtual int IValue { get { return int.MinValue; } }
+    public virtual Vector3 OriginalVec { get { return Vector3.zero; } }
 }
 public class BasicAction : Action{
 
@@ -125,6 +126,21 @@ public class FutureActions : Action
         _action = type; 
         _future = future;
         _time = time; 
+    }
+
+    public FutureActions(ActionType type, HistoryNode future, bool isExternal)
+    {
+        _isExternal = isExternal; 
+        _action = type;
+        _future = future;
+        _time = GameManager.FixedGameTime;
+    }
+    public FutureActions(ActionType type, HistoryNode future, float time, bool isExternal)
+    {
+        _isExternal = isExternal; 
+        _action = type;
+        _future = future;
+        _time = time;
     }
     public override HistoryNode PossibleFuture { get { return _future; } }
 }
@@ -286,6 +302,83 @@ public class AnimAction : Action
     public override float Value { get { return _value; } }
 }
 
+
+public class DirTargetAction : Action
+{
+    Vector3 _dir;
+    Vector3 _target; 
+    public DirTargetAction(ActionType type, Vector3 direction, Vector3 target)
+    {
+        _action = type;
+        _dir = direction;
+        _target = target; 
+        _time = GameManager.FixedGameTime;
+    }
+    public DirTargetAction(ActionType type, Vector3 direction, Vector3 target, float time)
+    {
+        _action = type;
+        _dir = direction;
+        _target = target;
+        _time = time;
+    }
+    public DirTargetAction(ActionType type, Vector3 direction, Vector3 target, bool external)
+    {
+        _action = type;
+        _dir = direction;
+        _target = target; 
+        _isExternal = external;
+        _time = GameManager.FixedGameTime;
+    }
+    public DirTargetAction(ActionType type, Vector3 direction, Vector3 target, float time, bool external)
+    {
+        _action = type;
+        _dir = direction;
+        _target = target;
+        _isExternal = external;
+        _time = time;
+    }
+    public override Vector3 Vector { get { return _dir; } }
+    public override Vector3 OriginalVec { get { return _target; } }
+}
+
+public class ValueTargetAction : Action
+{
+    float _value;
+    Vector3 _target;
+    public ValueTargetAction(ActionType type, float value, Vector3 target)
+    {
+        _action = type;
+        _value = value;
+        _target = target;
+        _time = GameManager.FixedGameTime;
+    }
+    public ValueTargetAction(ActionType type, float value, Vector3 target, float time)
+    {
+        _action = type;
+        _value = value;
+        _target = target;
+        _time = time;
+    }
+    public ValueTargetAction(ActionType type, float value, Vector3 target, bool external)
+    {
+        _action = type;
+        _value = value; 
+        _target = target;
+        _isExternal = external;
+        _time = GameManager.FixedGameTime;
+    }
+    public ValueTargetAction(ActionType type, float value, Vector3 target, float time, bool external)
+    {
+        _action = type;
+        _value = value; 
+        _target = target;
+        _isExternal = external;
+        _time = time;
+    }
+    public override float Value { get { return _value; } }
+    public override Vector3 OriginalVec { get { return _target; } }
+}
+
 public enum ActionType
 {
     PressForward,
@@ -316,6 +409,12 @@ public enum ActionType
     Clear,
     Activate,
     Deactivate,
+    SetInterruption,
+    UnsetInterruption,
+    UnsetTaskInterruption,
+    ReloadInterruptedTask,
+    ResumeBranch,
+    UnResumeTask,
     Fire, 
     TakeDamage,
     ShotBy,

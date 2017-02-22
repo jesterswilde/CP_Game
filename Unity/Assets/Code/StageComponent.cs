@@ -20,10 +20,8 @@ public class StageComponent : MonoBehaviour {
     bool _isInactive = false;  
     public void LoadNewStage(int _stage)
     {
-        Debug.Log("Loading new stage"); 
         if (_activeStages.Contains(_stage))
         {
-            Debug.Log("Activating");
             Activate();
         }else
         {
@@ -32,7 +30,6 @@ public class StageComponent : MonoBehaviour {
                 SetToReplay();
             }else
             {
-                Debug.Log("Deactivating"); 
                 Deactivate(); 
             }
         }

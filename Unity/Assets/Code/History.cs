@@ -145,6 +145,12 @@ public class History {
         AddToHead(new FutureActions(ActionType.SpliceFuture, _next, GameManager.FixedGameTime));
         _pointer = _head;
     }
+    public HistoryNode CreateBranch(Action _action)
+    {
+        HistoryNode _node = new HistoryNode(_action);
+        _node.SetNext(_pointer.Next);
+        return _node; 
+    }
     public void ReloadPossibleFuture(HistoryNode _future)
     {
         _pointer.SetNext(_future);

@@ -88,5 +88,7 @@ public enum TriggerType
     UnAlert, 
     Activate,
     Deactivate,
+    Interrupt,
+    Resume, 
     Null
 }

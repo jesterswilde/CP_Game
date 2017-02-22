@@ -8,6 +8,7 @@ public class AARotate : IAtomicAction
     float _remainingRotation;
     int _dir;
     float _finishesAt;
+    Vector3 _target; 
     public float FinishesAt { get { return _finishesAt; } }
     IAI _enemy;
 
@@ -43,6 +44,7 @@ public class AARotate : IAtomicAction
         _remainingRotation = _action.Value;
         _maxRotation = _action.Value;
         _dir = (_action.Value > 0) ? 1 : -1;
+        _target = _action.OriginalVec; 
         CalculateFinishTime(_action);
     }
     void CalculateFinishTime(Action _action)
@@ -64,6 +66,10 @@ public class AARotate : IAtomicAction
         _enemy.transform.forward = _currentForward;
         return new ValueAction(ActionType.AIRotate, Util.AngleBetweenVector3(_currentForward, _targetForward, _enemy.up), _time);
     }
+    public Action CreateAction()
+    {
+        return new ValueTargetAction(ActionType.AIRotate, _remainingRotation, _target); 
+    }
     public static void SimulateAction(DummyEnemy _enemy, Vector3 _target)
     {
         Vector3 _currentForward = _enemy.transform.forward;
@@ -81,8 +87,8 @@ public class AARotate : IAtomicAction
         Vector3 _up = _ai.transform.up;
         Vector3 _dir = _tempTarget - _ai.transform.position;
         float _angle = Util.AngleBetweenVector3(_ai.transform.forward, _dir, _up);
-        _ai.SetAction(new ValueAction(ActionType.AIRotate, _angle, _startTime));
+        _ai.SetAction(new ValueTargetAction(ActionType.AIRotate, _angle, _target, _startTime));
         float _endTime = Math.Abs(_angle) / _ai.RotationSpeed + _startTime; 
-        _ai.SetAction(new ValueAction(ActionType.AIRotateUnset, _angle,  _endTime));
+        _ai.SetAction(new ValueTargetAction(ActionType.AIRotateUnset, _angle, _target, _endTime));
     }
 }
