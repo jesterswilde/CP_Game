@@ -216,9 +216,9 @@ public class GameManager : MonoBehaviour {
     }
     static void Rewind()
     {
-        if(_fixedGameTime < 0)
+        if(_fixedGameTime < 0.1f)
         {
-            _fixedGameTime = 0; 
+            _fixedGameTime = 0.1f; 
         }
         foreach(WibblyWobbly _character in _timeyWimeys)
         {

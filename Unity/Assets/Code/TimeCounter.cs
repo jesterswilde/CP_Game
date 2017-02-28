@@ -117,7 +117,7 @@ public class TimeCounter : MonoBehaviour {
         {
             Text.text = _time.ToString();
         }
-        if (GameManager.ShowingCtrlMenu)
+        if (GameManager.ShowingCtrlMenu && Slider != null && GameSettings.Speeds.Length > 0)
         {
             Image.gameObject.SetActive(true);
             Slider.maxValue = GameSettings.Speeds[GameSettings.Speeds.Length - 1];

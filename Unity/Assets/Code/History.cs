@@ -71,6 +71,14 @@ public class History {
             _head = _node; 
         }
     }
+    public void InsertAfterPointer(Action _action, bool _moveForward)
+    {
+        InsertAfterPointer(_action);
+        if (_moveForward)
+        {
+            _pointer = _pointer.Next; 
+        }
+    }
     public HistoryNode PopNode(HistoryNode _node)
     {
         if(_node == null)

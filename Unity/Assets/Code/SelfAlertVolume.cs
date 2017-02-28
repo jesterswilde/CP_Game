@@ -13,23 +13,42 @@ public class SelfAlertVolume : MonoBehaviour {
     [SerializeField]
     Task _exitTask;
     [SerializeField]
-    TriggerType _exitTrigger; 
+    TriggerType _exitTrigger;
+    [SerializeField]
+    bool _useStay; 
 
-    void OnTriggerEnter(Collider _coll)
+    void OnTriggerStay(Collider _coll)
     {
-        if (Util.LayerMaskContainsLayer(_collMask, _coll.gameObject.layer))
+        if (_useStay && GameManager.IsPlaying)
         {
-            Interactable _inter = _coll.gameObject.GetComponent<Interactable>();
-            if (_inter != null)
+            if (Util.LayerMaskContainsLayer(_collMask, _coll.gameObject.layer))
             {
-                Debug.Log("enter trigger");
-                _inter.ExternalTrigger(_enterTask, _enterTrigger, null); 
+                Interactable _inter = _coll.gameObject.GetComponent<Interactable>();
+                if (_inter != null)
+                {
+                    _inter.ExternalTrigger(_enterTask, _enterTrigger, null); 
+                }
             }
         }
     }
+    void OnTriggerEnter(Collider _coll)
+    {
+        if (!_useStay && GameManager.IsPlaying)
+        {
+            if (Util.LayerMaskContainsLayer(_collMask, _coll.gameObject.layer))
+            {
+                Interactable _inter = _coll.gameObject.GetComponent<Interactable>();
+                if (_inter != null)
+                {
+                    _inter.ExternalTrigger(_enterTask, _enterTrigger, null);
+                }
+            }
+        }
+    }
+
     void OnTriggerExit(Collider _coll)
     {
-        if (Util.LayerMaskContainsLayer(_collMask, _coll.gameObject.layer))
+        if (GameManager.IsPlaying && Util.LayerMaskContainsLayer(_collMask, _coll.gameObject.layer))
         {
             Interactable _inter = _coll.gameObject.GetComponent<Interactable>();
             if (_inter != null)

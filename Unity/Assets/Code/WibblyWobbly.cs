@@ -82,6 +82,13 @@ public abstract class WibblyWobbly : MonoBehaviour {
             _history.InsertAfterPointer(_action); 
         }
     }
+    public virtual void SetExternalAction(Action _action, bool _movePointer)
+    {
+        if (GameManager.IsPlaying && _action != null)
+        {
+            _history.InsertAfterPointer(_action, _movePointer);
+        }
+    }
     public virtual void SetExternalAction(List<Action> _actions)
     {
         if (GameManager.IsPlaying && _actions != null)
@@ -89,6 +96,16 @@ public abstract class WibblyWobbly : MonoBehaviour {
             for(int i = 0; i < _actions.Count; i++)
             {
                 _history.InsertAfterPointer(_actions[i]); 
+            }
+        }
+    }
+    public virtual void SetExternalAction(List<Action> _actions, bool _movePointer)
+    {
+        if (GameManager.IsPlaying && _actions != null)
+        {
+            for (int i = 0; i < _actions.Count; i++)
+            {
+                _history.InsertAfterPointer(_actions[i], _movePointer);
             }
         }
     }

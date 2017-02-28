@@ -21,6 +21,7 @@ public abstract class Action
     public virtual InvenItem Item { get { return null; } }
     public virtual int IValue { get { return int.MinValue; } }
     public virtual Vector3 OriginalVec { get { return Vector3.zero; } }
+    public virtual InterruptedBranch Branch { get { return new InterruptedBranch(); } }
 }
 public class BasicAction : Action{
 
@@ -379,6 +380,26 @@ public class ValueTargetAction : Action
     public override Vector3 OriginalVec { get { return _target; } }
 }
 
+public class BranchAction : Action
+{
+    InterruptedBranch _branch; 
+
+    public BranchAction(ActionType type, InterruptedBranch branch)
+    {
+        _action = type;
+        _branch = branch;
+        _time = GameManager.FixedGameTime;
+    }
+    public BranchAction(ActionType type, InterruptedBranch branch, bool external)
+    {
+        _action = type;
+        _branch = branch; 
+        _isExternal = external;
+        _time = GameManager.FixedGameTime;
+    }
+    public override InterruptedBranch Branch { get { return _branch; } }
+}
+
 public enum ActionType
 {
     PressForward,
@@ -413,6 +434,8 @@ public enum ActionType
     UnsetInterruption,
     UnsetTaskInterruption,
     ReloadInterruptedTask,
+    Interrupt,
+    Resume,
     ResumeBranch,
     UnResumeTask,
     Fire, 
