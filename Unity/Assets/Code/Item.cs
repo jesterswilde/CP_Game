@@ -20,7 +20,7 @@ public class Item : MonoBehaviour, ITargetable {
     Renderer _renderer;
     Collider _collider;
     CombatState _combat;
-    Color _baseColor;
+	Material _baseMaterial;
     RequiredItems _requiredItems; 
 
     public bool IsVisible
@@ -62,7 +62,7 @@ public class Item : MonoBehaviour, ITargetable {
             {
                 _collider.enabled = true;
                 _renderer.enabled = true;
-                _renderer.material.color = _baseColor;  
+				_renderer.material = _baseMaterial;  
             }
         }
     }
@@ -77,14 +77,20 @@ public class Item : MonoBehaviour, ITargetable {
         _amount += _amountToAdd; 
     }
 
-    public void Targeted()
+	public void Targeted(float _dist)
     {
-        _renderer.material.color = ColorManager.ItemColor; 
+		if (_dist < _minDistanceToActivate) {
+			_renderer.material = ColorManager.ItemMaterial; 
+		} else {
+			_renderer.material = _baseMaterial; 
+		}
+		_renderer.material.SetFloat ("_OutlineWidth", ColorManager.OutlineWidth); 
     }
 
     public void UnTargeted()
     {
-        _renderer.material.color = _baseColor; 
+		_renderer.material = _baseMaterial; 
+		_renderer.material.SetFloat ("_OutlineWidth", 0); 
     }
 
     public List<Action> Activate(Character _character)
@@ -126,7 +132,7 @@ public class Item : MonoBehaviour, ITargetable {
     {
         _renderer = GetComponent<Renderer>();
         _collider = GetComponent<Collider>(); 
-        _baseColor = _renderer.material.color;
+		_baseMaterial = _renderer.material;
         _requiredItems = GetComponent<RequiredItems>(); 
     }
     void Start()

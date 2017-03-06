@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 public interface ITargetable {
-    void Targeted();
+	void Targeted(float dist);
     void UnTargeted();
     bool IsVisible { get; }
     Vector3 Position { get; } 

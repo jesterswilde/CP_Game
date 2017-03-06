@@ -13,7 +13,7 @@ public class Turret : Interactable, ITargetable {
 
     Renderer _renderer;
     Material _defaultMat; 
-    Color _baseColor;
+	Material _baseMaterial;
     CombatState _target;
     IBehavior _currentBehavior; 
     public bool IsVisible { get { return _renderer.isVisible; } }
@@ -25,14 +25,14 @@ public class Turret : Interactable, ITargetable {
     public GameObject Go { get { return gameObject; } }
     public float MinDistanceToActivate { get { return float.NaN; } }
 
-    public void Targeted()
+	public void Targeted(float _dist)
     {
-        _renderer.material.color = Color.red; 
+		_renderer.material = ColorManager.EnemyTargetMaterial; 
     }
 
     public void UnTargeted()
     {
-        _renderer.material.color = _baseColor; 
+		_renderer.material = _baseMaterial; 
     }
     public override void ExternalTrigger(Task _task, TriggerType _trigger, Character _character)
     {
@@ -110,13 +110,13 @@ public class Turret : Interactable, ITargetable {
     void Activate(Action _action)
     {
         _renderer.material = _defaultMat;
-        _baseColor = _renderer.material.color; 
+		_baseMaterial = _renderer.material; 
         _isActive = true;
     }
     void Deactivate(Action _action)
     {
         _renderer.material = GameSettings.InactiveMaterial;
-        _baseColor = _renderer.material.color; 
+		_baseMaterial = _renderer.material; 
         _isActive = false;
     }
 
@@ -236,7 +236,7 @@ public class Turret : Interactable, ITargetable {
     void Awake()
     {
         _renderer = GetComponent<Renderer>();
-        _baseColor = _renderer.material.color;
+		_baseMaterial = _renderer.material;
         _defaultMat = _renderer.material; 
         _defaultTask = _currentTask;
         _combat = GetComponent<CombatState>();

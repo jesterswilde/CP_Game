@@ -10,7 +10,7 @@ public class StageChangeActivate : MonoBehaviour, ITargetable {
     [SerializeField]
     float _minDistance = 5f; 
     Renderer _renderer;
-    Color _baseColor;
+	Material _baseMaterial;
     RequiredItems _requiredItems; 
 
     public GameObject Go { get { return gameObject; } }
@@ -59,20 +59,26 @@ public class StageChangeActivate : MonoBehaviour, ITargetable {
         throw new NotImplementedException();
     }
 
-    public void Targeted()
+	public void Targeted(float _dist)
     {
-        _renderer.material.color = ColorManager.StageTargetColor; 
+		if (_dist < _minDistance) {
+			_renderer.material = ColorManager.StageTargetMaterial; 
+		} else {
+			_renderer.material = _baseMaterial; 
+		}
+		_renderer.material.SetFloat ("_OutlineWidth", 0); 
     }
 
     public void UnTargeted()
     {
-        _renderer.material.color = _baseColor; 
+        _renderer.material = _baseMaterial; 
+		_renderer.material.SetFloat ("_OutlineWidth", 0); 
     }
 
     void Awake()
     {
         _renderer = GetComponent<Renderer>(); 
-        _baseColor = _renderer.material.color;
+        _baseMaterial = _renderer.material;
         _requiredItems = GetComponent<RequiredItems>();
         GameManager.RegisterTargetable(this); 
     }

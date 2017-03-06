@@ -6,26 +6,29 @@ public class ColorManager : MonoBehaviour {
 
     static ColorManager t; 
     [SerializeField]
-    Color _extractionColor;
-    public static Color ExtractionColor { get { return (t._extractionColor != null) ? t._extractionColor : Color.blue; } }
+	Material _extractionMaterial;
+	public static Material ExtractionMaterial { get { return t._extractionMaterial; } }
     [SerializeField]
-    Color _enemyTargetColor;
-    public static Color EnemyTargetColor { get { return (t._enemyTargetColor != null) ? t._enemyTargetColor : Color.red; } }
+	Material _enemyTargetMaterial;
+	public static Material EnemyTargetMaterial { get { return t._enemyTargetMaterial; } }
     [SerializeField]
-    Color _interactableTargetColor;
-    public static Color InteractableTargetColor { get { return (t._interactableTargetColor != null) ? t._interactableTargetColor : Color.yellow; } }
+	Material _interactableTargetMaterial;
+    public static Material InteractableTargetMaterial { get { return t._interactableTargetMaterial; } }
     [SerializeField]
-    Color _stageTargetColor;
-    public static Color StageTargetColor { get { return (t._stageTargetColor != null) ? t._stageTargetColor : Color.green; } }
+	Material _stageTargetMaterial;
+	public static Material StageTargetMaterial { get { return t._stageTargetMaterial; } }
     [SerializeField]
-    Color _itemColor;
-    public static Color ItemColor { get { return (t._itemColor != null) ? t._itemColor : Color.yellow; } }
+	Material _itemMaterial;
+	public static Material ItemMaterial { get { return t._itemMaterial; } }
     [SerializeField]
-    Color _disabledItem; 
-    public static Color DisabledItem { get { return (t._disabledItem != null) ? t._disabledItem : Color.grey; } }
+	Material _disabledMaterial;
+	public static Material DisabledMaterial { get { return t._disabledMaterial; } }
+	[SerializeField]
+	float _outlineWidth; 
+	public static float OutlineWidth { get { return t._outlineWidth; } }
 
     void Awake()
     {
-        t = this; 
+        t = this;  
     }
 }

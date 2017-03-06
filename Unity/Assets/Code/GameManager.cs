@@ -335,6 +335,9 @@ public class GameManager : MonoBehaviour {
         {
             Observe();
         }
+		if (_activeCharacter != null) {
+			_activeCharacter.Target (); 
+		}
         if (_canAcceptPlayerInput)
         {
             PlayerInput.CheckSpeedButtons(); 

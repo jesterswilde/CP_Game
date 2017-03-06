@@ -16,8 +16,7 @@ public class TargetableTrigger : MonoBehaviour, ITargetable
     [SerializeField]
     bool _loop = false; 
 
-    Material _mat;
-    Color _startingColor;
+	Material _baseMaterial;
     Renderer _renderer;
     RequiredItems _requiredItems;
     public bool IsVisible { get { return _renderer.isVisible; } }
@@ -74,27 +73,31 @@ public class TargetableTrigger : MonoBehaviour, ITargetable
                 _index = _alertList.Count -1; 
             }
         }
-        Debug.Log("Untriggerd " + _index); 
     }
-    public void Targeted()
+	public void Targeted(float _dist)
     {
-        _mat.color = Color.yellow; 
+		if (_dist < _minDistanceToActivate) {
+			_renderer.material = ColorManager.InteractableTargetMaterial; 
+		} else {
+			_renderer.material = _baseMaterial; 
+		}
+		_renderer.material.SetFloat ("_OutlineWidth", ColorManager.OutlineWidth); 
     }
     public void UnTargeted()
     {
-        _mat.color = _startingColor; 
+		_renderer.material = _baseMaterial; 
+		_renderer.material.SetFloat ("_OutlineWidth", 0); 
     }
 
     void Awake()
     {
-        _mat = GetComponent<Renderer>().material;
-        _startingColor = _mat.color; 
         if(_alertList.Count == 0)
         {
             throw new System.Exception(gameObject.name + " has no interactable object"); 
         }
         _requiredItems = GetComponent<RequiredItems>(); 
         _renderer = GetComponent<Renderer>();
+		_baseMaterial = _renderer.material; 
     }
     void Start()
     {

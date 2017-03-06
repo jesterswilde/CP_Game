@@ -9,6 +9,7 @@ public class AAMoveForward : IAtomicAction
     float _maxDistance;
     float _finishesAt;
     public float FinishesAt { get { return _finishesAt; } }
+	int _index; 
     public AAMoveForward(IAI enemy)
     {
         _enemy = enemy; 
@@ -32,6 +33,7 @@ public class AAMoveForward : IAtomicAction
 
     public void ReverseAction(Action _action, float _time)
     {
+		_index = _action.IValue;
         _distance = _action.Value - (_action.Time - _time) * _enemy.MoveSpeed;
         _maxDistance = _action.Value;
         CalculateFinishTime(_action); 
@@ -39,13 +41,14 @@ public class AAMoveForward : IAtomicAction
 
     public void UseAction(Action _action, float _time)
     {
+		_index = _action.IValue; 
         _distance = _action.Value;
         _maxDistance = _action.Value;
         CalculateFinishTime(_action);
     }
     public Action Unset()
     {
-        return new ValueAction(ActionType.AIMoveForwardUnset, _maxDistance); 
+		return new ValueIntAction(ActionType.AIMoveForwardUnset, _maxDistance, _index); 
     }
 
     public static Action CreateAction(Transform _enemy, Vector3 _target, float _time)
@@ -56,12 +59,12 @@ public class AAMoveForward : IAtomicAction
     {
         return new ValueAction(ActionType.AIMoveForward, _distance); 
     }
-    public static void SimulateAction(DummyEnemy _enemy, Vector3 _target)
+	public static void SimulateAction(DummyEnemy _enemy, Vector3 _target, int index)
     {
         float _distance = Vector3.Distance(_enemy.transform.position, _target);
         _enemy.transform.position += _enemy.transform.forward * _distance; 
-        _enemy.SetAction(new ValueAction(ActionType.AIMoveForward, _distance, _enemy.Time));
+		_enemy.SetAction(new ValueIntAction(ActionType.AIMoveForward, _distance, index, _enemy.Time));
         _enemy.AddToTIme(_distance / _enemy.MoveSpeed);
-        _enemy.SetAction(new ValueAction(ActionType.AIMoveForwardUnset, _distance, _enemy.Time));
+		_enemy.SetAction(new ValueIntAction(ActionType.AIMoveForwardUnset, _distance, index, _enemy.Time));
     }
 }

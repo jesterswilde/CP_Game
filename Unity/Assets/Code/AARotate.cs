@@ -11,6 +11,7 @@ public class AARotate : IAtomicAction
     Vector3 _target; 
     public float FinishesAt { get { return _finishesAt; } }
     IAI _enemy;
+	int _index; 
 
     public AARotate(IAI enemy)
     {
@@ -33,6 +34,7 @@ public class AARotate : IAtomicAction
 
     public void ReverseAction(Action _action, float _time)
     {
+		_index = _action.IValue; 
         _remainingRotation = _action.Value - (_time - _action.Time) * _enemy.RotationSpeed;
         _maxRotation = _action.Value;
         _dir = (_action.Value > 0) ? 1 : -1;
@@ -41,6 +43,7 @@ public class AARotate : IAtomicAction
 
     public void UseAction(Action _action, float _time)
     {
+		_index = _action.IValue; 
         _remainingRotation = _action.Value;
         _maxRotation = _action.Value;
         _dir = (_action.Value > 0) ? 1 : -1;
@@ -54,7 +57,7 @@ public class AARotate : IAtomicAction
 
     public Action Unset()
     {
-        return new ValueAction(ActionType.AIRotateUnset, _maxRotation, true); 
+		return new ValueIntAction(ActionType.AIRotateUnset, _maxRotation, _index, true); 
     }
 
     public static Action CreateAction(Transform _enemy, Vector3 _target, float _time)
@@ -70,16 +73,16 @@ public class AARotate : IAtomicAction
     {
         return new ValueTargetAction(ActionType.AIRotate, _remainingRotation, _target); 
     }
-    public static void SimulateAction(DummyEnemy _enemy, Vector3 _target)
+	public static void SimulateAction(DummyEnemy _enemy, Vector3 _target, int index)
     {
         Vector3 _currentForward = _enemy.transform.forward;
         Vector3 _tempTarget = new Vector3(_target.x, _enemy.transform.position.y, _target.z);
         Vector3 _up = _enemy.transform.up; 
         _enemy.transform.LookAt(_tempTarget);
         float _angle = Util.AngleBetweenVector3(_currentForward, _enemy.transform.forward, _up);
-        _enemy.SetAction(new ValueAction(ActionType.AIRotate, _angle, _enemy.Time));
+		_enemy.SetAction(new ValueIntAction(ActionType.AIRotate, _angle, index, _enemy.Time));
         _enemy.AddToTIme(Math.Abs(_angle) / _enemy.RotationSpeed);
-        _enemy.SetAction(new ValueAction(ActionType.AIRotateUnset, _angle, _enemy.Time));
+		_enemy.SetAction(new ValueIntAction(ActionType.AIRotateUnset, _angle, index, _enemy.Time));
     }
     public static void SimulateAction(IAI _ai, Vector3 _target, float _startTime)
     {

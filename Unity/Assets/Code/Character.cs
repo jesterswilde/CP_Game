@@ -187,6 +187,25 @@ public class Character : WibblyWobbly {
             }
         }
     }
+	public void Target(){
+		ITargetable _target = GameManager.GetTargeted(GameSettings.MaxTargetDistance); 
+		if(_target == null && _currentTarget != null)
+		{
+			_currentTarget.UnTargeted();
+			_currentTarget = _target;
+			return;
+		}
+		if(_target != null)
+		{
+			float _dist = Vector3.Distance (_target.Position, transform.position); 
+			if(_currentTarget != null)
+			{
+				_currentTarget.UnTargeted();
+			}
+			_currentTarget = _target;
+			_currentTarget.Targeted(_dist); 
+		}
+	}
     public bool WillRotate()
     {
         if(_playerControlled && _state.IsMoving())
@@ -275,21 +294,7 @@ public class Character : WibblyWobbly {
 	
 	// Update is called once per frame
 	void Update () {
-        ITargetable _target = GameManager.GetTargeted(GameSettings.MaxTargetDistance); 
-        if(_target == null && _currentTarget != null)
-        {
-            _currentTarget.UnTargeted();
-            _currentTarget = _target; 
-        }
-        if(!System.Object.ReferenceEquals(_target, _currentTarget) && _target != null)
-        {
-            if(_currentTarget != null)
-            {
-                _currentTarget.UnTargeted();
-            }
-            _currentTarget = _target;
-            _currentTarget.Targeted(); 
-        }
+        
     }
 
    

@@ -10,7 +10,7 @@ public class ExtractionTrigger : MonoBehaviour, ITargetable {
     float _minDistanceToActivate = 1f;
     Stack<Character> _extractedCharacters = new Stack<Character>();  
     Renderer _renderer;
-    Color _baseColor; 
+	Material _baseMaterial; 
     public CombatState Combat { get { return null; } }
     public GameObject Go { get { return gameObject; } }
     public bool isActivatable { get { return true; } }
@@ -45,20 +45,26 @@ public class ExtractionTrigger : MonoBehaviour, ITargetable {
         throw new NotImplementedException();
     }
 
-    public void Targeted()
+	public void Targeted(float _dist)
     {
-        _renderer.material.color = Color.blue; 
+		if (_dist < _minDistanceToActivate) {
+			_renderer.material = ColorManager.ExtractionMaterial; 
+		} else {
+			_renderer.material = _baseMaterial;
+		}
+		_renderer.material.SetFloat ("_OutlineWidth", ColorManager.OutlineWidth); 
     }
 
     public void UnTargeted()
     {
-        _renderer.material.color = _baseColor; 
+        _renderer.material = _baseMaterial; 
+		_renderer.material.SetFloat ("_OutlineWidth", 0); 
     }
 
     void Awake()
     {
         _renderer = GetComponent<Renderer>();
-        _baseColor = _renderer.material.color; 
+        _baseMaterial = _renderer.material; 
     }
     void Start()
     {

@@ -15,9 +15,10 @@ public class Interactable : WibblyWobbly, IAI {
     [SerializeField]
     protected Task _currentTask;
     protected Task _defaultTask;
-    protected HistoryNode _interruptedBranch;
+	protected int _currentTaskIndex; 
     protected Task _interruptedTask;
-    protected Stack<InterruptedBranch> _branches = new Stack<InterruptedBranch>(); 
+	protected int _interruptedTaskIndex;
+	protected Stack<InterruptedTask> _interuptedTasks = new Stack<InterruptedTask> (); 
 
     public override void Play(float _time)
     {
@@ -59,44 +60,37 @@ public class Interactable : WibblyWobbly, IAI {
     {
         switch (_action.Type)
         {
-            case ActionType.AIMoveForward:
-                _currentAction = new AAMoveForward(this);
-                _currentAction.UseAction(_action, _time);
+			case ActionType.AIMoveForward:
+				_currentAction = new AAMoveForward (this);
+				_currentAction.UseAction (_action, _time);
+				_currentTaskIndex = _action.IValue;
                 break;
             case ActionType.AIRotate:
                 _currentAction = new AARotate(this);
                 _currentAction.UseAction(_action, _time);
+				_currentTaskIndex = _action.IValue;
                 break;
-            case ActionType.AIMoveTo:
-                _currentAction = new AAMoveTo(this);
-                _currentAction.UseAction(_action, _time);
-                break;
-            case ActionType.AIWait:
-                _currentAction = new AAWait();
-                _currentAction.UseAction(_action, _time);
-                break;
+			case ActionType.AIMoveTo:
+				_currentAction = new AAMoveTo (this);
+				_currentAction.UseAction (_action, _time);
+				_currentTaskIndex = _action.IValue;
+				break;
+			case ActionType.AIWait:
+				_currentAction = new AAWait ();
+				_currentAction.UseAction (_action, _time);
+				_currentTaskIndex = _action.IValue;
+				break;
             case ActionType.AIRotateDir:
                 _currentAction = new AARotateDir(this);
                 _currentAction.UseAction(_action, _time);
-                break; 
+				_currentTaskIndex = _action.IValue;
+				break; 
             case ActionType.SetTask:
                 _currentTask = _action.Task;
                 break;
             case ActionType.UnsetTask:
                 _currentTask = null;
                 break;
-            case ActionType.ReloadInterruptedTask:
-                if(_currentTask != null)
-                {
-                    SetExternalAction(new TaskAction(ActionType.UnsetTask, _currentTask));
-                }
-                _currentTask = _interruptedTask;
-                _interruptedTask = null;
-                break;
-            case ActionType.ResumeBranch:
-                Task.ResumeTask(_interruptedBranch, this, GameManager.FixedGameTime);
-                _interruptedBranch = null;
-                break; 
             case ActionType.SpliceFuture:
                 _history.SpliceOffPossibleFuture();
                 break; 
@@ -106,13 +100,6 @@ public class Interactable : WibblyWobbly, IAI {
             case ActionType.AIWaitUnset:
             case ActionType.AIRotateDirUnset:
                 _currentAction = null;
-                break;
-            case ActionType.Interrupt:
-                Interrupt(); 
-                SetAction(new BasicAction(ActionType.Null, float.MaxValue, true));
-                break;
-            case ActionType.Resume:
-                Resume(); 
                 break;
         }
         if(_combat != null && _action != null)
@@ -125,49 +112,42 @@ public class Interactable : WibblyWobbly, IAI {
     {
         switch (_action.Type)
         {
-            case ActionType.AIMoveForwardUnset:
-                _currentAction = new AAMoveForward(this);
-                _currentAction.ReverseAction(_action, _time); 
-                break;
+			case ActionType.AIMoveForwardUnset:
+				_currentAction = new AAMoveForward (this);
+				_currentAction.ReverseAction (_action, _time); 
+				_currentTaskIndex = _action.IValue;
+				break;
             case ActionType.AIRotateUnset:
                 _currentAction = new AARotate(this);
                 _currentAction.ReverseAction(_action, _time);
-                break; 
+				_currentTaskIndex = _action.IValue; 
+				break; 
             case ActionType.AIMoveToUnset:
                 _currentAction = new AAMoveTo(this);
                 _currentAction.ReverseAction(_action, _time); 
-                break;
+				_currentTaskIndex = _action.IValue;
+				break;
             case ActionType.AIWaitUnset:
                 _currentAction = new AAWait();
                 _currentAction.ReverseAction(_action, _time); 
-                break;
+				_currentTaskIndex = _action.IValue; 
+				break;
             case ActionType.AIRotateDirUnset:
                 _currentAction = new AARotateDir(this);
                 _currentAction.ReverseAction(_action, _time);
-                break; 
+				_currentTaskIndex = _action.IValue;
+				break; 
             case ActionType.UnsetTask:
                 _currentTask = _action.Task;
                 break;
-            case ActionType.UnsetTaskInterruption:
-                _interruptedTask = _action.Task;
-                break; 
-            case ActionType.UnsetInterruption:
-                _interruptedBranch = _action.PossibleFuture;
-                break; 
-            case ActionType.SetTask:
+			case ActionType.UnsetInterruption:
+				PopInterruption ();
+				break;
+			case ActionType.SetInterruption:
+				PushInterruption ();
+				break;
+			case ActionType.SetTask:
                 _currentTask = null;
-                break;
-            case ActionType.ReloadInterruptedTask:
-                _interruptedTask = _action.Task;
-                break;
-            case ActionType.ResumeBranch:
-                _interruptedBranch = _action.PossibleFuture;
-                break;
-            case ActionType.Interrupt:
-                _branches.Pop();
-                break;
-            case ActionType.Resume:
-                _branches.Push(_action.Branch);
                 break; 
             case ActionType.AIMoveForward:
             case ActionType.AIMoveTo:
@@ -186,32 +166,30 @@ public class Interactable : WibblyWobbly, IAI {
         }
     }
     protected virtual void Interrupt()
-    {
-        HistoryNode _branch = null;
-        if(_currentAction != null)
-        {
-            _branch = _history.CreateBranch(_currentAction.CreateAction()); 
-        }
-        _branches.Push(new InterruptedBranch(_branch, _currentTask));
-        _history.SpliceOffPossibleFuture();
-        if (_currentAction != null)
-        {
-            SetExternalAction(_currentAction.Unset());
-            _currentAction = null;
-        }
-        if (_currentTask != null)
-        {
-            SetExternalAction(new TaskAction(ActionType.UnsetTask, _currentTask, true));
-            _currentAction = null; 
-        }
+    { 
+		PushInterruption ();
+		UnloadAll (); 
+		SetExternalAction(new BasicAction(ActionType.UnsetInterruption, true));
+		SetAction (new BasicAction (ActionType.Null, Mathf.Infinity, true));
     }
+	protected virtual void PushInterruption(){
+		_interuptedTasks.Push (new InterruptedTask (_currentTask, _currentTaskIndex)); 
+		_interruptedTask = _currentTask; 
+		_interruptedTaskIndex = _currentTaskIndex;
+	}
     protected virtual void Resume()
     {
-        UnloadAll(); 
-        InterruptedBranch _branch = _branches.Pop();
-        _currentTask = _branch.Task;
-        Task.ResumeTask(_branch.Branch, this, GameManager.FixedGameTime);
+		PopInterruption (); 
+		SetExternalAction (new BasicAction (ActionType.SetInterruption, true));
     }
+	protected virtual void PopInterruption(){
+		InterruptedTask _task = _interuptedTasks.Pop ();
+		if (_task.Task != null) {
+			SetTask (_task.Task, _task.Index); 
+			_currentTask = _task.Task;
+			_currentTaskIndex = _task.Index; 
+		}
+	}
     protected virtual void UnloadAll()
     {
         _history.SpliceOffPossibleFuture();
@@ -251,11 +229,11 @@ public class Interactable : WibblyWobbly, IAI {
             {
                 switch (_trigger)
                 {
-                    case TriggerType.Interrupt:
-                        SetExternalAction(new BasicAction(ActionType.Interrupt, true));
+					case TriggerType.Interrupt:
+						Interrupt ();
                         break;
-                    case TriggerType.Resume:
-                        SetExternalAction(new BranchAction(ActionType.Resume, _branches.Peek() , true));
+					case TriggerType.Resume:
+						Resume ();
                         break;
                 }
             }
@@ -265,14 +243,17 @@ public class Interactable : WibblyWobbly, IAI {
     {
         base.SetExternalAction(_action);
     }
-    public virtual void SetTask(Task _task)
+	public virtual void SetTask(Task _task, int index)
     {
         if (GameManager.IsPlaying)
         {
             UnloadAll(); 
-            _task.SimulateTask(this, GameManager.FixedGameTime); 
+            _task.SimulateTask(this, GameManager.FixedGameTime, index); 
         }
     }
+	public virtual void SetTask(Task _task){
+		SetTask (_task, 0); 
+	}
     public virtual void PlayTask(Task _task)
     {
         if (GameManager.IsPlaying)
@@ -296,15 +277,15 @@ public class Interactable : WibblyWobbly, IAI {
     }
 }
 
-public struct InterruptedBranch
+public class InterruptedTask
 {
-    HistoryNode _branch;
-    public HistoryNode Branch { get { return _branch; } }
-    Task _task; 
-    public Task Task { get { return _task; } }
-    public InterruptedBranch(HistoryNode branch, Task task)
-    {
-        _task = task;
-        _branch = branch; 
-    }
+	Task _task; 
+	int _index; 
+	public Task Task{ get { return _task; } }
+	public int Index { get { return _index; } }
+
+	public InterruptedTask(Task task, int index){
+		_task = task; 
+		_index = index; 
+	}
 }

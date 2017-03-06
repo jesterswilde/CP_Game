@@ -21,8 +21,8 @@ public abstract class Action
     public virtual InvenItem Item { get { return null; } }
     public virtual int IValue { get { return int.MinValue; } }
     public virtual Vector3 OriginalVec { get { return Vector3.zero; } }
-    public virtual InterruptedBranch Branch { get { return new InterruptedBranch(); } }
 }
+
 public class BasicAction : Action{
 
     public BasicAction(ActionType _actionType)
@@ -255,7 +255,7 @@ public class BehaviorAction : Action
         _time = GameManager.FixedGameTime;
     }
 
-    public IBehavior Behavior { get { return _behavior; } }
+	public override IBehavior Behavior { get { return _behavior; } }
 }
 
 public class ItemAction : Action
@@ -380,24 +380,118 @@ public class ValueTargetAction : Action
     public override Vector3 OriginalVec { get { return _target; } }
 }
 
-public class BranchAction : Action
+public class ValueIntAction : Action
 {
-    InterruptedBranch _branch; 
+	float _value;
+	int _index;
+	public ValueIntAction(ActionType type, float value, int index)
+	{
+		_action = type;
+		_value = value;
+		_index = index; 
+		_time = GameManager.FixedGameTime;
+	}
+	public ValueIntAction(ActionType type, float value, int index, float time)
+	{
+		_action = type;
+		_value = value;
+		_index = index; 
+		_time = time;
+	}
+	public ValueIntAction(ActionType type, float value, int index, bool external)
+	{
+		_action = type;
+		_value = value; 
+		_index = index; 
+		_isExternal = external;
+		_time = GameManager.FixedGameTime;
+	}
+	public ValueIntAction(ActionType type, float value, int index, float time, bool external)
+	{
+		_action = type;
+		_value = value; 
+		_index = index; 
+		_isExternal = external;
+		_time = time;
+	}
+	public override float Value { get { return _value; } }
+	public override int IValue { get { return _index; } }
+}
 
-    public BranchAction(ActionType type, InterruptedBranch branch)
-    {
-        _action = type;
-        _branch = branch;
-        _time = GameManager.FixedGameTime;
-    }
-    public BranchAction(ActionType type, InterruptedBranch branch, bool external)
-    {
-        _action = type;
-        _branch = branch; 
-        _isExternal = external;
-        _time = GameManager.FixedGameTime;
-    }
-    public override InterruptedBranch Branch { get { return _branch; } }
+public class VectorIntAction : Action
+{
+	Vector3 _vector;
+	int _index;
+	public VectorIntAction(ActionType type, Vector3 vector, int index)
+	{
+		_action = type;
+		_vector = vector; 
+		_index = index; 
+		_time = GameManager.FixedGameTime;
+	}
+	public VectorIntAction(ActionType type, Vector3 vector, int index, float time)
+	{
+		_action = type;
+		_vector = vector; 
+		_index = index; 
+		_time = time;
+	}
+	public VectorIntAction(ActionType type, Vector3 vector, int index, bool external)
+	{
+		_action = type;
+		_vector = vector; 
+		_index = index; 
+		_isExternal = external;
+		_time = GameManager.FixedGameTime;
+	}
+	public VectorIntAction(ActionType type, Vector3 vector, int index, float time, bool external)
+	{
+		_action = type;
+		_vector = vector; 
+		_index = index; 
+		_isExternal = external;
+		_time = time;
+	}
+	public override Vector3 Vector { get { return _vector; } }
+	public override int IValue { get { return _index; } }
+}
+
+public class TaskIntAction : Action
+{
+	Task _task; 
+	int _index;
+	public TaskIntAction(ActionType type, Task task, int index)
+	{
+		_action = type;
+		_task = task;
+		_index = index; 
+		_time = GameManager.FixedGameTime;
+	}
+	public TaskIntAction(ActionType type, Task task, int index, float time)
+	{
+		_action = type;
+		_task = task; 
+		_index = index; 
+		_time = time;
+	}
+	public TaskIntAction(ActionType type, Task task, int index, bool external)
+	{
+		_action = type;
+		_task = task; 
+		_index = index; 
+		_isExternal = external;
+		_time = GameManager.FixedGameTime;
+	}
+	public TaskIntAction(ActionType type, Task task, int index, float time, bool external)
+	{
+		_action = type;
+		_task = task; 
+		_index = index; 
+		_isExternal = external;
+		_time = time;
+	}
+	public override Task Task { get { return _task; } }
+	public override int IValue { get { return _index; } }
 }
 
 public enum ActionType
@@ -430,6 +524,7 @@ public enum ActionType
     Clear,
     Activate,
     Deactivate,
+	ThresholdReached,
     SetInterruption,
     UnsetInterruption,
     UnsetTaskInterruption,
