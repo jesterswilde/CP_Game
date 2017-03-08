@@ -23,7 +23,7 @@ public class ExtractionTrigger : MonoBehaviour, ITargetable {
 
     public Vector3 Position { get { return transform.position; } }
 
-    public List<Action> Activate(Character _character)
+	public List<Action> Activate(Character _character, Vector3 _dir)
     {
         _extractedCharacters.Push(_character);
         Debug.Log(_extractedCharacters.Aggregate("Extracting...\n", (_result, _char) => _result += _char.PrintInventory())); 

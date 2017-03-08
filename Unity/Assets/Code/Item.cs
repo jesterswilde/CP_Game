@@ -93,7 +93,7 @@ public class Item : MonoBehaviour, ITargetable {
 		_renderer.material.SetFloat ("_OutlineWidth", 0); 
     }
 
-    public List<Action> Activate(Character _character)
+	public List<Action> Activate(Character _character, Vector3 _dir)
     {
         if(_requiredItems == null || _requiredItems.HasRequiredItems(_character))
         {

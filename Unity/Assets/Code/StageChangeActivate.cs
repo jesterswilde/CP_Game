@@ -25,7 +25,7 @@ public class StageChangeActivate : MonoBehaviour, ITargetable {
 
     bool _canActivate = true; 
     public bool CanActivate { get { return _canActivate; } set { _canActivate = value; } }
-    public List<Action> Activate(Character _character)
+	public List<Action> Activate(Character _character, Vector3 _dir)
     {
         if (_canActivate)
         {
