@@ -36,10 +36,8 @@ public class Kickable : WibblyWobbly, ITargetable {
 				_hasCast = true; 
 				Vector3 _travelVec = _dir * _speed * _deltaTime;
 				float _toCollision = _hit.distance - _collRadius;
-				Debug.Log ("Dist " + _toCollision / _travelDist * _deltaTime + " | " + _deltaTime + " | " + _time ); 
 				float _collTime = (_toCollision / _travelDist) * _deltaTime + _time;
 				Vector3 _newDir = Vector3.Reflect (_travelVec, _hit.normal).normalized;
-				Debug.Log (GameManager.FixedGameTime + " | " + _collTime); 
 				SetExternalAction(new VectorAction(ActionType.Deactivate, _dir * _speed, true));
 				SetExternalAction(new DirTargetAction (ActionType.Activate, _speed * _newDir, transform.position , true)); 
 			}
@@ -60,7 +58,6 @@ public class Kickable : WibblyWobbly, ITargetable {
 	protected override void Act (float _deltaTime)
 	{
 		if (_speed != 0) {
-			Debug.Log (_deltaTime + " | " + _speed); 
 			int _intSpeed = Mathf.FloorToInt(_speed * 10000); 
 			_intSpeed -= ModSpeed (_deltaTime);	
 			_speed = _intSpeed / 10000f; 
@@ -91,12 +88,13 @@ public class Kickable : WibblyWobbly, ITargetable {
 	}
 	protected override void ReverseAction (Action _action, float _time)
 	{
-		switch (_action.Type) {
-		case(ActionType.Deactivate):
-			transform.position = _action.OriginalVec; 
-			_speed = _action.Vector.magnitude; 
-			_dir = _action.Vector.normalized;
-			break; 
+			switch (_action.Type) {
+			case(ActionType.Deactivate):
+				//Here my morals die. 
+				transform.position = _action.OriginalVec; 
+				_speed = _action.Vector.magnitude; 
+				_dir = _action.Vector.normalized;
+				break; //my heart
 		case(ActionType.ThresholdReached):
 			_speed = _action.Value;
 			break;
@@ -117,12 +115,11 @@ public class Kickable : WibblyWobbly, ITargetable {
 		_renderer.material = _baseMaterial; 
 		_renderer.material.SetFloat ("_OutlineWidth", 0);
 	}
-	public List<Action> Activate (Character _character)
+	public List<Action> Activate (Character _character, Vector3 _newDir)
 	{
-		Debug.Log (_character.transform.position + " | " + transform.position); 
-		Vector3 _kick = transform.position - _character.transform.position; 
-		_kick = new Vector3 (_kick.x, 0, _kick.z).normalized * _force; 
-		SetAction(new VectorAction (ActionType.Activate, _kick, true));  
+		Debug.Log (_character.transform.position + " | " + transform.position);
+		_newDir = new Vector3 (_newDir.x, 0, _newDir.z).normalized * _force; 
+		SetAction(new VectorAction (ActionType.Activate, _newDir, true));  
 		SetAction(new DirTargetAction(ActionType.Deactivate, _dir * _speed, transform.position, true)); 
 		return null; 
 	}

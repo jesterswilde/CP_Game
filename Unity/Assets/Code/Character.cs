@@ -92,7 +92,7 @@ public class Character : WibblyWobbly {
                 SetExternalAction(new VectorAction(ActionType.LeavingSurface, _state.GroundNormal, true));
                 break; 
             case ActionType.Activate:
-                Activate(_action.Target); 
+				Activate(_action.Target, _action.Vector); 
                 return;
             case ActionType.PickUp:
                 _inventory.PickUpItem(_action.Item);
@@ -135,6 +135,10 @@ public class Character : WibblyWobbly {
             case ActionType.Extract:
                 _isExtracted = false;
                 return;
+			case ActionType.LockTrans:
+				transform.position = _action.Vector;
+				transform.rotation = Quaternion.Euler (_action.OriginalVec); 
+				break;
         }
         _combat.ReverseAction(_action);
         _state.ReverseAction(_action);
@@ -169,21 +173,20 @@ public class Character : WibblyWobbly {
     {
 
     }
-
-    public void Activate(ITargetable _target)
+    public void Activate(ITargetable _target, Vector3 _dir)
     {
         float _dist = 0; 
         if(_target != null)
         {
             _dist = (transform.position - _target.Position).magnitude; 
         }
-        if(_target != null && _target.isActivatable && _dist < _target.MinDistanceToActivate)
+        if(_target != null && _target.isActivatable && _dist <_target.MinDistanceToActivate)
         {
             Ray _ray = new Ray(transform.position, _target.Position - transform.position);
             RaycastHit _hit; 
             if(!Physics.Raycast(_ray, out _hit, _dist, GameManager.CollMask))
             {
-                SetExternalAction(_target.Activate(this)); 
+				SetExternalAction(_target.Activate(this, _dir)); 
             }
         }
     }
@@ -220,7 +223,7 @@ public class Character : WibblyWobbly {
     }
     public Action CreateTargetAction()
     {
-        return new TargetedAction(ActionType.Activate, _currentTarget); 
+		return new TargetedAction(ActionType.Activate, _currentTarget, _currentTarget.Position - transform.position); 
     }
 
     public void SetAsActivePlayer()
@@ -265,7 +268,7 @@ public class Character : WibblyWobbly {
     }
     public void SetStateToKeyboard()
     {
-        SetAction(_combat.SetStateToKeyboard(_state.SetStateToKeyboard()));
+        SetAction(_combat.SetStateToKeyboard(_state.SetStateToKeyboard(this)));
     }
 
         // Use this for initialization

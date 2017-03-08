@@ -107,7 +107,7 @@ public class Turret : Interactable, ITargetable {
             SetAction(_currentBehavior.EndBehavior()); 
         }
     }
-    void Activate(Action _action)
+	void Activate(Action _action)
     {
         _renderer.material = _defaultMat;
 		_baseMaterial = _renderer.material; 
@@ -146,7 +146,7 @@ public class Turret : Interactable, ITargetable {
                 _isDead = true;
                 break;
             case ActionType.Activate:
-                Activate(_action);
+				Activate(_action);
                 break;
             case ActionType.Deactivate:
                 Deactivate(_action);
@@ -264,7 +264,7 @@ public class Turret : Interactable, ITargetable {
         throw new NotImplementedException();
     }
 
-    public List<Action> Activate(Character _character)
+	public List<Action> Activate(Character _character, Vector3 _dir)
     {
         throw new NotImplementedException();
     }
