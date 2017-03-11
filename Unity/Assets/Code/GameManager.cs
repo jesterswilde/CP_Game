@@ -3,6 +3,7 @@ using System.Collections;
 using System;
 using System.Collections.Generic;
 using System.Linq; 
+using UnityEngine.SceneManagement; 
 
 [RequireComponent(typeof(GameSettings))]
 [RequireComponent(typeof(Combat))]
@@ -10,45 +11,46 @@ public class GameManager : MonoBehaviour {
 
     [SerializeField]
     LayerMask collMask;
-    static LayerMask _collMask;
-    public static LayerMask CollMask { get { return _collMask; } }
-    static GameManager t; 
-    static float _gameTime = 0;
-    static float _totalUpdateTime = 0;
-    static float _totalFixedTime = 0;
-    static float _gameSpeed = 1;
-    static float _fixedGameTime = 0; 
-    static float _jumpDuration = 1; 
-    public static float JumpDuration { get { return _jumpDuration; } }
-    public static float GameSpeed { get { return _gameSpeed; } }
-    public static float GameTime { get { return _gameTime; } }
-    public static float TotalFixedTime { get { return _totalFixedTime; } }
-    public static float FixedGameTime { get { return _fixedGameTime; } }
-    static Character _activeCharacter;
-    public static Character ActiveCharacter { get { return _activeCharacter; } }
-    static List<Character> _characters = new List<Character>();
-    public static List<Character> Characters { get { return _characters; } } 
-    static int _characterIndex = 0;
-    static List<WibblyWobbly> _timeyWimeys = new List<WibblyWobbly>();
-    static List<ITargetable> _targetables = new List<ITargetable>();
-    static List<IManager> _managers = new List<IManager>(); 
+
+	static GameManager t; 
+    LayerMask _collMask;
+    public static LayerMask CollMask { get { return t._collMask; } }
+    float _totalUpdateTime = 0;
+    float _totalFixedTime = 0;
+    float _gameSpeed = 1;
+    float _fixedGameTime = 0; 
+    float _jumpDuration = 1;
+	float _gameTime; 
+    public static float JumpDuration { get { return t._jumpDuration; } }
+    public static float GameSpeed { get { return t._gameSpeed; } }
+	public static float GameTime { get { return t._gameTime; } }
+    public static float TotalFixedTime { get { return t._totalFixedTime; } }
+    public static float FixedGameTime { get { return t._fixedGameTime; } }
+    Character _activeCharacter;
+    public static Character ActiveCharacter { get { return t._activeCharacter; } }
+    List<Character> _characters = new List<Character>();
+    public static List<Character> Characters { get { return t._characters; } } 
+    int _characterIndex = 0;
+    List<WibblyWobbly> _timeyWimeys = new List<WibblyWobbly>();
+    List<ITargetable> _targetables = new List<ITargetable>();
+    List<IManager> _managers = new List<IManager>(); 
     [SerializeField]
     ObserverCam ob;
-    static ObserverCam _obCam;
-    static bool _isReplaying = false; 
-    public static bool IsReplaying { get { return _isReplaying; } }
-    static bool _isPlaying = true; 
-    public static bool IsPlaying { get { return _isPlaying; } }
-    static bool _isPaused = false; 
-    public static bool IsPaused { get { return _isPaused; } }
-    static callback _jumpCB; 
-    static bool _showingCtrlMenu = false; 
-    public static bool ShowingCtrlMenu { get { return _showingCtrlMenu; } }
-    static bool _canAcceptPlayerInput = true; 
-    public static bool CanAcceptPlayerInput { get { return _canAcceptPlayerInput; } }
+    ObserverCam _obCam;
+    bool _isReplaying = false; 
+    public static bool IsReplaying { get { return t._isReplaying; } }
+    bool _isPlaying = true; 
+    public static bool IsPlaying { get { return t._isPlaying; } }
+    bool _isPaused = false; 
+    public static bool IsPaused { get { return t._isPaused; } }
+    callback _jumpCB; 
+    bool _showingCtrlMenu = false; 
+    public static bool ShowingCtrlMenu { get { return t._showingCtrlMenu; } }
+    bool _canAcceptPlayerInput = true; 
+    public static bool CanAcceptPlayerInput { get { return t._canAcceptPlayerInput; } }
 
-    static ICamera _camController;
-    static ICamera _nextCamController;
+    ICamera _camController;
+    ICamera _nextCamController;
 
     #region Camera
     public static ITargetable GetTargeted(float _threshold)
@@ -70,62 +72,62 @@ public class GameManager : MonoBehaviour {
     }
     static void SwitchCamera(ICamera _next)
     {
-        if(_camController != null)
+        if(t._camController != null)
         {
-            _nextCamController = _next; 
-            _camController.ExitCamera();
+            t._nextCamController = _next; 
+            t._camController.ExitCamera();
         }else
         {
-            _camController = _next;  
-            _camController.StartCamera();
+            t._camController = _next;  
+            t._camController.StartCamera();
         }
     }
     public static void ExitedCamera()
     {
-        _camController = _nextCamController;
-        _camController.StartCamera(); 
+        t._camController = t._nextCamController;
+        t._camController.StartCamera(); 
     }
     static void StartCamera()
     {
-        _camController.StartCamera(); 
+        t._camController.StartCamera(); 
     }
     #endregion
 
     #region Time
     public static void SetSpeed(float _speed)
     {
-        _gameSpeed = _speed; 
-        if(_gameSpeed > 0)
+        t._gameSpeed = _speed; 
+        if(t._gameSpeed > 0)
         {
-            if(_activeCharacter != null && !_isPlaying)
+            if(t._activeCharacter != null && !t._isPlaying)
             {
-                _activeCharacter.SetStateToKeyboard(); 
+                t._activeCharacter.SetStateToKeyboard(); 
             }
-            _isPlaying = true;
-            _isPaused = false; 
+            t._isPlaying = true;
+            t._isPaused = false; 
         }
-        if(_gameSpeed < 0)
+        if(t._gameSpeed < 0)
         {
-            if(_activeCharacter != null && _isPlaying)
+            if(t._activeCharacter != null && t._isPlaying)
             {
-                _activeCharacter.ClearState(); 
+                t._activeCharacter.ClearState(); 
             }
-            _isPaused = false;
-            _isPlaying = false; 
+            t._isPaused = false;
+            t._isPlaying = false; 
         }
-        if(_gameSpeed == 0)
+        if(t._gameSpeed == 0)
         {
-            if (_activeCharacter != null && _isPlaying)
+            if (t._activeCharacter != null && t._isPlaying)
             {
-                _activeCharacter.ClearState();
+                t._activeCharacter.ClearState();
             }
-            _isPaused = true;
-            _isPlaying = false;
+            t._isPaused = true;
+            t._isPlaying = false;
         }
     }
     public static void ShowCtrlMenu(bool _show)
     {
-        if (_canAcceptPlayerInput)
+        if (t._canAcceptPlayerInput)
         {
             if (_show)
             {
@@ -135,7 +137,7 @@ public class GameManager : MonoBehaviour {
             {
                 SetSpeed(TimeCounter.Speed); 
             }
-            _showingCtrlMenu = _show;
+            t._showingCtrlMenu = _show;
         }
     }
     void UpdateFixedTimestep()
@@ -152,21 +154,20 @@ public class GameManager : MonoBehaviour {
 
     public static void JumpToTime(float _time)
     {
-        _activeCharacter.SetAction(new BasicAction(ActionType.Null)); 
+        t._activeCharacter.SetAction(new BasicAction(ActionType.Null)); 
         TimeysApplyActions(); 
         float _timeGap = _time - GameManager.GameTime;
         int _dir = (_timeGap >= 0) ? 1 : -1;
         float _jumpSpeed = Mathf.Clamp(Mathf.Abs(_timeGap / GameSettings.MinJumpDuration), GameSettings.MinJumpDuration, GameSettings.MaxJumpSpeed) * _dir;
-        _jumpDuration = _timeGap / _jumpSpeed;
+        t._jumpDuration = _timeGap / _jumpSpeed;
         SetSpeed(_jumpSpeed);
-        _canAcceptPlayerInput = false;
-        Debug.Log("Jumping " + _jumpSpeed + " | " + _jumpDuration); 
-        GameManager.t.StartJump(_jumpDuration);
+        t._canAcceptPlayerInput = false; 
+        GameManager.t.StartJump(t._jumpDuration);
     }
     public static void JumpToTime(float _time, callback _cb)
     {
         JumpToTime(_time);
-        _jumpCB = _cb; 
+        t._jumpCB = _cb; 
     }
     void StartJump(float _duration)
     {
@@ -174,7 +175,7 @@ public class GameManager : MonoBehaviour {
     }
     void EndJump()
     {
-        _gameTime = _fixedGameTime; 
+        t._gameTime = _fixedGameTime; 
         SetSpeed(0);
         _canAcceptPlayerInput = true;
         if(_jumpCB != null)
@@ -188,13 +189,13 @@ public class GameManager : MonoBehaviour {
         if (GameSpeed > 0 && !Input.GetKey(KeyCode.Space))
         {
             if(!PlayerInput.GetAbsKeyboardState().Aggregate((result, current) => current || result) &&
-                _activeCharacter != null && _activeCharacter.IsPastMostRecentAction())
+                t._activeCharacter != null && t._activeCharacter.IsPastMostRecentAction())
             {
                 SetSpeed(0); 
             }
         }else
         {
-            if(_activeCharacter != null && _activeCharacter.IsPastMostRecentAction() && _canAcceptPlayerInput &&
+            if(t._activeCharacter != null && t._activeCharacter.IsPastMostRecentAction() && t._canAcceptPlayerInput &&
                 PlayerInput.GetAbsKeyboardState().Aggregate((result, current) => current || result))
             {
                 SetSpeed(GameSettings.ForwardSpeed); 
@@ -203,104 +204,104 @@ public class GameManager : MonoBehaviour {
     }
     static void Play()
     {
-        if(GameSettings.MaxLevelTime > 0 && _fixedGameTime > GameSettings.MaxLevelTime)
+        if(GameSettings.MaxLevelTime > 0 && t._fixedGameTime > GameSettings.MaxLevelTime)
         {
             SetSpeed(0);
             return; 
         }
-        foreach(WibblyWobbly _character in _timeyWimeys)
+        foreach(WibblyWobbly _character in t._timeyWimeys)
         {
-            _character.Play(_fixedGameTime); 
+            _character.Play(t._fixedGameTime); 
         }
-        EffectsManager.Play(_fixedGameTime); 
+        EffectsManager.Play(t._fixedGameTime); 
     }
     static void Rewind()
     {
-        if(_fixedGameTime < 0.1f)
+        if(t._fixedGameTime < 0.1f)
         {
-            _fixedGameTime = 0.1f; 
+            t._fixedGameTime = 0.1f; 
         }
-        foreach(WibblyWobbly _character in _timeyWimeys)
+        foreach(WibblyWobbly _character in t._timeyWimeys)
         {
-            _character.Rewind(_fixedGameTime); 
+            _character.Rewind(t._fixedGameTime); 
         }
-        EffectsManager.Play(_fixedGameTime); 
+        EffectsManager.Play(t._fixedGameTime); 
     }
     #endregion
 
     #region Character
     public static void SwitchCharacter()
     {
-        _characterIndex++; 
-        if(_characterIndex >= _characters.Count)
+        t._characterIndex++; 
+        if(t._characterIndex >= t._characters.Count)
         {
-            _characterIndex = 0; 
+            t._characterIndex = 0; 
         }
-        Character _nextCharacter = _characters[_characterIndex];
+        Character _nextCharacter = t._characters[t._characterIndex];
         JumpToTime(_nextCharacter.GetHeadTimestamp()); 
         SetActiveCharacter(_nextCharacter);
         TimeCounter.SwitchedToCharacter(_nextCharacter); 
     }
     public static void SetActiveCharacter(int index)
     {
-        _characterIndex = index;
-        SetActiveCharacter(_characters[index]); 
+        t._characterIndex = index;
+        SetActiveCharacter(t._characters[index]); 
     }
     public static void SetActiveCharacter(Character character)
     {
-        if(_activeCharacter != null)
+        if(t._activeCharacter != null)
         {
-            _activeCharacter.SetAsInactivePlayer(); 
+            t._activeCharacter.SetAsInactivePlayer(); 
         }
-        _activeCharacter = character;
-        if(_activeCharacter != null)
+        t._activeCharacter = character;
+        if(t._activeCharacter != null)
         {
-            _activeCharacter.SetAsActivePlayer(); 
-            SwitchCamera(_activeCharacter.Cam); 
+            t._activeCharacter.SetAsActivePlayer(); 
+            SwitchCamera(t._activeCharacter.Cam); 
         }
     }
 
     public static void RegisterCharacter(Character _character)
     {
-        _characters.Add(_character); 
+        t._characters.Add(_character); 
     }
     public static void UnRegisterCharacter(Character _character)
     {
-        _characters.Remove(_character); 
+        t._characters.Remove(_character); 
     }
     public static void ClearCharacters()
     {
-        _characters.Clear(); 
+        t._characters.Clear(); 
     }
     public static void RegisterWibblyWobbly(WibblyWobbly _timey)
     {
-        _timeyWimeys.Add(_timey); 
+        t._timeyWimeys.Add(_timey); 
     }
     public static void UnRegisterWibblyWobbly(WibblyWobbly _timey)
     {
-        _timeyWimeys.Remove(_timey); 
+        t._timeyWimeys.Remove(_timey); 
     }
     public static void RegisterTargetable(ITargetable _target)
     {
-        _targetables.Add(_target); 
+        t._targetables.Add(_target); 
     }
     public static void UnRegisterTargetable(ITargetable _target)
     {
-        _targetables.Remove(_target); 
+        t._targetables.Remove(_target); 
     }
     public static void RegisterManager(IManager _manager)
     {
-        _managers.Add(_manager); 
+        t._managers.Add(_manager); 
     }
     public static void UnRegisterManager(IManager _manager)
     {
-        _managers.Remove(_manager); 
+        t._managers.Remove(_manager); 
     }
     public static void TimeysApplyActions()
     {
-        for(int i = 0; i < _timeyWimeys.Count; i++)
+        for(int i = 0; i < t._timeyWimeys.Count; i++)
         {
-            _timeyWimeys[i].ApplyActions(); 
+            t._timeyWimeys[i].ApplyActions(); 
         }
     }
     #endregion
@@ -308,7 +309,7 @@ public class GameManager : MonoBehaviour {
     
     public static float GetGameTimeFixed()
     {
-        return _gameTime + _totalFixedTime - _totalUpdateTime; 
+        return t._gameTime + t._totalFixedTime - t._totalUpdateTime; 
     }
     void Observe()
     {
@@ -321,65 +322,74 @@ public class GameManager : MonoBehaviour {
             SetActiveCharacter(null);
         }
     }
-    
+	static bool _loadLevel;
+	static string _levelToLoad;
+	public static void StartLoadingLevel(string _levelName){
+		_loadLevel = true; 
+		_levelToLoad = _levelName; 
+	}
+	public static void LoadNextLevel(){
+		t.CancelInvoke (); 
+		SceneManager.LoadSceneAsync (_levelToLoad); 
+		_loadLevel = false; 
+		_levelToLoad = ""; 
+	}
     // Update is called once per frame
     void Update () {
-        ShouldPause(); 
-        _totalUpdateTime += Time.deltaTime;
-        _gameTime = _fixedGameTime;
-        for (int i = 0; i < _managers.Count; i++)
-        {
-            _managers[i].UpdateManager(_gameTime, Time.deltaTime);
-        }
-        if (Input.GetKeyDown(KeyCode.Backspace))
-        {
-            Observe();
-        }
+		ShouldPause (); 
+		_totalUpdateTime += Time.deltaTime;
+		_gameTime = _fixedGameTime;
+		for (int i = 0; i < _managers.Count; i++) {
+			_managers [i].UpdateManager (_gameTime, Time.deltaTime);
+		}
+		if (Input.GetKeyDown (KeyCode.Backspace)) {
+			Observe ();
+		}
 		if (_activeCharacter != null) {
 			_activeCharacter.Target (); 
 		}
-        if (_canAcceptPlayerInput)
-        {
-            PlayerInput.CheckSpeedButtons(); 
-        }
-        if (_canAcceptPlayerInput && _activeCharacter != null && _isPlaying)
-        {
-            _activeCharacter.FaceCamrea(); 
-            _activeCharacter.SetStateToKeyboard();
-            _activeCharacter.SetAction(PlayerInput.ActionButtons(_activeCharacter)); 
-            _activeCharacter.ApplyActions(); 
-        }
-        TimeCounter.UpdateTime(_fixedGameTime);
-        _camController.UpdateCamera();
-        UpdateFixedTimestep(); 
+		if (_canAcceptPlayerInput) {
+			PlayerInput.CheckSpeedButtons (); 
+		}
+		if (_canAcceptPlayerInput && _activeCharacter != null && _isPlaying) {
+			_activeCharacter.FaceCamrea (); 
+			_activeCharacter.SetStateToKeyboard ();
+			_activeCharacter.SetAction (PlayerInput.ActionButtons (_activeCharacter)); 
+			_activeCharacter.ApplyActions (); 
+		}
+		TimeCounter.UpdateTime (_fixedGameTime);
+		_camController.UpdateCamera ();
+		UpdateFixedTimestep ();
+		if (_loadLevel) {
+			LoadNextLevel (); 
+		}
     }
     
     void FixedUpdate()
     {
-        TimeysApplyActions();
-        if (!_isPaused)
-        {
-            _totalFixedTime += GameSettings.FixedTimestep;
-            int _dir = (_gameSpeed >= 0) ? 1 : -1; 
-            _fixedGameTime += GameSettings.FixedTimestep * _dir;
-            _fixedGameTime = Mathf.Max(_fixedGameTime, 0); 
-        }
-        for(int i = 0; i < _managers.Count; i++)
-        {
-            _managers[i].FixedUpdateManager(_fixedGameTime, Time.fixedDeltaTime); 
-        }
-        if (_isPlaying && !_isPaused)
-        {
-            Play();
-        }
-        if (!_isPaused && !_isPlaying)
-        {
-            Rewind();
-        }
+		TimeysApplyActions ();
+		if (!_isPaused) {
+			_totalFixedTime += GameSettings.FixedTimestep;
+			int _dir = (_gameSpeed >= 0) ? 1 : -1; 
+			_fixedGameTime += GameSettings.FixedTimestep * _dir;
+			_fixedGameTime = Mathf.Max (_fixedGameTime, 0); 
+		}
+		for (int i = 0; i < _managers.Count; i++) {
+			_managers [i].FixedUpdateManager (_fixedGameTime, Time.fixedDeltaTime); 
+		}
+		if (_isPlaying && !_isPaused) {
+			Play ();
+		}
+		if (!_isPaused && !_isPlaying) {
+			Rewind ();
+		}
         
     }
     void Awake()
     {
+		if (t != null) {
+			Destroy (t); 
+		}
         t = this; 
         _obCam = ob;
         _collMask = collMask;

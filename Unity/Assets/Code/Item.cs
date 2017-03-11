@@ -2,6 +2,7 @@
 using System.Collections;
 using System;
 using System.Collections.Generic; 
+using System.Linq;
 
 public class Item : MonoBehaviour, ITargetable {
     [SerializeField]
@@ -21,7 +22,7 @@ public class Item : MonoBehaviour, ITargetable {
     Collider _collider;
     CombatState _combat;
 	Material _baseMaterial;
-    RequiredItems _requiredItems; 
+	List<IRequire> _activationRequirements = new List<IRequire> (); 
 
     public bool IsVisible
     { get { return _renderer.isVisible; }}
@@ -79,12 +80,16 @@ public class Item : MonoBehaviour, ITargetable {
 
 	public void Targeted(float _dist)
     {
-		if (_dist < _minDistanceToActivate) {
-			_renderer.material = ColorManager.ItemMaterial; 
+		if (!_isHeld) {
+			if (_dist < _minDistanceToActivate) {
+				_renderer.material = ColorManager.ItemMaterial; 
+			} else {
+				_renderer.material = _baseMaterial; 
+			}
+			_renderer.material.SetFloat ("_OutlineWidth", ColorManager.OutlineWidth); 
 		} else {
-			_renderer.material = _baseMaterial; 
+			UnTargeted (); 
 		}
-		_renderer.material.SetFloat ("_OutlineWidth", ColorManager.OutlineWidth); 
     }
 
     public void UnTargeted()
@@ -92,21 +97,19 @@ public class Item : MonoBehaviour, ITargetable {
 		_renderer.material = _baseMaterial; 
 		_renderer.material.SetFloat ("_OutlineWidth", 0); 
     }
-
-    public List<Action> Activate(Character _character)
+	bool MeetsRequirements(Character _character){
+		return _activationRequirements.All ((_req) => _req.AllowActivation (_character)); 
+	}
+	public List<Action> Activate(Character _character, Vector3 _dir)
     {
-        if(_requiredItems == null || _requiredItems.HasRequiredItems(_character))
+		if(MeetsRequirements(_character) && !_isHeld)
         {
-            List<Action> _actions = new List<Action>();
-            if(_requiredItems != null && _requiredItems.UseItems() != null)
-            {
-                _actions.AddRange(_requiredItems.UseItems()); 
-            }
-            if (!_isHeld)
-            {
-                _actions.Add(new ItemAction(ActionType.PickUp, new InvenItem(this), true));
-               return _actions;
-            }
+			List<Action> _actions = new List<Action>();
+			foreach (IRequire _req in _activationRequirements) {
+				_req.ActivationConsequences ().AddTo (_actions); 
+			}
+            _actions.Add(new ItemAction(ActionType.PickUp, new InvenItem(this), true));
+           return _actions;
         }
         return null; 
     }
@@ -133,7 +136,8 @@ public class Item : MonoBehaviour, ITargetable {
         _renderer = GetComponent<Renderer>();
         _collider = GetComponent<Collider>(); 
 		_baseMaterial = _renderer.material;
-        _requiredItems = GetComponent<RequiredItems>(); 
+		_activationRequirements = GetComponents<Component>().Where((Component _comp)=> _comp is IRequire).Select((_comp)=> _comp as IRequire).ToList(); 
+
     }
     void Start()
     {

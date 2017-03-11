@@ -10,7 +10,7 @@ public interface ITargetable {
     bool isActivatable { get; }
     bool isAttackable { get; }
     CombatState Combat { get; }
-    List<Action> Activate(Character _character);
+	List<Action> Activate(Character _character, Vector3 _dir);
     void RewindActivation(Action _action);
     GameObject Go { get; }
     float MinDistanceToActivate { get; }

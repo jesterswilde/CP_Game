@@ -149,15 +149,18 @@ public class FutureActions : Action
 public class TargetedAction : Action
 {
     ITargetable _target;
+	Vector3 _vec;
 
-    public TargetedAction(ActionType type, ITargetable target)
+	public TargetedAction(ActionType type, ITargetable target, Vector3 vec)
     {
         _action = type;
         _target = target;
         _time = GameManager.FixedGameTime; 
+		_vec = vec; 
     }
-    public TargetedAction(ActionType type, ITargetable target, bool external)
+	public TargetedAction(ActionType type, ITargetable target, Vector3 vec, bool external)
     {
+		_vec = vec; 
         _action = type;
         _target = target;
         _isExternal = external;
@@ -165,6 +168,7 @@ public class TargetedAction : Action
     }
 
     public override ITargetable Target { get { return _target; } }
+	public override Vector3 Vector { get { return _vec; } }
 }
 
 public class TaskAction : Action
@@ -517,6 +521,7 @@ public enum ActionType
     IsFalling,
     StandingOnSurface,
     LeavingSurface,
+	LockTrans,
     PickUp,
     PutDown,
     PullTrigger,

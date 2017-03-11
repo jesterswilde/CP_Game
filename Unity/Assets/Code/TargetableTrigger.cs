@@ -28,7 +28,7 @@ public class TargetableTrigger : MonoBehaviour, ITargetable
     public CombatState Combat { get { return null; } }
     public GameObject Go { get { return gameObject; } }
 
-    public List<Action> Activate(Character _character)
+	public List<Action> Activate(Character _character, Vector3 _dir)
     {
         if(_alertList.Count == 0)
         {
@@ -50,7 +50,7 @@ public class TargetableTrigger : MonoBehaviour, ITargetable
                 if (_loop)
                 {
                     _index = 0;
-                    Activate(_character);
+					Activate(_character, Vector3.zero);
                 }else
                 {
                     _index++; 
