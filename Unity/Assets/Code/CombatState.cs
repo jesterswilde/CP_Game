@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 public delegate void SetActionDelegate(Action _action, bool _determinOrigin);
-public class CombatState : MonoBehaviour {
+public class CombatState : MonoBehaviour, ITargetable {
 
     [SerializeField]
     float _maximumHealth = 20;
@@ -25,7 +25,8 @@ public class CombatState : MonoBehaviour {
     Transform[] _vitalPoints;
     bool _isDead = false;
     Renderer _renderer;
-    int _rollI;
+	Material _baseMaterial; 
+	int _rollI;
     [SerializeField]
     Transform _gunTrans;
     public Transform GunTrans { get { return _gunTrans != null ? _gunTrans : transform; } set { _gunTrans = value; } }
@@ -34,6 +35,62 @@ public class CombatState : MonoBehaviour {
     SetActionDelegate _actionDelegate;
     [SerializeField]
     string _muzzleFlash;
+	bool _isPlayer;
+
+
+
+	public void Targeted(float _dist)
+	{
+		_renderer.material = ColorManager.EnemyTargetMaterial; 
+	}
+
+	public void UnTargeted()
+	{
+		_renderer.material = _baseMaterial; 
+	}
+
+	public List<Action> Activate (Character _character, Vector3 _dir)
+	{
+		return null; 
+	}
+
+
+	public void RewindActivation (Action _action)
+	{
+	}
+
+
+	public void SetAction (Action _action)
+	{
+		throw new NotImplementedException ();
+	}
+
+
+	public bool IsVisible {
+		get {
+			throw new NotImplementedException ();
+		}
+	}
+
+
+	public Vector3 Position { get { return transform.position; } }
+
+
+	public bool isActivatable { get { return false; } }
+
+
+	public bool isAttackable { get { return true; } }
+
+
+	public CombatState Combat { get { return this; } }
+
+
+	public GameObject Go { get { return gameObject; } }
+
+
+	public float MinDistanceToActivate { get { return Mathf.Infinity; } }
+
+ 
     
 
     public Action UseAction(Action _action)
@@ -202,9 +259,11 @@ public class CombatState : MonoBehaviour {
 
     void Awake()
     {
+		_isPlayer = (GetComponent<Character> () != null) ? true : false; 
         _currentHealth = _maximumHealth;
         _inventory = GetComponent<Inventory>();
         _renderer = GetComponent<Renderer>(); 
+		_baseMaterial = _renderer.material; 
         if(_vitalPoints.Length > 0)
         {
             _vitals.SetVitals(_vitalPoints);
@@ -213,13 +272,12 @@ public class CombatState : MonoBehaviour {
             _vitals.SetVitals(transform); 
         }
     }
-
-	// Use this for initialization
+		
 	void Start () {
         _rollI = SRand.GetStartingIndex(); 
+		GameManager.RegisterTargetable (this); 
 	}
-	
-	// Update is called once per frame
+
 	void Update () {
 	
 	}
