@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic; 
 using System;
 
-public class Turret : Interactable, ITargetable {
+public class Turret : Interactable {
 
     [SerializeField]
     bool _isActive = true;
@@ -19,22 +19,7 @@ public class Turret : Interactable, ITargetable {
     public bool IsVisible { get { return _renderer.isVisible; } }
     public Vector3 Position { get { return transform.position;  } }
 
-
-    public bool isActivatable { get { return false; } }
-    public bool isAttackable { get { return (_combat != null) ? true : false; } }
-    public GameObject Go { get { return gameObject; } }
-    public float MinDistanceToActivate { get { return float.NaN; } }
-
-	public void Targeted(float _dist)
-    {
-		_renderer.material = ColorManager.EnemyTargetMaterial; 
-    }
-
-    public void UnTargeted()
-    {
-		_renderer.material = _baseMaterial; 
-    }
-    public override void ExternalTrigger(Task _task, TriggerType _trigger, Character _character)
+	public override void ExternalTrigger(Task _task, TriggerType _trigger, Character _character)
     {
         if(_task != null)
         {
@@ -247,8 +232,7 @@ public class Turret : Interactable, ITargetable {
     }
     void Start()
     {
-        GameManager.RegisterTargetable(this);
-        GameManager.RegisterWibblyWobbly(this);
+		GameManager.RegisterWibblyWobbly(this);
         SetAction(new BasicAction(ActionType.Null));
         if (_isActive)
         {
