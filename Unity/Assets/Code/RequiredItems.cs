@@ -3,12 +3,30 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq; 
 
-public class RequiredItems : MonoBehaviour {
+public class RequiredItems : MonoBehaviour, IRequire {
 
     [SerializeField]
     List<StringIntKVP> _requiredItems;
     [SerializeField]
-    bool _consumesItems = false; 
+    bool _consumesItems = false;
+	#region IRequire implementation
+
+
+	public bool AllowActivation (Character _character)
+	{
+		return HasRequiredItems (_character); 
+	}
+
+
+	public List<Action> ActivationConsequences ()
+	{
+		return UseItems (); 
+	}
+
+
+	#endregion
+
+ 
 
     public bool HasRequiredItems(Character _character)
     {

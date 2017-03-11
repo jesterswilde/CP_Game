@@ -261,10 +261,9 @@ public class Interactable : WibblyWobbly, IAI {
             _task.SimulateTask(this, GameManager.FixedGameTime);
         }
     }
+
     void Awake()
     {
-        _history.AddToHead(new BasicAction(ActionType.Null));
-        RegisterWibblyWobbly();
         _combat = GetComponent<CombatState>();
         if (_currentTask != null && _currentTask.Default)
         {
@@ -275,6 +274,10 @@ public class Interactable : WibblyWobbly, IAI {
             _combat.SetCallbacks(new SetActionDelegate(SetAction));
         }
     }
+	void Start(){
+		_history.AddToHead(new BasicAction(ActionType.Null));
+		RegisterWibblyWobbly();
+	}
 }
 
 public class InterruptedTask

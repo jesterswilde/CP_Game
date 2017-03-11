@@ -152,6 +152,7 @@ public class Character : WibblyWobbly {
                 break;
         }
     }
+
     public override void SetAction(Action _action)
     {
         if (GameManager.CanAcceptPlayerInput && CanAct())
@@ -273,13 +274,13 @@ public class Character : WibblyWobbly {
 
         // Use this for initialization
     void Start () {
+		GameManager.RegisterCharacter(this);
+		RegisterWibblyWobbly(); 
         SetAction(new BasicAction(ActionType.Null));
         _rollI =  SRand.GetStartingIndex(); 
 	}
     void Awake()
     {
-        GameManager.RegisterCharacter(this);
-        RegisterWibblyWobbly(); 
         _cam = gameObject.GetComponent<CharacterCam>();
         _camTrans = _cam.CameraSpot;
         _inventory = gameObject.GetComponent<Inventory>();
@@ -293,11 +294,6 @@ public class Character : WibblyWobbly {
         {
             _combat.SetCallbacks(new SetActionDelegate(SetAction));
         }
-    }
-	
-	// Update is called once per frame
-	void Update () {
-        
     }
 
    

@@ -137,12 +137,13 @@ public class Enemy : WibblyWobbly, IAI {
         _aaRotate = new AARotate(this);
         _aaWait = new AAWait();
         _aaMoveTo = new AAMoveTo(this); 
-        UseAction(new ValueAction(ActionType.AIWait, 0.5f), 0); 
-        RegisterWibblyWobbly();
         _combat = GetComponent<CombatState>();
     }
+
     void Start()
     {
+		UseAction(new ValueAction(ActionType.AIWait, 0.5f), 0); 
+		RegisterWibblyWobbly();
     }
 
     public void SetAtomicAction(ActionType _type, IAI _ai, Vector3 _target, float _time)

@@ -20,30 +20,16 @@ public class TimeCounter : MonoBehaviour {
     Color _activeColor;
     [SerializeField]
     Color _inactiveColor;
-    static Text Text;
-    static Slider Slider;
-    static Text SliderValue;
-    static Image Image;
-    static HealthHex[] Hexes;
-    static Text[] CharaNames;
-    static List<TimelineUI> _timelines = new List<TimelineUI>();
-    static Color ActiveColor;
-    static Color InactiveColor;
-    static float _speed = 1;
-    static float _mostFutureTime = 0;
-    public static float Speed { get { return _speed; } }
-    public static Color AColor { get { return ActiveColor; } }
-    public static Color IColor { get { return InactiveColor; } }
+	public static TimeCounter t; 
+    List<TimelineUI> _timelines = new List<TimelineUI>();
+    float _speed = 1;
+    float _mostFutureTime = 0;
+    public static float Speed { get { return t._speed; } }
+	public static Color AColor { get { return t._activeColor; } }
+	public static Color IColor { get { return t._inactiveColor; } }
     void Awake()
     { 
-        Text = _text;
-        Slider = _slider;
-        SliderValue = _sliderValue;
-        Image = _image;
-        Hexes = _hexes;
-        CharaNames = _charaNames;
-        ActiveColor = _activeColor;
-        InactiveColor = _inactiveColor;
+		t = this;
     }
     void Start()
     {
@@ -52,86 +38,88 @@ public class TimeCounter : MonoBehaviour {
     }
     public static void SwitchedToCharacter(Character _character)
     {
-        for (int i = 0; i < Hexes.Length; i++)
-        {
-            Hexes[i].SetExtVisibility(i < _character.Combat.MaximumHealth);
-        }
-        TookDamage(_character);
-        for (int i = 0; i < CharaNames.Length; i++)
-        {
-            CharaNames[i].text = _character.name;
-        }
-        for (int i = 0; i < _timelines.Count; i++)
-        {
-            _timelines[i].SwitchedToCharacter(_character);
-        }
-     
+		if (_character != null) {
+			for (int i = 0; i < t._hexes.Length; i++) {
+				t._hexes [i].SetExtVisibility (i < _character.Combat.MaximumHealth);
+			}
+			TookDamage (_character);
+			for (int i = 0; i < t._charaNames.Length; i++) {
+				t._charaNames [i].text = _character.name;
+			}
+			for (int i = 0; i < t._timelines.Count; i++) {
+				t._timelines [i].SwitchedToCharacter (_character);
+			}
+		}
 
     }
+
     public static void TookDamage(Character _character)
     {
-        for (int i = 0; i < Hexes.Length; i++)
+		for (int i = 0; i < t._hexes.Length; i++)
         {
-            Hexes[i].SetIntVisibility(i < _character.Combat.CurrentHealth);
+			t._hexes[i].SetIntVisibility(i < _character.Combat.CurrentHealth);
         }
     }
 
     static void UpdateFuturePoint()
     {
-        if (GameManager.FixedGameTime > _mostFutureTime)
+        if (GameManager.FixedGameTime > t._mostFutureTime)
         {
-            _mostFutureTime = GameManager.FixedGameTime;
+            t._mostFutureTime = GameManager.FixedGameTime;
         }
     }
     static void SetCharaToTimeline()
     {
-        for (int i = 0; i < _timelines.Count; i++)
+        for (int i = 0; i < t._timelines.Count; i++)
         {
             if(GameManager.Characters.Count > i)
             {
-                _timelines[i].SetCharacterNames(GameManager.Characters[i]);
+                t._timelines[i].SetCharacterNames(GameManager.Characters[i]);
             }
             else
             {
-                _timelines[i].SetCharacterNames(null); 
+                t._timelines[i].SetCharacterNames(null); 
             }
 
         }
     }
     public static void RegisterTimeline(TimelineUI _timeline)
     {
-        _timelines.Add(_timeline);
+        t._timelines.Add(_timeline);
     }
     static void UpdateTimelines(float _time)
     {
-        for (int i = 0; i < _timelines.Count; i++)
+        for (int i = 0; i < t._timelines.Count; i++)
         {
-            _timelines[i].UpdateTimeline(_time, _mostFutureTime);
+            t._timelines[i].UpdateTimeline(_time, t._mostFutureTime);
         }
     }
+	public static void ClearLevel(){
+		t = null; 
+	}
     public static void UpdateTime(float _time)
     {
         UpdateFuturePoint();
         UpdateTimelines(_time);
-        if (Text != null)
+		if (t._text != null)
         {
-            Text.text = _time.ToString();
+			t._text.text = _time.ToString();
         }
-        if (GameManager.ShowingCtrlMenu && Slider != null && GameSettings.Speeds.Length > 0)
+		if (GameManager.ShowingCtrlMenu && t._slider != null && GameSettings.Speeds.Length > 0)
         {
-            Image.gameObject.SetActive(true);
-            Slider.maxValue = GameSettings.Speeds[GameSettings.Speeds.Length - 1];
-            Slider.minValue = GameSettings.Speeds[0]; 
+			t._image.gameObject.SetActive(true);
+			t._slider.maxValue = GameSettings.Speeds[GameSettings.Speeds.Length - 1];
+			t._slider.minValue = GameSettings.Speeds[0]; 
             float _maxY = Screen.height;
             float _increment = _maxY / GameSettings.Speeds.Length; 
             float _y = Input.mousePosition.y;
             int _index = Mathf.FloorToInt(_y / _increment);
-            Slider.value = GameSettings.Speeds[Mathf.Clamp(_index, 0, GameSettings.Speeds.Length - 1)]; 
-            _speed = Slider.value;
-            SliderValue.text = _speed.ToString(); 
+			t._slider.value = GameSettings.Speeds[Mathf.Clamp(_index, 0, GameSettings.Speeds.Length - 1)]; 
+			t._speed = t._slider.value;
+			t._sliderValue.text = t._speed.ToString(); 
         }else
         {
-            Image.gameObject.SetActive(false);
+			t._image.gameObject.SetActive(false);
         }
     }
 }
