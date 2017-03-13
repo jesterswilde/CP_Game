@@ -41,12 +41,16 @@ public class CombatState : MonoBehaviour, ITargetable {
 
 	public void Targeted(float _dist)
 	{
-		_renderer.material = ColorManager.EnemyTargetMaterial; 
+		if (!_isPlayer) {
+			_renderer.material = ColorManager.EnemyTargetMaterial; 
+		}
 	}
 
 	public void UnTargeted()
 	{
-		_renderer.material = _baseMaterial; 
+		if (!_isPlayer) {
+			_renderer.material = _baseMaterial; 
+		}
 	}
 
 	public List<Action> Activate (Character _character, Vector3 _dir)
@@ -66,11 +70,7 @@ public class CombatState : MonoBehaviour, ITargetable {
 	}
 
 
-	public bool IsVisible {
-		get {
-			throw new NotImplementedException ();
-		}
-	}
+	public bool IsVisible { get { return _renderer.isVisible; } }
 
 
 	public Vector3 Position { get { return transform.position; } }
@@ -79,7 +79,7 @@ public class CombatState : MonoBehaviour, ITargetable {
 	public bool isActivatable { get { return false; } }
 
 
-	public bool isAttackable { get { return true; } }
+public bool isAttackable { get { return true; } }
 
 
 	public CombatState Combat { get { return this; } }

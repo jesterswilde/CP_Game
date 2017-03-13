@@ -9,9 +9,12 @@ public class RequiredItems : MonoBehaviour, IRequire {
     List<StringIntKVP> _requiredItems;
     [SerializeField]
     bool _consumesItems = false;
+	[SerializeField]
+	string _uiDescription; 
+
 	#region IRequire implementation
 
-
+	public string UIText { get { return _uiDescription; } }
 	public bool AllowActivation (Character _character)
 	{
 		return HasRequiredItems (_character); 
