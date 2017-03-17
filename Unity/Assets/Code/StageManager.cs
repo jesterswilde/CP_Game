@@ -7,11 +7,11 @@ using System;
 public class StageManager : MonoBehaviour, IManager {
 
     [SerializeField]
-    int _stage = 0; 
-    [SerializeField]
+    int _stage = 0;
     static StageManager t;
-    static List<StageComponent> _stageComponents = new List<StageComponent>(); 
-
+    List<StageComponent> _stageComponents = new List<StageComponent>(); 
+	public static int CurrentStage{ get { return t._stage; } }
+	List<StageChangeActivate> _changeListeners = new List<StageChangeActivate>(); 
 
     void LoadStage()
     {
@@ -37,10 +37,10 @@ public class StageManager : MonoBehaviour, IManager {
     void Awake()
     {
         GameManager.RegisterManager(this); 
+		t = this; 
     }
     void Start()
     {
-        t = this; 
     }
     public static void ChangeStage(int _newStage)
     {
@@ -52,6 +52,15 @@ public class StageManager : MonoBehaviour, IManager {
     }
     public static void RegisterStageComponent(StageComponent _component)
     {
-        _stageComponents.Add(_component); 
+        t._stageComponents.Add(_component); 
     }
+	public static void RegisterEventListener(StageChangeActivate _listener){
+		t._changeListeners.Add (_listener); 
+	}
+	public static void BroadcastEvent(){
+		foreach (StageChangeActivate _listener in t._changeListeners) {
+			
+		}
+
+	}
 }

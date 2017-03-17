@@ -14,7 +14,7 @@ public class StageChangeActivate : MonoBehaviour, ITargetable {
     [SerializeField]
     float _minDistance = 5f; 
 	[SerializeField]
-	bool _targetable; 
+	bool _targetable = true; 
     Renderer _renderer;
 	Material _baseMaterial;
 	List<IRequire> _activationRequiremnts = new List<IRequire> ();
@@ -68,12 +68,14 @@ public class StageChangeActivate : MonoBehaviour, ITargetable {
 
 	public void Targeted(float _dist)
     {
-		if (_dist < _minDistance) {
+		if (_dist < _minDistance && _targetable) {
 			_renderer.material = ColorManager.StageTargetMaterial; 
 		} else {
 			_renderer.material = _baseMaterial; 
 		}
-		_renderer.material.SetFloat ("_OutlineWidth", 0); 
+		if (_targetable) {
+			_renderer.material.SetFloat ("_OutlineWidth", 0); 
+		}
     }
 
     public void UnTargeted()

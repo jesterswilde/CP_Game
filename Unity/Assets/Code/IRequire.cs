@@ -5,5 +5,6 @@ using UnityEngine;
 public interface IRequire {
 
 	bool AllowActivation(Character _character); 
-	List<Action> ActivationConsequences (); 
+	List<Action> ActivationConsequences ();
+	string UIText { get; } 
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq; 
 
-public class StageComponent : MonoBehaviour {
+public class StageComponent : MonoBehaviour, IRequire {
 
     [SerializeField]
     int[] _activeStages;
@@ -13,6 +13,25 @@ public class StageComponent : MonoBehaviour {
     Character _character;
     List<Renderer> _renderers = new List<Renderer>();
     List<Collider> _colliders = new List<Collider>();
+
+
+	#region IRequire implementation
+
+	public string UIText { get { return ""; } }
+	public bool AllowActivation (Character _character)
+	{
+		return _activeStages.Contains (StageManager.CurrentStage) || _replayStages.Contains (StageManager.CurrentStage); 
+	}
+
+
+	public List<Action> ActivationConsequences ()
+	{
+		return null; 
+	}
+
+
+	#endregion
+
     StageChangeActivate _activator; 
 
     bool _isActive = true;
@@ -157,6 +176,8 @@ public class StageComponent : MonoBehaviour {
         _interactable = GetComponent<Interactable>();
         _character = GetComponent<Character>();
         _activator = GetComponent<StageChangeActivate>(); 
-        StageManager.RegisterStageComponent(this); 
     }
+	void Start(){
+		StageManager.RegisterStageComponent(this); 
+	}
 }
