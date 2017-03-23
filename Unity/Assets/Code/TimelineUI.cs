@@ -6,21 +6,25 @@ using System.Collections.Generic;
 public class TimelineUI : MonoBehaviour {
 
     [SerializeField]
-    Image[] _activeCharaHex;
-    [SerializeField]
     Image _timelineFill;
     [SerializeField]
     Text _charaTime;
     [SerializeField]
-    Image[] _frozenElements;
+    Image _pointer;
     [SerializeField]
     Slider _slider;
+    [SerializeField]
+    int _order;
+    public static TimelineUI tui;
     string _playerName;
     bool _isActive;
     float _characterTime;
+    public int Order { get { return tui._order; } }
+    
 
     void Awake()
     {
+        tui = (this);
         TimeCounter.RegisterTimeline(this);
     }
 
@@ -33,38 +37,30 @@ public class TimelineUI : MonoBehaviour {
         else
         {
             SetTimelineVisibility(false);
-            SetCharaHexVisibility(false);
         }
     }
 
     public void SetTimelineVisibility (bool visibility)
     {
-        for (int i = 0; i < _frozenElements.Length; i++)
-        {
-            _frozenElements[i].enabled = visibility;
-        }
         _charaTime.enabled = visibility;
+        _pointer.enabled = visibility;
         _slider.gameObject.SetActive(visibility);
     }
 
-    public void SetCharaHexVisibility(bool visibility)
-    {
-        for (int i = 0; i < _activeCharaHex.Length; i++)
-        {
-            _activeCharaHex[i].enabled = visibility;
-        }
-    }
     public void SwitchedToCharacter(Character _character)
     {
         _isActive = _character.name == _playerName;
-         SetCharaHexVisibility(_isActive);
         if (_isActive)
         {
-            _timelineFill.color = TimeCounter.AColor;
+            _pointer.color = TimeCounter.AColor;
+            _charaTime.color = TimeCounter.AColor;
+            _timelineFill.enabled = true;
         }
         else
         {
-            _timelineFill.color = TimeCounter.IColor;
+            _pointer.color = TimeCounter.IColor;
+            _charaTime.color = TimeCounter.IColor;
+            _timelineFill.enabled = false;
         }
     }
     public void UpdateTimeline(float _currentTime, float _maxTime)
@@ -74,6 +70,6 @@ public class TimelineUI : MonoBehaviour {
             _characterTime = _currentTime;
         }
         _slider.value = _characterTime / _maxTime;
-        _charaTime.text = System.Math.Round(_characterTime, 2).ToString("0.00");
+        _charaTime.text = _playerName + " (" + System.Math.Round(_characterTime, 2).ToString("0.00") + ")";
     }
 }
