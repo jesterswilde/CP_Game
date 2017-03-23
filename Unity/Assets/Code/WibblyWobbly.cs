@@ -60,6 +60,9 @@ public abstract class WibblyWobbly : MonoBehaviour {
             }
         }
     }
+	protected virtual void InsertPreviousAction(Action _action){
+		_history.InsertBeforePointer (_action); 
+	}
     public virtual void ApplyActions()
     {
         if (CanAddActions())

@@ -112,6 +112,9 @@ public class Interactable : WibblyWobbly, IAI {
     {
         switch (_action.Type)
         {
+			case ActionType.Instantiated:
+				Destroy (gameObject); 
+				break;
 			case ActionType.AIMoveForwardUnset:
 				_currentAction = new AAMoveForward (this);
 				_currentAction.ReverseAction (_action, _time); 
@@ -149,6 +152,10 @@ public class Interactable : WibblyWobbly, IAI {
 			case ActionType.SetTask:
                 _currentTask = null;
                 break; 
+			case ActionType.LockTrans:
+				transform.position = _action.Vector; 
+				transform.rotation = Quaternion.Euler (_action.OriginalVec);
+				break;
             case ActionType.AIMoveForward:
             case ActionType.AIMoveTo:
             case ActionType.AIRotate: 
@@ -169,26 +176,35 @@ public class Interactable : WibblyWobbly, IAI {
     { 
 		PushInterruption ();
 		UnloadAll (); 
+		SetExternalAction (new DirTargetAction (ActionType.LockTrans, transform.position, transform.eulerAngles, true)); 
 		SetExternalAction(new BasicAction(ActionType.UnsetInterruption, true));
 		SetAction (new BasicAction (ActionType.Null, Mathf.Infinity, true));
     }
 	protected virtual void PushInterruption(){
+		GetComponent<Renderer> ().material.color = Color.red; 
 		_interuptedTasks.Push (new InterruptedTask (_currentTask, _currentTaskIndex)); 
 		_interruptedTask = _currentTask; 
 		_interruptedTaskIndex = _currentTaskIndex;
 	}
     protected virtual void Resume()
     {
-		PopInterruption (); 
-		SetExternalAction (new BasicAction (ActionType.SetInterruption, true));
-    }
-	protected virtual void PopInterruption(){
-		InterruptedTask _task = _interuptedTasks.Pop ();
-		if (_task.Task != null) {
-			SetTask (_task.Task, _task.Index); 
-			_currentTask = _task.Task;
-			_currentTaskIndex = _task.Index; 
+		if(PopInterruption ()){ 
+			SetExternalAction (new DirTargetAction (ActionType.LockTrans, transform.position, transform.eulerAngles, true)); 
+			SetExternalAction (new BasicAction (ActionType.SetInterruption, true));
 		}
+    }
+	protected virtual bool PopInterruption(){
+		if (_interuptedTasks.Count > 0) {
+			InterruptedTask _task = _interuptedTasks.Pop ();
+			if (_task.Task != null) {
+				GetComponent<Renderer> ().material.color = Color.white; 
+				SetTask (_task.Task, _task.Index); 
+				_currentTask = _task.Task;
+				_currentTaskIndex = _task.Index; 
+			}
+			return _task != null; 
+		}
+		return false; 
 	}
     protected virtual void UnloadAll()
     {
@@ -229,11 +245,11 @@ public class Interactable : WibblyWobbly, IAI {
             {
                 switch (_trigger)
                 {
-					case TriggerType.Interrupt:
-						Interrupt ();
+				case TriggerType.Interrupt:
+					Interrupt ();
                         break;
-					case TriggerType.Resume:
-						Resume ();
+				case TriggerType.Resume:
+					Resume ();
                         break;
                 }
             }

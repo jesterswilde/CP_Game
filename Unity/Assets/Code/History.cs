@@ -79,6 +79,20 @@ public class History {
             _pointer = _pointer.Next; 
         }
     }
+	public void InsertBeforePointer(Action _action){
+		if (_head != null) {
+			HistoryNode _node = new HistoryNode (_action); 
+			HistoryNode _prev = _pointer.Previous; 
+			if (_prev != null) {
+				_prev.SetNext (_node); 
+			}
+			_node.SetPrevious (_prev); 
+			_node.SetNext (_pointer); 
+			_pointer.SetPrevious (_node); 
+		} else {
+			AddToHead (_action); 
+		}
+	}
     public HistoryNode PopNode(HistoryNode _node)
     {
         if(_node == null)
