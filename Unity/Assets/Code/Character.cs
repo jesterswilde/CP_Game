@@ -111,7 +111,7 @@ public class Character : WibblyWobbly {
             case ActionType.TakeDamage:
                 if (_playerControlled)
                 {
-                    TimeCounter.TookDamage(this);
+//                    TimeCounter.TookDamage(this);
                 }
                 break;
         }
@@ -147,7 +147,7 @@ public class Character : WibblyWobbly {
             case ActionType.TakeDamage:
                 if (_playerControlled)
                 {
-                    TimeCounter.TookDamage(this);
+//                    TimeCounter.TookDamage(this);
                 }
                 break;
         }

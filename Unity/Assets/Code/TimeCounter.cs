@@ -4,18 +4,20 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 
 public class TimeCounter : MonoBehaviour {
+ //   [SerializeField]
+ //   Slider _slider; 
     [SerializeField]
-    Slider _slider; 
-    [SerializeField]
-    Text _text;
-    [SerializeField]
-    Text _sliderValue;
-    [SerializeField]
-    Image _image;
+    Text[] _currentTime;
+ //   [SerializeField]
+ //   Text _sliderValue;
+ //   [SerializeField]
+//    Image _image;
     [SerializeField]
     Image[] _limitImage;
     [SerializeField]
     Text[] _limitText;
+    [SerializeField]
+    Text[] _timeLimit;
     [SerializeField]
     Text[] _charaNames;
     [SerializeField]
@@ -30,7 +32,6 @@ public class TimeCounter : MonoBehaviour {
     public static float Speed { get { return t._speed; } }
 	public static Color AColor { get { return t._activeColor; } }
 	public static Color IColor { get { return t._inactiveColor; } }
-    public static float MaxTime { get { return t._mostFutureTime; } }
     void Awake()
     { 
 		t = this;
@@ -39,10 +40,7 @@ public class TimeCounter : MonoBehaviour {
     {
         SetCharaToTimeline();
         _mostFutureTime = GameSettings.MaxLevelTime;
-        for (int i = 0; i < t._timelines.Count; i++)
-        {
-            Debug.Log(_timelines[i]);
-        }
+        SetLevelTime();
     }
     public static void SwitchedToCharacter(Character _character)
     {
@@ -59,13 +57,27 @@ public class TimeCounter : MonoBehaviour {
 
     public static void SetLevelTime ()
     {
-        if (MaxTime != 0)
+        if (t._mostFutureTime != 0)
         {
-
+            for (int i = 0; i < t._timeLimit.Length; i++)
+            {
+                t._timeLimit[i].text = t._mostFutureTime + " Seconds";
+            }
         }
         else
         {
-
+            for (int i = 0; i < t._limitImage.Length; i++)
+            {
+                t._limitImage[i].enabled = false;
+            }
+            for (int i = 0; i < t._limitText.Length; i++)
+            {
+                t._limitText[i].enabled = false;
+            }
+            for (int i = 0; i < t._timeLimit.Length; i++)
+            {
+                t._timeLimit[i].enabled = false;
+            }
         }
     }
 
@@ -118,11 +130,14 @@ public class TimeCounter : MonoBehaviour {
     {
         UpdateFuturePoint();
         UpdateTimelines(_time);
-		if (t._text != null)
+		if (t._currentTime != null)
         {
-			t._text.text = _time.ToString();
+            for (int i = 0; i < t._currentTime.Length; i++)
+            {
+                t._currentTime[i].text = System.Math.Round(_time, 2).ToString("0.00");
+            }
         }
-		if (GameManager.ShowingCtrlMenu && t._slider != null && GameSettings.Speeds.Length > 0)
+/*		if (GameManager.ShowingCtrlMenu && t._slider != null && GameSettings.Speeds.Length > 0)
         {
 			t._image.gameObject.SetActive(true);
 			t._slider.maxValue = GameSettings.Speeds[GameSettings.Speeds.Length - 1];
@@ -137,8 +152,8 @@ public class TimeCounter : MonoBehaviour {
         }else
         {
 			t._image.gameObject.SetActive(false);
-        }
-    }
+       }
+*/    }
 }
 /*
  * Get ahold of hexes*
