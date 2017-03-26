@@ -8,9 +8,13 @@ public class TimelineUI : MonoBehaviour {
     [SerializeField]
     Image _timelineFill;
     [SerializeField]
-    Text _charaTime;
+    Text _topTime;
     [SerializeField]
-    Image _pointer;
+    Text _bottomTime;
+    [SerializeField]
+    Image[] _topHex;
+    [SerializeField]
+    Image[] _bottomHex;
     [SerializeField]
     Slider _slider;
     [SerializeField]
@@ -42,11 +46,33 @@ public class TimelineUI : MonoBehaviour {
 
     public void SetTimelineVisibility (bool visibility)
     {
-        _charaTime.enabled = visibility;
-		if (_pointer != null) {
-			_pointer.enabled = visibility;
-		}
+        _topTime.enabled = visibility;
+        _bottomTime.enabled = visibility;
+        for (int i = 0; i < _topHex.Length; i++)
+        {
+            _topHex[i].enabled = visibility;
+        }
+        for (int i = 0; i < _bottomHex.Length; i++)
+        {
+            _bottomHex[i].enabled = visibility;
+        }
         _slider.gameObject.SetActive(visibility);
+    }
+    public void SetTopVisibility(bool visibility)
+    {
+        _topTime.enabled = visibility;
+        for (int i = 0; i < _topHex.Length; i++)
+        {
+            _topHex[i].enabled = visibility;
+        }
+    }
+    public void SetBottomVisibility(bool visibility)
+    {
+        _bottomTime.enabled = visibility;
+        for (int i = 0; i < _bottomHex.Length; i++)
+        {
+            _bottomHex[i].enabled = visibility;
+        }
     }
 
     public void SwitchedToCharacter(Character _character)
@@ -54,18 +80,14 @@ public class TimelineUI : MonoBehaviour {
         _isActive = _character.name == _playerName;
         if (_isActive)
         {
-			if (_pointer != null) {
-				_pointer.color = TimeCounter.AColor;
-			}
-            _charaTime.color = TimeCounter.AColor;
+            SetTopVisibility(true);
+            SetBottomVisibility(false);
             _timelineFill.enabled = true;
         }
         else
         {
-			if (_pointer != null) {
-				_pointer.color = TimeCounter.IColor;
-			}
-            _charaTime.color = TimeCounter.IColor;
+            SetTopVisibility(false);
+            SetBottomVisibility(true);
             _timelineFill.enabled = false;
         }
     }
@@ -76,6 +98,7 @@ public class TimelineUI : MonoBehaviour {
             _characterTime = _currentTime;
         }
         _slider.value = _characterTime / _maxTime;
-        _charaTime.text = _playerName + " (" + System.Math.Round(_characterTime, 2).ToString("0.00") + ")";
+        _topTime.text = System.Math.Round(_characterTime, 2).ToString("0.00");
+        _bottomTime.text = System.Math.Round(_characterTime, 2).ToString("0.00");
     }
 }

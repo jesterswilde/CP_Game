@@ -128,15 +128,6 @@ public class Character : WibblyWobbly {
 		}
         SetAction(_combat.UseAction(_action), true); 
         _state.UseAction(_action);
-        switch (_action.Type)
-        {
-            case ActionType.TakeDamage:
-                if (_playerControlled)
-                {
-                    //TimeCounter.TookDamage(this);
-                }
-                break;
-        }
     }
     protected override void ReverseAction(Action _action, float _time)
     {
@@ -168,15 +159,6 @@ public class Character : WibblyWobbly {
 		}
         _combat.ReverseAction(_action);
         _state.ReverseAction(_action);
-        switch (_action.Type)
-        {
-            case ActionType.TakeDamage:
-                if (_playerControlled)
-                {
-                    //TimeCounter.TookDamage(this);
-                }
-                break;
-        }
     }
 
     public override void SetAction(Action _action)
