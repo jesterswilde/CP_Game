@@ -46,8 +46,10 @@ public class TimelineUI : MonoBehaviour {
 
     public void SetTimelineVisibility (bool visibility)
     {
-        _topTime.enabled = visibility;
-        _bottomTime.enabled = visibility;
+		if (_topTime != null && _bottomTime != null) {
+			_topTime.enabled = visibility;
+			_bottomTime.enabled = visibility;
+		}
         for (int i = 0; i < _topHex.Length; i++)
         {
             _topHex[i].enabled = visibility;
@@ -60,7 +62,9 @@ public class TimelineUI : MonoBehaviour {
     }
     public void SetTopVisibility(bool visibility)
     {
-        _topTime.enabled = visibility;
+		if (_topTime != null) {
+			_topTime.enabled = visibility;
+		}
         for (int i = 0; i < _topHex.Length; i++)
         {
             _topHex[i].enabled = visibility;
@@ -68,7 +72,9 @@ public class TimelineUI : MonoBehaviour {
     }
     public void SetBottomVisibility(bool visibility)
     {
-        _bottomTime.enabled = visibility;
+		if (_bottomTime != null) {
+			_bottomTime.enabled = visibility;
+		}
         for (int i = 0; i < _bottomHex.Length; i++)
         {
             _bottomHex[i].enabled = visibility;
@@ -98,7 +104,9 @@ public class TimelineUI : MonoBehaviour {
             _characterTime = _currentTime;
         }
         _slider.value = _characterTime / _maxTime;
-        _topTime.text = System.Math.Round(_characterTime, 2).ToString("0.00");
-        _bottomTime.text = System.Math.Round(_characterTime, 2).ToString("0.00");
+		if (_topTime != null && _bottomTime != null) {
+			_topTime.text = System.Math.Round (_characterTime, 2).ToString ("0.00");
+			_bottomTime.text = System.Math.Round (_characterTime, 2).ToString ("0.00");
+		}
     }
 }
