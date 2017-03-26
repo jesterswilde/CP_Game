@@ -46,6 +46,7 @@ public class Character : WibblyWobbly {
             SetAction(_combat.PullTrigger(_time, _currentTarget.Combat), true);
         }
         base.Play(_time);
+		SetExternalAction (_state.AnimState ()); 
     }
 
     internal string toString()
@@ -66,6 +67,9 @@ public class Character : WibblyWobbly {
                 _projectedMove = new Vector3(_projectedMove.x, -10, _projectedMove.z); 
             }
             transform.position += _projectedMove.normalized * speed * _deltaTime;
+			foreach (ITime _timeUser in _timeUsers) {
+				_timeUser.Act (_deltaTime); 
+			}
         }
     }
 
@@ -82,8 +86,23 @@ public class Character : WibblyWobbly {
                 _projectedMove = new Vector3(_projectedMove.x, -10, _projectedMove.z);
             }
             transform.position += _projectedMove.normalized * speed * _deltaTime * -1;
+			foreach (ITime _timeUser in _timeUsers) {
+				_timeUser.RewindAct (_deltaTime); 
+			}
         }
     }
+	public override void PlayVisuals (float _time)
+	{
+		foreach (ITime _timeUser in _timeUsers) {
+			SetExternalAction(_timeUser.PlayVisuals (_time)); 
+		}
+	}
+	public override void RewindVisuals (float _time)
+	{
+		foreach (ITime _timeUser in _timeUsers) {
+			_timeUser.RewindVisuals (_time);
+		}
+	}
     protected override void UseAction(Action _action, float _time)
     {
         switch (_action.Type)
@@ -104,6 +123,9 @@ public class Character : WibblyWobbly {
                 _isExtracted = true;
                 return; 
         }
+		foreach (ITime _timeUser in _timeUsers) {
+			SetAction(_timeUser.UseAction (_action, _time), true); 
+		}
         SetAction(_combat.UseAction(_action), true); 
         _state.UseAction(_action);
         switch (_action.Type)
@@ -111,7 +133,7 @@ public class Character : WibblyWobbly {
             case ActionType.TakeDamage:
                 if (_playerControlled)
                 {
-                    TimeCounter.TookDamage(this);
+                    //TimeCounter.TookDamage(this);
                 }
                 break;
         }
@@ -140,6 +162,10 @@ public class Character : WibblyWobbly {
 				transform.rotation = Quaternion.Euler (_action.OriginalVec); 
 				break;
         }
+
+		foreach (ITime _timeUser in _timeUsers) {
+			_timeUser.ReverseAction (_action, _time); 
+		}
         _combat.ReverseAction(_action);
         _state.ReverseAction(_action);
         switch (_action.Type)
@@ -147,7 +173,7 @@ public class Character : WibblyWobbly {
             case ActionType.TakeDamage:
                 if (_playerControlled)
                 {
-                    TimeCounter.TookDamage(this);
+                    //TimeCounter.TookDamage(this);
                 }
                 break;
         }
@@ -278,6 +304,7 @@ public class Character : WibblyWobbly {
 		RegisterWibblyWobbly(); 
         SetAction(new BasicAction(ActionType.Null));
         _rollI =  SRand.GetStartingIndex(); 
+		SetAction (new AnimAction (ActionType.AnimEnded, 0, 0)); 
 	}
     void Awake()
     {

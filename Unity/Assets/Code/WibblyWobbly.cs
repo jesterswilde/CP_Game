@@ -12,6 +12,11 @@ public abstract class WibblyWobbly : MonoBehaviour {
     protected abstract void Act(float _deltaTime);
     protected abstract void ActReverse(float _deltaTIme);
     public CombatState Combat { get { return _combat; } }
+	protected List<ITime> _timeUsers = new List<ITime>(); 
+
+	public void RegisterITime(ITime _timeUser){
+		_timeUsers.Add (_timeUser); 
+	}
     protected void RegisterWibblyWobbly()
     {
         GameManager.RegisterWibblyWobbly(this); 
@@ -39,14 +44,14 @@ public abstract class WibblyWobbly : MonoBehaviour {
     }
     public virtual void SetAction(List<Action> _actions)
     {
-        if (CanAddActions() && _actions.Count > 0)
+		if (CanAddActions() && _actions != null && _actions.Count > 0)
         {
             _actionsToBeConsumed.AddRange(_actions); 
         }
     }
     public virtual void SetAction(List<Action> _actions, bool _determinExternal)
     {
-        if (CanAddActions() && _actions.Count > 0)
+		if (CanAddActions() && _actions != null && _actions.Count > 0)
         {
             for(int i = 0; i < _actions.Count; i++)
             {
@@ -153,4 +158,10 @@ public abstract class WibblyWobbly : MonoBehaviour {
             ReverseAction(_node.Action, _prevTime);
         }
     }
+	public virtual void PlayVisuals(float _time){
+		
+	}
+	public virtual void RewindVisuals(float _time){
+		
+	}
 }

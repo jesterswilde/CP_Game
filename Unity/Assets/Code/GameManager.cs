@@ -217,9 +217,10 @@ public class GameManager : MonoBehaviour {
     }
     static void Rewind()
     {
-        if(t._fixedGameTime < 0.1f)
+        if(t._fixedGameTime < 0)
         {
-            t._fixedGameTime = 0.1f; 
+            t._fixedGameTime = 0;
+			SetSpeed (0); 
         }
         foreach(WibblyWobbly _character in t._timeyWimeys)
         {
@@ -356,6 +357,13 @@ public class GameManager : MonoBehaviour {
 			_activeCharacter.SetStateToKeyboard ();
 			_activeCharacter.SetAction (PlayerInput.ActionButtons (_activeCharacter)); 
 			_activeCharacter.ApplyActions (); 
+		}
+		foreach (WibblyWobbly _timey in _timeyWimeys) {
+			if (_gameSpeed >= 0) {
+				_timey.PlayVisuals (_gameTime);
+			} else {
+				_timey.RewindVisuals (_gameTime); 
+			}
 		}
 		TimeCounter.UpdateTime (_fixedGameTime);
 		_camController.UpdateCamera ();

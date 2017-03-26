@@ -549,6 +549,8 @@ public enum ActionType
     UnsetTask,
     BSeekAndShoot,
     BSeekAndShootUnset,
+	AnimRunning,
+	AnimStopRunning,
     AIWait,
     AIWaitUnset,
     AIMoveForward,

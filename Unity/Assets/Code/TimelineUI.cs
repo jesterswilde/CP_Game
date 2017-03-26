@@ -43,7 +43,9 @@ public class TimelineUI : MonoBehaviour {
     public void SetTimelineVisibility (bool visibility)
     {
         _charaTime.enabled = visibility;
-        _pointer.enabled = visibility;
+		if (_pointer != null) {
+			_pointer.enabled = visibility;
+		}
         _slider.gameObject.SetActive(visibility);
     }
 
@@ -52,13 +54,17 @@ public class TimelineUI : MonoBehaviour {
         _isActive = _character.name == _playerName;
         if (_isActive)
         {
-            _pointer.color = TimeCounter.AColor;
+			if (_pointer != null) {
+				_pointer.color = TimeCounter.AColor;
+			}
             _charaTime.color = TimeCounter.AColor;
             _timelineFill.enabled = true;
         }
         else
         {
-            _pointer.color = TimeCounter.IColor;
+			if (_pointer != null) {
+				_pointer.color = TimeCounter.IColor;
+			}
             _charaTime.color = TimeCounter.IColor;
             _timelineFill.enabled = false;
         }

@@ -19,6 +19,7 @@ public class CharacterState
     Vector3 _groundNormal = Vector3.zero; 
     Vector3 _prevPos = Vector3.zero;
     Quaternion _prevRot = new Quaternion();
+	bool _isRunning = false; 
 
     public int Forward { get { return _forward; } set { _forward = value; } }
     public int Backward { get { return _backward; } set { _backward = value; } }
@@ -102,6 +103,19 @@ public class CharacterState
         }
         return false; 
     }
+	public Action AnimState(){
+		bool _moving = _forward == 1 && _canMoveForward ==1 || _backward == 1 && _canMoveBackward == 1 ||
+		_left == 1 && _canMoveLeft == 1 || _right == 1 && _canMoveRight == 1;
+		if (_isRunning && !_moving) {
+			_isRunning = false; 
+			return new BasicAction (ActionType.AnimStopRunning, true); 
+		}
+		if (!_isRunning && _moving) {
+			_isRunning = true; 
+			return new BasicAction (ActionType.AnimRunning, true); 
+		}
+		return null; 
+	}
     public void ClearState()
     {
         _forward = 0;
