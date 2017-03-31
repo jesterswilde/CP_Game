@@ -1,16 +1,20 @@
-﻿using System.Collections;
+﻿using UnityEngine;
+using System.Collections;
+using UnityEngine.UI;
 using System.Collections.Generic;
-using UnityEngine;
 
 public class ActionLogUI : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+    [SerializeField]
+    Text[] _text;
+    int _order = 0;
+    string _content;
+    public GameObject _prefab;
+
+    public void LogAction (string _logText)
+    {
+
+    }
+
+
 }
