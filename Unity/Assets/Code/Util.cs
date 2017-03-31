@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System; 
 using System.Collections;
 using System.Collections.Generic; 
 
@@ -28,6 +29,20 @@ public class Util {
         }
         return _t; 
     }
+	
+	public static void WriteHistory (HistoryNode _node, string _location){
+		
+	}
+	public static HistoryHeadTail ReadHistory(string _location){
+		throw  new NotImplementedException(); 
+	}
+	public static bool UnserializeBool(string _token){
+		if (_token == "1") {
+			return true; 
+		}
+		return false; 
+	}
+
     public static List<T> GetComponents<T>(GameObject _go)
     {
         List<T> _list = new List<T>();
@@ -40,6 +55,19 @@ public class Util {
         return _list; 
     }
 }
+public struct HistoryHeadTail{
+	HistoryNode _head; 
+	HistoryNode _tail; 
+
+	public HistoryNode Head{ get { return _head; } }
+	public HistoryNode Tail{ get { return _tail; } }
+
+	public HistoryHeadTail (HistoryNode head, HistoryNode tail)
+	{
+		_head = head; 
+		_tail = tail; 
+	}
+}
 
 
 public static class IEnumerableExtensions
@@ -50,3 +78,5 @@ public static class IEnumerableExtensions
 	}
 
 }
+
+
