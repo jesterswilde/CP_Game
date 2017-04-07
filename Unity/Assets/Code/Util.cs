@@ -36,6 +36,14 @@ public class Util {
 	public static HistoryHeadTail ReadHistory(string _location){
 		throw  new NotImplementedException(); 
 	}
+	public static string SerializeVector(Vector3 _vector){
+		return _vector.x.ToString () + "|" + _vector.y.ToString () + "|" + _vector.z.ToString ();
+	}
+	public static Vector3 UnserializeVector(string _string){
+		_string.Split(new char{'|'}); 
+		return new Vector3 (float.TryParse (_string [0]),
+			                  float.TryParse (_string [1]), float.TryParse (_string [2])); 
+	}
 	public static bool UnserializeBool(string _token){
 		if (_token == "1") {
 			return true; 
