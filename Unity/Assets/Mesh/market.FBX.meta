@@ -10,23 +10,28 @@ ModelImporter:
     100004: market_buildings
     100006: market_centerSplit
     100008: building_whale_counter
+    100010: Object001
     400000: building_whale
     400002: //RootNode
     400004: market_buildings
     400006: market_centerSplit
     400008: building_whale_counter
+    400010: Object001
     2300000: building_whale
     2300002: market_buildings
     2300004: market_centerSplit
     2300006: building_whale_counter
+    2300008: Object001
     3300000: building_whale
     3300002: market_buildings
     3300004: market_centerSplit
     3300006: building_whale_counter
+    3300008: Object001
     4300000: market_buildings
     4300002: market_centerSplit
     4300004: building_whale
     4300006: building_whale_counter
+    4300008: Object001
   materials:
     importMaterials: 1
     materialName: 0

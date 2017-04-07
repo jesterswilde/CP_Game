@@ -8,15 +8,30 @@ ModelImporter:
     100000: //RootNode
     100002: mercenary
     100004: visor_Glow
+    100006: mercenary_armor
+    100008: mercenary_visor
+    100010: mercenary_green
     400000: //RootNode
     400002: mercenary
     400004: visor_Glow
+    400006: mercenary_armor
+    400008: mercenary_visor
+    400010: mercenary_green
     2300000: mercenary
     2300002: visor_Glow
+    2300004: mercenary_armor
+    2300006: mercenary_visor
+    2300008: mercenary_green
     3300000: mercenary
     3300002: visor_Glow
+    3300004: mercenary_armor
+    3300006: mercenary_visor
+    3300008: mercenary_green
     4300000: mercenary
     4300002: visor_Glow
+    4300004: mercenary_armor
+    4300006: mercenary_visor
+    4300008: mercenary_green
   materials:
     importMaterials: 1
     materialName: 0
