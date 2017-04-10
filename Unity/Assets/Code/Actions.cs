@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
+using System.Collections.Generic; 
 
 public abstract class Action
 {
@@ -21,6 +22,10 @@ public abstract class Action
     public virtual InvenItem Item { get { return null; } }
     public virtual int IValue { get { return int.MinValue; } }
     public virtual Vector3 OriginalVec { get { return Vector3.zero; } }
+	public virtual int SerialIndex{ get ; }
+	public virtual Action Parse (List<string> _tokens){
+		return null;
+		} 
 }
 
 public class BasicAction : Action{
@@ -47,6 +52,11 @@ public class BasicAction : Action{
         _action = _actionType;
         _time = time;
     }
+	public override int SerialIndex { get { return 1; } }
+	public override  Action Parse(List<string> _tokens){
+		return new BasicAction (ActionType (int.TryParse (_tokens [1])),
+			float.TryParse (_tokens [2]), Util.UnserializeBool (_tokens [2]));  
+	}
 }
 
 public class ValueAction : Action
@@ -79,6 +89,12 @@ public class ValueAction : Action
         _isExternal = isExternal; 
     }
     public override float Value { get { return _value; } }
+	public override int SerialIndex { get { return 2; } }
+	public static Action Parse(List<string> _tokens){
+		return new ValueAction (ActionType (int.TryParse (_tokens [1])), 
+			float.TryParse(_tokens[2]),
+			float.TryParse (_tokens [3]), Util.UnserializeBool (_tokens [4]));  
+	}
 }
 public class VectorAction : Action
 {
@@ -111,6 +127,12 @@ public class VectorAction : Action
         time = _time; 
     }
     public override Vector3 Vector { get { return _vector; } }
+	public override int SerialIndex { get { return 3; } }
+	public static Action Parse(List<string> _tokens){
+		return new VectorAction (ActionType (int.TryParse (_tokens [1])), 
+			float.TryParse(_tokens[2]),
+			float.TryParse (_tokens [3]), Util.UnserializeBool (_tokens [4]));  
+	}
 }
 public class FutureActions : Action
 {
@@ -143,7 +165,8 @@ public class FutureActions : Action
         _future = future;
         _time = time;
     }
-    public override HistoryNode PossibleFuture { get { return _future; } }
+	public override HistoryNode PossibleFuture { get { return _future; } }
+	public override int SerialIndex { get { return 4; } }
 }
 
 public class TargetedAction : Action
@@ -169,6 +192,7 @@ public class TargetedAction : Action
 
     public override ITargetable Target { get { return _target; } }
 	public override Vector3 Vector { get { return _vec; } }
+	public override int SerialIndex { get { return 5; } }
 }
 
 public class TaskAction : Action
@@ -194,7 +218,8 @@ public class TaskAction : Action
         _isExternal = external;
         _time = GameManager.FixedGameTime;
     }
-    public override Task Task { get { return _task; } }
+	public override Task Task { get { return _task; } }
+	public override int SerialIndex { get { return 6; } }
 }
 
 public class WeaponAction : Action
@@ -215,7 +240,8 @@ public class WeaponAction : Action
         _time = GameManager.FixedGameTime;
     }
 
-    public override Weapon Weapon { get { return _weapon; } }
+	public override Weapon Weapon { get { return _weapon; } }
+	public override int SerialIndex { get { return 7; } }
 }
 
 
@@ -237,7 +263,8 @@ public class CombatAction : Action
         _time = GameManager.FixedGameTime;
     }
 
-    public override CombatState Combat { get { return _combat; } }
+	public override CombatState Combat { get { return _combat; } }
+	public override int SerialIndex { get { return 8; } }
 }
 
 public class BehaviorAction : Action
@@ -260,6 +287,8 @@ public class BehaviorAction : Action
     }
 
 	public override IBehavior Behavior { get { return _behavior; } }
+
+	public override int SerialIndex { get { return 9; } }
 }
 
 public class ItemAction : Action
@@ -280,7 +309,8 @@ public class ItemAction : Action
         _time = GameManager.FixedGameTime;
     }
 
-    public override InvenItem Item { get { return _item; } }
+	public override InvenItem Item { get { return _item; } }
+	public override int SerialIndex { get { return 10; } }
 }
 
 public class AnimAction : Action
@@ -304,7 +334,8 @@ public class AnimAction : Action
         _time = GameManager.FixedGameTime;
     }
     public override int IValue { get { return _int; } }
-    public override float Value { get { return _value; } }
+	public override float Value { get { return _value; } }
+	public override int SerialIndex { get { return 11; } }
 }
 
 
@@ -343,7 +374,8 @@ public class DirTargetAction : Action
         _time = time;
     }
     public override Vector3 Vector { get { return _dir; } }
-    public override Vector3 OriginalVec { get { return _target; } }
+	public override Vector3 OriginalVec { get { return _target; } }
+	public override int SerialIndex { get { return 12; } }
 }
 
 public class ValueTargetAction : Action
@@ -381,7 +413,8 @@ public class ValueTargetAction : Action
         _time = time;
     }
     public override float Value { get { return _value; } }
-    public override Vector3 OriginalVec { get { return _target; } }
+	public override Vector3 OriginalVec { get { return _target; } }
+	public override int SerialIndex { get { return 13; } }
 }
 
 public class ValueIntAction : Action
@@ -420,6 +453,7 @@ public class ValueIntAction : Action
 	}
 	public override float Value { get { return _value; } }
 	public override int IValue { get { return _index; } }
+	public override int SerialIndex { get { return 14; } }
 }
 
 public class VectorIntAction : Action
@@ -458,6 +492,7 @@ public class VectorIntAction : Action
 	}
 	public override Vector3 Vector { get { return _vector; } }
 	public override int IValue { get { return _index; } }
+	public override int SerialIndex { get { return 15; } }
 }
 
 public class TaskIntAction : Action
@@ -496,6 +531,7 @@ public class TaskIntAction : Action
 	}
 	public override Task Task { get { return _task; } }
 	public override int IValue { get { return _index; } }
+	public override int SerialIndex { get { return 16; } }
 }
 
 public enum ActionType
