@@ -16,6 +16,20 @@ public class TimelineUI : MonoBehaviour {
     [SerializeField]
     Image[] _bottomHex;
     [SerializeField]
+    Image _topPortrait;
+    [SerializeField]
+    Image _bottomPortrait;
+    [SerializeField]
+    Sprite _hacker;
+    [SerializeField]
+    Sprite _office;
+    [SerializeField]
+    Sprite _merc;
+    [SerializeField]
+    Sprite _otaku;
+    [SerializeField]
+    Sprite _generic;
+    [SerializeField]
     Slider _slider;
     [SerializeField]
     int _order;
@@ -31,6 +45,10 @@ public class TimelineUI : MonoBehaviour {
         tui = (this);
         TimeCounter.RegisterTimeline(this);
     }
+    void Start()
+    {
+        SetPortraitChara();
+    }
 
     public void SetCharacterNames(Character _character)
     {
@@ -41,6 +59,34 @@ public class TimelineUI : MonoBehaviour {
         else
         {
             SetTimelineVisibility(false);
+        }
+    }
+    public void SetPortrait(Sprite sprite)
+    {
+        _topPortrait.sprite = sprite;
+        _bottomPortrait.sprite = sprite;
+    }
+    public void SetPortraitChara()
+    {
+        if (_playerName == "._.anTHraX._.")
+        {
+            SetPortrait(_hacker);
+        }
+        else if (_playerName == "Michael")
+        {
+            SetPortrait(_office);
+        }
+        else if (_playerName == "Gold")
+        {
+            SetPortrait(_merc);
+        }
+        else if (_playerName == "Tadachi")
+        {
+            SetPortrait(_otaku);
+        }
+        else
+        {
+            SetPortrait(_generic);
         }
     }
 

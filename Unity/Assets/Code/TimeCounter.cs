@@ -8,10 +8,11 @@ public class TimeCounter : MonoBehaviour {
  //   Slider _slider; 
     [SerializeField]
     Text[] _currentTime;
- //   [SerializeField]
- //   Text _sliderValue;
- //   [SerializeField]
-//    Image _image;
+    /*/   [SerializeField]
+    //   Text _sliderValue;
+    //   [SerializeField]
+    //    Image _image;
+    */
     [SerializeField]
     Image[] _limitImage;
     [SerializeField]
@@ -20,6 +21,15 @@ public class TimeCounter : MonoBehaviour {
     Text[] _timeLimit;
     [SerializeField]
     Text[] _charaNames;
+    [SerializeField]
+    ActionLogUI[] _actionUI;
+    List<string> _actionLog = new List<string>();
+    List<float> _actionTime = new List<float>();
+    [SerializeField]
+    ObjectiveUI[] _objectiveUI;
+    [SerializeField]
+    string[] _objText;
+    bool _objComplete;
     [SerializeField]
     Color _activeColor;
     [SerializeField]
@@ -41,6 +51,28 @@ public class TimeCounter : MonoBehaviour {
         SetCharaToTimeline();
         _mostFutureTime = GameSettings.MaxLevelTime;
         SetLevelTime();
+        EnableObjectives();
+        for (int i = 0; i < _actionUI.Length; i++)
+        {
+            _actionUI[i].SetLogVisibility(false);
+        }
+    }
+    void Update()
+    {
+        UpdateAction();
+        if (Input.GetKeyDown (KeyCode.L))
+        {
+            LogAction("I pressed L", GameManager.GameTime);
+        }
+        if (Input.GetKeyDown(KeyCode.O))
+        {
+            _objText[0] = "Get to da choppa";
+            EnableObjectives();
+        }
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            ObjectiveComplete(0, true);
+        }
     }
     public static void SwitchedToCharacter(Character _character)
     {
@@ -112,6 +144,76 @@ public class TimeCounter : MonoBehaviour {
 
         }
     }
+    public void LogAction (string _content, float _currentTime)
+    {
+        _actionLog.Add(_content);
+        _actionTime.Add(_currentTime);
+    }
+    public void UpdateAction ()
+    {
+        if (_actionTime.Count >= 1)
+        {
+            for (int i = _actionTime.Count - 1; i >= 0; i--)
+            {
+                Debug.Log("i " + i);
+                Debug.Log("_actionTime " + _actionTime.Count);
+                if (_actionTime.Count - 1 >= 3 && _actionTime[i] <= GameManager.GameTime)
+                {
+                    _actionUI[0].SetLogVisibility(true);
+                    _actionUI[0].SetText(_actionLog[i], _actionTime[i]);
+                    _actionUI[1].SetLogVisibility(true);
+                    _actionUI[1].SetText(_actionLog[i - 1], _actionTime[i - 1]);
+                    _actionUI[2].SetLogVisibility(true);
+                    _actionUI[2].SetText(_actionLog[i - 2], _actionTime[i - 2]);
+                    return;
+                }
+                else if (_actionTime.Count - 1 == 2 && _actionTime[i] <= GameManager.GameTime)
+                {
+                    _actionUI[0].SetLogVisibility(true);
+                    _actionUI[0].SetText(_actionLog[i], _actionTime[i]);
+                    _actionUI[1].SetLogVisibility(true);
+                    _actionUI[1].SetText(_actionLog[i - 1], _actionTime[i - 1]);
+                    _actionUI[2].SetLogVisibility(false);
+                    return;
+                }
+                else if (_actionTime.Count - 1 == 1 && _actionTime[i] <= GameManager.GameTime)
+                {
+                    _actionUI[0].SetLogVisibility(true);
+                    _actionUI[0].SetText(_actionLog[i], _actionTime[i]);
+                    _actionUI[1].SetLogVisibility(false);
+                    _actionUI[2].SetLogVisibility(false);
+                    return;
+                }
+            }
+        }
+        else
+        {
+            for (int i = 0; i < _actionUI.Length; i++)
+            {
+                _actionUI[i].SetLogVisibility(false);
+            }
+        }
+    }
+    public void EnableObjectives()
+    {
+        for (int i = 0; i < _objectiveUI.Length; i++)
+        {
+            if (_objText[i] == "0")
+            {
+                _objectiveUI[i].SetMainVisibility(false);
+            }
+            else
+            {
+                _objectiveUI[i].SetMainVisibility(true);
+                _objectiveUI[i].SetText(_objText[i]);
+                _objectiveUI[i].SetIntVisibility(false);
+            }
+        }
+    }
+    public void ObjectiveComplete (int number, bool visibility)
+    {
+        _objectiveUI[number].SetIntVisibility(visibility);
+    }
     public static void RegisterTimeline(TimelineUI _timeline)
     {
         t._timelines.Add(_timeline);
@@ -162,4 +264,25 @@ public class TimeCounter : MonoBehaviour {
  * 
  * */
 
- 
+/*if (_actionTime.Count >= 3)
+            {
+               _actionUI[0].SetText(_actionLog[i], _actionTime[i]);
+               _actionUI[1].SetText(_actionLog[i-1], _actionTime[i-1]);
+               _actionUI[2].SetText(_actionLog[i-2], _actionTime[i - 2]);
+            }
+            else if (_actionTime.Count == 2)
+            {
+                _actionUI[0].SetText(_actionLog[i], _actionTime[i]);
+                _actionUI[1].SetText(_actionLog[i-1], _actionTime[i-1]);
+                _actionUI[2].SetLogVisibility(false);
+            }
+            else if (_actionTime.Count == 1)
+            {
+                _actionUI[0].SetText(_actionLog[i], _actionTime[i]);
+                _actionUI[1].SetLogVisibility(false);
+                _actionUI[2].SetLogVisibility(false);
+            }
+            i++;
+            return;*/
+
+
