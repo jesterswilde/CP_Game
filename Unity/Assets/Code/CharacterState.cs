@@ -9,8 +9,10 @@ public class CharacterState
     int _backward = 0;
     int _left = 0;
     int _right = 0;
-    bool _pullingTrigger = false; 
+    bool _pullingTrigger = false;
     float _rotX = 0;
+    Vector3 _forwardVec = new Vector3(1,0,0);
+    public Vector3 ForwardVec { get { return _forwardVec;}} 
     int _canMoveForward = 1;
     int _canMoveBackward = 1;
     int _canMoveLeft = 1;
@@ -192,7 +194,8 @@ public class CharacterState
                 _right = 0;
                 break;
             case ActionType.Rotation:
-                _rotX += _action.Value;
+                Debug.Log(_action.Vector); 
+                _forwardVec += _action.Vector; 
                 break;
             case ActionType.Clear:
                 ClearState();
@@ -270,7 +273,7 @@ public class CharacterState
                 _right = 1;
                 break;
             case ActionType.Rotation:
-                _rotX -= _action.Value;
+                _forwardVec -= _action.Vector; 
                 break;
             case ActionType.PullTrigger:
                 _pullingTrigger = false;

@@ -353,7 +353,7 @@ public class GameManager : MonoBehaviour {
 			PlayerInput.CheckSpeedButtons (); 
 		}
 		if (_canAcceptPlayerInput && _activeCharacter != null && _isPlaying) {
-			_activeCharacter.FaceCamrea (); 
+			_activeCharacter.FaceCamera (); 
 			_activeCharacter.SetStateToKeyboard ();
 			_activeCharacter.SetAction (PlayerInput.ActionButtons (_activeCharacter)); 
 			_activeCharacter.ApplyActions (); 
