@@ -1,0 +1,214 @@
+fileFormatVersion: 2
+guid: d43702cd99ca0864f96b377d9a54e8c7
+timeCreated: 1491925266
+licenseType: Free
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: //RootNode
+    100002: IKTarget001
+    100004: mercenary
+    100006: mercenary_green
+    100008: visor_Glow
+    100010: w
+    100012: wgun
+    100014: wHead
+    100016: wLCalf
+    100018: wLCollarbone
+    100020: wLDigit11
+    100022: wLDigit12
+    100024: wLDigit13
+    100026: wLDigit21
+    100028: wLDigit22
+    100030: wLDigit23
+    100032: wLDigit31
+    100034: wLDigit32
+    100036: wLDigit33
+    100038: wLDigit41
+    100040: wLDigit42
+    100042: wLDigit43
+    100044: wLDigit51
+    100046: wLDigit52
+    100048: wLDigit53
+    100050: wLFoot
+    100052: wLForearm
+    100054: wLIKTarget
+    100056: wLPalm
+    100058: wLPlatform
+    100060: wLThigh
+    100062: wLtoe1
+    100064: wLUpperarm
+    100066: wNeck1
+    100068: wNeck2
+    100070: wPelvis
+    100072: wRCalf
+    100074: wRCollarbone
+    100076: wRDigit11
+    100078: wRDigit12
+    100080: wRDigit13
+    100082: wRDigit21
+    100084: wRDigit22
+    100086: wRDigit23
+    100088: wRDigit31
+    100090: wRDigit32
+    100092: wRDigit33
+    100094: wRDigit41
+    100096: wRDigit42
+    100098: wRDigit43
+    100100: wRDigit51
+    100102: wRDigit52
+    100104: wRDigit53
+    100106: wRFoot
+    100108: wRForearm
+    100110: wRibcage
+    100112: wRPalm
+    100114: wRPlatform
+    100116: wRThigh
+    100118: wRtoe1
+    100120: wRUpperarm
+    100122: wSpine1
+    100124: wSpine2
+    100126: wSpine3
+    100128: wSpine4
+    400000: //RootNode
+    400002: IKTarget001
+    400004: mercenary
+    400006: mercenary_green
+    400008: visor_Glow
+    400010: w
+    400012: wgun
+    400014: wHead
+    400016: wLCalf
+    400018: wLCollarbone
+    400020: wLDigit11
+    400022: wLDigit12
+    400024: wLDigit13
+    400026: wLDigit21
+    400028: wLDigit22
+    400030: wLDigit23
+    400032: wLDigit31
+    400034: wLDigit32
+    400036: wLDigit33
+    400038: wLDigit41
+    400040: wLDigit42
+    400042: wLDigit43
+    400044: wLDigit51
+    400046: wLDigit52
+    400048: wLDigit53
+    400050: wLFoot
+    400052: wLForearm
+    400054: wLIKTarget
+    400056: wLPalm
+    400058: wLPlatform
+    400060: wLThigh
+    400062: wLtoe1
+    400064: wLUpperarm
+    400066: wNeck1
+    400068: wNeck2
+    400070: wPelvis
+    400072: wRCalf
+    400074: wRCollarbone
+    400076: wRDigit11
+    400078: wRDigit12
+    400080: wRDigit13
+    400082: wRDigit21
+    400084: wRDigit22
+    400086: wRDigit23
+    400088: wRDigit31
+    400090: wRDigit32
+    400092: wRDigit33
+    400094: wRDigit41
+    400096: wRDigit42
+    400098: wRDigit43
+    400100: wRDigit51
+    400102: wRDigit52
+    400104: wRDigit53
+    400106: wRFoot
+    400108: wRForearm
+    400110: wRibcage
+    400112: wRPalm
+    400114: wRPlatform
+    400116: wRThigh
+    400118: wRtoe1
+    400120: wRUpperarm
+    400122: wSpine1
+    400124: wSpine2
+    400126: wSpine3
+    400128: wSpine4
+    2300000: visor_Glow
+    3300000: visor_Glow
+    4300000: mercenary
+    4300002: visor_Glow
+    4300004: mercenary_green
+    7400000: Take 001
+    9500000: //RootNode
+    13700000: mercenary
+    13700002: mercenary_green
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

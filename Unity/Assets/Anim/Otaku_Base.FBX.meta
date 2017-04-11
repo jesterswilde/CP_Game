@@ -1,0 +1,207 @@
+fileFormatVersion: 2
+guid: 4d4f177fc79ab4b47a05d8c380ff1456
+timeCreated: 1491932260
+licenseType: Free
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: IKTarget001
+    100002: otaku
+    100004: otaku_arm
+    100006: //RootNode
+    100008: otaku_hat
+    100010: wHead
+    100012: wLCalf
+    100014: wLCollarbone
+    100016: wLDigit11
+    100018: wLDigit12
+    100020: wLDigit13
+    100022: wLDigit21
+    100024: wLDigit22
+    100026: wLDigit23
+    100028: wLDigit31
+    100030: wLDigit32
+    100032: wLDigit33
+    100034: wLDigit41
+    100036: wLDigit42
+    100038: wLDigit43
+    100040: wLDigit51
+    100042: wLDigit52
+    100044: wLDigit53
+    100046: wLFoot
+    100048: wLForearm
+    100050: wLPalm
+    100052: wLPlatform
+    100054: wLThigh
+    100056: wLtoe1
+    100058: wLUpperarm
+    100060: wNeck1
+    100062: wNeck2
+    100064: wPelvis
+    100066: wRCalf
+    100068: wRCollarbone
+    100070: wRDigit11
+    100072: wRDigit12
+    100074: wRDigit13
+    100076: wRDigit21
+    100078: wRDigit22
+    100080: wRDigit23
+    100082: wRDigit31
+    100084: wRDigit32
+    100086: wRDigit33
+    100088: wRDigit41
+    100090: wRDigit42
+    100092: wRDigit43
+    100094: wRDigit51
+    100096: wRDigit52
+    100098: wRDigit53
+    100100: wRFoot
+    100102: wRForearm
+    100104: wRibcage
+    100106: wRPalm
+    100108: wRPlatform
+    100110: wRThigh
+    100112: wRtoe1
+    100114: wRUpperarm
+    100116: wSpine1
+    100118: wSpine2
+    100120: wSpine3
+    100122: wSpine4
+    400000: IKTarget001
+    400002: otaku
+    400004: otaku_arm
+    400006: //RootNode
+    400008: otaku_hat
+    400010: wHead
+    400012: wLCalf
+    400014: wLCollarbone
+    400016: wLDigit11
+    400018: wLDigit12
+    400020: wLDigit13
+    400022: wLDigit21
+    400024: wLDigit22
+    400026: wLDigit23
+    400028: wLDigit31
+    400030: wLDigit32
+    400032: wLDigit33
+    400034: wLDigit41
+    400036: wLDigit42
+    400038: wLDigit43
+    400040: wLDigit51
+    400042: wLDigit52
+    400044: wLDigit53
+    400046: wLFoot
+    400048: wLForearm
+    400050: wLPalm
+    400052: wLPlatform
+    400054: wLThigh
+    400056: wLtoe1
+    400058: wLUpperarm
+    400060: wNeck1
+    400062: wNeck2
+    400064: wPelvis
+    400066: wRCalf
+    400068: wRCollarbone
+    400070: wRDigit11
+    400072: wRDigit12
+    400074: wRDigit13
+    400076: wRDigit21
+    400078: wRDigit22
+    400080: wRDigit23
+    400082: wRDigit31
+    400084: wRDigit32
+    400086: wRDigit33
+    400088: wRDigit41
+    400090: wRDigit42
+    400092: wRDigit43
+    400094: wRDigit51
+    400096: wRDigit52
+    400098: wRDigit53
+    400100: wRFoot
+    400102: wRForearm
+    400104: wRibcage
+    400106: wRPalm
+    400108: wRPlatform
+    400110: wRThigh
+    400112: wRtoe1
+    400114: wRUpperarm
+    400116: wSpine1
+    400118: wSpine2
+    400120: wSpine3
+    400122: wSpine4
+    4300000: otaku
+    4300002: otaku_hat
+    4300004: otaku_arm
+    7400000: Take 001
+    9500000: //RootNode
+    13700000: otaku
+    13700002: otaku_arm
+    13700004: otaku_hat
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

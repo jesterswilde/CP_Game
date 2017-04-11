@@ -40,9 +40,13 @@ public class Util {
 		return _vector.x.ToString () + "|" + _vector.y.ToString () + "|" + _vector.z.ToString ();
 	}
 	public static Vector3 UnserializeVector(string _string){
-		_string.Split(new char{'|'}); 
-		return new Vector3 (float.TryParse (_string [0]),
-			                  float.TryParse (_string [1]), float.TryParse (_string [2])); 
+		string[] _split = _string.Split(new char[]{'|'});
+        float x, y, z;
+        if (float.TryParse(_split[0], out x) && float.TryParse(_split[1], out y) &&
+            float.TryParse(_split[2], out z)) {
+            return new Vector3(x, y, z); 
+        }
+        return new Vector3(float.NaN, float.NaN, float.NaN); 
 	}
 	public static bool UnserializeBool(string _token){
 		if (_token == "1") {

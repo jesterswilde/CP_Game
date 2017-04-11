@@ -22,7 +22,7 @@ public abstract class Action
     public virtual InvenItem Item { get { return null; } }
     public virtual int IValue { get { return int.MinValue; } }
     public virtual Vector3 OriginalVec { get { return Vector3.zero; } }
-	public virtual int SerialIndex{ get ; }
+	public abstract int SerialIndex{ get ; }
 	public virtual Action Parse (List<string> _tokens){
 		return null;
 		} 
@@ -53,10 +53,10 @@ public class BasicAction : Action{
         _time = time;
     }
 	public override int SerialIndex { get { return 1; } }
-	public override  Action Parse(List<string> _tokens){
+	/*public override  Action Parse(List<string> _tokens){
 		return new BasicAction (ActionType (int.TryParse (_tokens [1])),
 			float.TryParse (_tokens [2]), Util.UnserializeBool (_tokens [2]));  
-	}
+	}*/
 }
 
 public class ValueAction : Action
@@ -89,12 +89,12 @@ public class ValueAction : Action
         _isExternal = isExternal; 
     }
     public override float Value { get { return _value; } }
-	public override int SerialIndex { get { return 2; } }
+	public override int SerialIndex { get { return 2; } }/*
 	public static Action Parse(List<string> _tokens){
 		return new ValueAction (ActionType (int.TryParse (_tokens [1])), 
 			float.TryParse(_tokens[2]),
 			float.TryParse (_tokens [3]), Util.UnserializeBool (_tokens [4]));  
-	}
+	*/
 }
 public class VectorAction : Action
 {
@@ -127,12 +127,12 @@ public class VectorAction : Action
         time = _time; 
     }
     public override Vector3 Vector { get { return _vector; } }
-	public override int SerialIndex { get { return 3; } }
+	public override int SerialIndex { get { return 3; } }/*
 	public static Action Parse(List<string> _tokens){
 		return new VectorAction (ActionType (int.TryParse (_tokens [1])), 
 			float.TryParse(_tokens[2]),
 			float.TryParse (_tokens [3]), Util.UnserializeBool (_tokens [4]));  
-	}
+	}*/
 }
 public class FutureActions : Action
 {
