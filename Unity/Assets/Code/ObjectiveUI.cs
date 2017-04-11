@@ -2,19 +2,32 @@
 using System.Collections;
 using UnityEngine.UI;
 
-public class HealthHex : MonoBehaviour
+public class ObjectiveUI : MonoBehaviour
 {
     [SerializeField]
     Image[] _hexExterior;
     [SerializeField]
     Image[] _hexInterior;
+    [SerializeField]
+    Text[] _text;
 
-    
-    public void SetExtVisibility(bool visibility)
+    public void SetText(string _content)
+    {
+        for (int i = 0; i < _text.Length; i++)
+        {
+            _text[i].text = _content;
+        }
+    }
+
+    public void SetMainVisibility(bool visibility)
     {
         for (int i = 0; i < _hexExterior.Length; i++)
         {
             _hexExterior[i].enabled = visibility;
+        }
+        for(int i = 0; i < _text.Length; i++)
+        {
+            _text[i].enabled = visibility;
         }
         SetIntVisibility(visibility);        
     }

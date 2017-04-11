@@ -1,0 +1,162 @@
+fileFormatVersion: 2
+guid: a8ccd7b6c34c0df40a1f130f8bfde3bd
+timeCreated: 1491202123
+licenseType: Free
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: Box011
+    100002: office_3
+    100004: office_3_floor
+    100006: office_3_window
+    100008: office_3_window001
+    100010: office_3_window002
+    100012: office_3_window003
+    100014: office_3_window004
+    100016: office_3_window005
+    100018: office_3_window006
+    100020: office_3_window_pane
+    100022: office_3_window_pane001
+    100024: office_3_window_pane002
+    100026: office_3_window_pane003
+    100028: office_3_window_pane004
+    100030: office_3_window_pane005
+    100032: office_3_window_pane006
+    100034: //RootNode
+    400000: Box011
+    400002: office_3
+    400004: office_3_floor
+    400006: office_3_window
+    400008: office_3_window001
+    400010: office_3_window002
+    400012: office_3_window003
+    400014: office_3_window004
+    400016: office_3_window005
+    400018: office_3_window006
+    400020: office_3_window_pane
+    400022: office_3_window_pane001
+    400024: office_3_window_pane002
+    400026: office_3_window_pane003
+    400028: office_3_window_pane004
+    400030: office_3_window_pane005
+    400032: office_3_window_pane006
+    400034: //RootNode
+    2300000: Box011
+    2300002: office_3
+    2300004: office_3_floor
+    2300006: office_3_window
+    2300008: office_3_window001
+    2300010: office_3_window002
+    2300012: office_3_window003
+    2300014: office_3_window004
+    2300016: office_3_window005
+    2300018: office_3_window006
+    2300020: office_3_window_pane
+    2300022: office_3_window_pane001
+    2300024: office_3_window_pane002
+    2300026: office_3_window_pane003
+    2300028: office_3_window_pane004
+    2300030: office_3_window_pane005
+    2300032: office_3_window_pane006
+    3300000: Box011
+    3300002: office_3
+    3300004: office_3_floor
+    3300006: office_3_window
+    3300008: office_3_window001
+    3300010: office_3_window002
+    3300012: office_3_window003
+    3300014: office_3_window004
+    3300016: office_3_window005
+    3300018: office_3_window006
+    3300020: office_3_window_pane
+    3300022: office_3_window_pane001
+    3300024: office_3_window_pane002
+    3300026: office_3_window_pane003
+    3300028: office_3_window_pane004
+    3300030: office_3_window_pane005
+    3300032: office_3_window_pane006
+    4300000: office_3
+    4300002: office_3_floor
+    4300004: Box011
+    4300006: office_3_window
+    4300008: office_3_window_pane
+    4300010: office_3_window001
+    4300012: office_3_window_pane001
+    4300014: office_3_window002
+    4300016: office_3_window_pane002
+    4300018: office_3_window003
+    4300020: office_3_window_pane003
+    4300022: office_3_window_pane004
+    4300024: office_3_window004
+    4300026: office_3_window005
+    4300028: office_3_window_pane005
+    4300030: office_3_window006
+    4300032: office_3_window_pane006
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
