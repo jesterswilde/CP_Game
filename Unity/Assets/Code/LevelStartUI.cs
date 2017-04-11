@@ -38,10 +38,12 @@ public class LevelStartUI : MonoBehaviour {
         for (int i = 0; i < _description.Length; i++)
         {
             _description[i].text = _descContent;
+            _description[i].text = _descContent.Replace("\\n", "\n");
         }
         for (int i = 0; i < _conditions.Length; i++)
         {
             _conditions[i].text = _condContent;
+            _conditions[i].text = _condContent.Replace("\\n", "\n");
         }
     }
 
