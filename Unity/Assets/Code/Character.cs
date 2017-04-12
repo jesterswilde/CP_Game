@@ -27,7 +27,12 @@ public class Character : WibblyWobbly {
     bool _isExtracted; 
 
     CharacterState _state = new CharacterState();
-    Renderer _renderer; 
+    Renderer _renderer;
+    Transform _artGO;
+    Vector3 _artForward;
+    float _lerpIncrement = 0.05f;
+    float _lerpAmount = 1f;
+    float _lerpThreshold = 10;
 
     [SerializeField]
     bool _playerControlled = false;
@@ -58,16 +63,9 @@ public class Character : WibblyWobbly {
     {
         if (CanAct())
         {
-            //transform.forward = _cam.CameraForward(_state.XRot);  
-            transform.forward = _state.ForwardVec; 
-            /* Vector3 _move = ((_state.Forward * _state.CanForward) - (_state.Backward * _state.CanBackward)) * transform.forward +
-                 ((_state.Right * _state.CanRight) - (_state.Left * _state.CanLeft)) * transform.right;
-             */
-            Vector3 _move = Vector3.zero; 
-            if (_state.IsMoving())
-            {
-                _move = _state.CanForward * transform.forward; 
-            }; 
+            transform.forward = _cam.CameraForward(_state.XRot);
+            Vector3 _move = ((_state.Forward * _state.CanForward) - (_state.Backward * _state.CanBackward)) * transform.forward +
+                ((_state.Right * _state.CanRight) - (_state.Left * _state.CanLeft)) * transform.right;
             Vector3 _projectedMove = Vector3.ProjectOnPlane(_move, _state.GroundNormal);
             if (_state.IsGrounded == 0)
             {
@@ -84,14 +82,9 @@ public class Character : WibblyWobbly {
     {
         if (CanAct())
         {
-            transform.forward = _state.ForwardVec;
-            //Vector3 _move = ((_state.Forward * _state.CanForward) - (_state.Backward * _state.CanBackward)) * transform.forward + 
-            //    ((_state.Right * _state.CanRight) - (_state.Left * _state.CanLeft)) * transform.right;
-            Vector3 _move = Vector3.zero;
-            if (_state.IsMoving())
-            {
-                _move = _state.CanForward * transform.forward;
-            };
+            transform.forward = _cam.CameraForward(_state.XRot);
+            Vector3 _move = ((_state.Forward * _state.CanForward) - (_state.Backward * _state.CanBackward)) * transform.forward + 
+                ((_state.Right * _state.CanRight) - (_state.Left * _state.CanLeft)) * transform.right;
             Vector3 _projectedMove = Vector3.ProjectOnPlane(_move, _state.GroundNormal);
             if (_state.IsGrounded == 0)
             {
@@ -108,12 +101,14 @@ public class Character : WibblyWobbly {
 		foreach (ITime _timeUser in _timeUsers) {
 			SetExternalAction(_timeUser.PlayVisuals (_time)); 
 		}
+        SmoothArtLerp(Time.deltaTime * GameManager.GameSpeed);
 	}
 	public override void RewindVisuals (float _time)
 	{
 		foreach (ITime _timeUser in _timeUsers) {
 			_timeUser.RewindVisuals (_time);
 		}
+        SmoothArtLerp(Time.deltaTime * GameManager.GameSpeed); 
 	}
     protected override void UseAction(Action _action, float _time)
     {
@@ -230,6 +225,25 @@ public class Character : WibblyWobbly {
 			_currentTarget.Targeted(_dist); 
 		}
 	}
+    public bool WillRotate()
+    {
+        if(_playerControlled && _state.IsMoving())
+        {
+            return _state.XRot != _cam.XRot; 
+        }
+        return false; 
+    }
+    public void FaceCamera()
+    {
+        if (WillRotate())
+        {
+            SetAction(new ValueAction(ActionType.Rotation, RotationDifference()));
+        }
+    }
+    public float RotationDifference()
+    {
+        return _cam.XRot - _state.XRot;
+    }
     public Action CreateTargetAction()
     {
 		return new TargetedAction(ActionType.Activate, _currentTarget, _currentTarget.Position - transform.position); 
@@ -268,38 +282,43 @@ public class Character : WibblyWobbly {
     {
         SetAction(_combat.ActionsToReset(_state.ActionsToReset()));
     }
-    public bool WillRotate()
-    {
-        if (_playerControlled && _state.IsMoving())
-        {
-            return FaceDirection() != transform.forward;  
-        }
-        return false;
-    }
-    Vector3 FaceDirection()
-    {
-        return (_state.Forward - _state.Backward) * _camTrans.forward +
-            (_state.Right - _state.Left) * _camTrans.right;
-    }
-    public void FaceCamera()
-    {
-        if (WillRotate())
-        {
-            Vector3 _diff = FaceDirection() - _state.ForwardVec;
-            _diff.y = 0;  
-            SetAction(new VectorAction(ActionType.Rotation, _diff));
-        }
-    }
-    public float RotationDifference()
-    {
-        return FaceDirection().x - _state.XRot;
-    }
     public void SetStateToKeyboard()
     {
         SetAction(_combat.SetStateToKeyboard(_state.SetStateToKeyboard(this)));
     }
+    #region ArtGO
+    
+    void SmoothArtLerp(float _delta)
+    {
+        Vector3 _facing = GetFacing(); 
+        if(_facing != _artForward && _state.IsMoving())
+        {
+            float _diff = Util.AngleBetweenVector3(_facing, _artForward, transform.up);
+            float _theta = Mathf.Deg2Rad*(_delta / _lerpIncrement * _lerpAmount * _diff);
+            if (Mathf.Abs(_diff) < _lerpThreshold * GameManager.GameSpeed)
+            {
+                _artForward = _facing;
+            }else
+            {
+                Debug.Log(_diff + " | " + _theta + " | " + Mathf.Cos(_theta)); 
+                float x = _artForward.x * Mathf.Cos(_theta) - _artForward.z * Mathf.Sin(_theta);
+                float z = _artForward.z * Mathf.Cos(_theta) + _artForward.x * Mathf.Sin(_theta);
+                _artForward.x = x;
+                _artForward.z = z; 
+            }
+            _artGO.forward = _artForward; 
+        }
+    }
+    Vector3 GetFacing()
+    {
+        Vector3 _forward = (_state.Forward - _state.Backward) * _cam.transform.forward;
+        Vector3 _right = (_state.Right - _state.Left) * _cam.transform.right;
+        return (_forward + _right).normalized; 
+    }
 
-        // Use this for initialization
+    #endregion
+
+    // Use this for initialization
     void Start () {
 		GameManager.RegisterCharacter(this);
 		RegisterWibblyWobbly(); 
@@ -314,7 +333,8 @@ public class Character : WibblyWobbly {
         _inventory = gameObject.GetComponent<Inventory>();
         _renderer = GetComponent<Renderer>();
         _combat = GetComponent<CombatState>();
-        transform.forward = _state.ForwardVec; 
+        _artGO = GetComponentInChildren<Animator>().transform;
+        _artForward = transform.forward; 
         if(_combat == null)
         {
             _combat = gameObject.AddComponent<CombatState>(); 
