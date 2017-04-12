@@ -9,18 +9,15 @@ public class CharacterState
     int _backward = 0;
     int _left = 0;
     int _right = 0;
-    bool _pullingTrigger = false;
+    bool _pullingTrigger = false; 
     float _rotX = 0;
-    Vector3 _forwardVec = new Vector3(1,0,0);
-    public Vector3 ForwardVec { get { return _forwardVec;}} 
     int _canMoveForward = 1;
     int _canMoveBackward = 1;
     int _canMoveLeft = 1;
     int _canMoveRight = 1;
     int _isGrounded = 0;
-    Vector3 _groundNormal = Vector3.zero; 
-    Vector3 _prevPos = Vector3.zero;
-    Quaternion _prevRot = new Quaternion();
+    Vector3 _groundNormal = Vector3.zero;
+    
 	bool _isRunning = false; 
 
     public int Forward { get { return _forward; } set { _forward = value; } }
@@ -35,8 +32,6 @@ public class CharacterState
     public int CanRight { get { return _canMoveRight; } }
     public int IsGrounded { get { return _isGrounded; } }
     public float XRot { get { return _rotX; } }
-    public Vector3 PrevPos { get { return _prevPos; } set { _prevPos = value; } }
-    public Quaternion PrevRot { get { return _prevRot; } set { _prevRot = value; } }
 
     public List<Action> ActionsToReset()
     {
@@ -194,8 +189,7 @@ public class CharacterState
                 _right = 0;
                 break;
             case ActionType.Rotation:
-                Debug.Log(_action.Vector); 
-                _forwardVec += _action.Vector; 
+                _rotX += _action.Value;
                 break;
             case ActionType.Clear:
                 ClearState();
@@ -273,7 +267,7 @@ public class CharacterState
                 _right = 1;
                 break;
             case ActionType.Rotation:
-                _forwardVec -= _action.Vector; 
+                _rotX -= _action.Value;
                 break;
             case ActionType.PullTrigger:
                 _pullingTrigger = false;
