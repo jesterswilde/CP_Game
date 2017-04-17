@@ -6,7 +6,7 @@
 		_MainTex ("Albedo (RGB)", 2D) = "white" {}
 		_Glossiness ("Smoothness", Range(0,1)) = 0.5
 		_Metallic ("Metallic", Range(0,1)) = 0.0
-		_OutlineWidth ("Outline Width", Range(0,5)) = 0.5
+		_OutlineWidth ("Outline Width", Range(0,30)) = 0.5
 		_OutlineColor ("Outline Color", Color) = (1,1,1,1)
 	}
 	SubShader
@@ -26,7 +26,8 @@
 
 			struct appdata {
 				float4 vertex : POSITION;
-				float3 normal : NORMAL;
+				float4 color : COLOR;
+				float3 normal : NORMAL; 
 			};
 	 
 			struct v2f {
@@ -40,11 +41,16 @@
 			v2f vert(appdata v) {
 				// just make a copy of incoming vertex data but scaled according to normal direction
 				v2f o;
+				//v.vertex.xyz += v.color.xyz;
 				o.pos = mul(UNITY_MATRIX_MVP, v.vertex);
-				float3 norm   = mul ((float3x3)UNITY_MATRIX_IT_MV, v.normal);
-				float2 offset = TransformViewToProjection(norm.xy);
-				o.pos.xy += offset * o.pos.z * _OutlineWidth * 0.01;
-				o.color = _OutlineColor;
+				float3 color = v.color.xyz;
+				float4 normColor;
+				normColor.xyz = v.normal;
+				normColor.w = 1;
+				half3 norm = mul((half3x3)UNITY_MATRIX_IT_MV, v.normal);
+				half2 offset = TransformViewToProjection(norm.xy);
+				o.pos.xy += offset * o.pos.z * _OutlineWidth;
+				o.color = normColor;
 				return o;
 			}
 
