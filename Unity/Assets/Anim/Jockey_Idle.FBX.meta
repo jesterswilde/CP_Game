@@ -1,0 +1,217 @@
+fileFormatVersion: 2
+guid: 52e19cd53f39a72488d4b3be91f51772
+timeCreated: 1492549462
+licenseType: Free
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: IKTarget001
+    100002: //RootNode
+    100004: office_jockey_body
+    100006: office_jockey_glasses
+    100008: office_jockey_glasses_rim
+    100010: office_jockey_tie
+    100012: w
+    100014: wgun
+    100016: wHead
+    100018: wLCalf
+    100020: wLCollarbone
+    100022: wLDigit11
+    100024: wLDigit12
+    100026: wLDigit13
+    100028: wLDigit21
+    100030: wLDigit22
+    100032: wLDigit23
+    100034: wLDigit31
+    100036: wLDigit32
+    100038: wLDigit33
+    100040: wLDigit41
+    100042: wLDigit42
+    100044: wLDigit43
+    100046: wLDigit51
+    100048: wLDigit52
+    100050: wLDigit53
+    100052: wLFoot
+    100054: wLForearm
+    100056: wLIKTarget
+    100058: wLPalm
+    100060: wLPlatform
+    100062: wLThigh
+    100064: wLtoe1
+    100066: wLUpperarm
+    100068: wNeck1
+    100070: wNeck2
+    100072: wPelvis
+    100074: wRCalf
+    100076: wRCollarbone
+    100078: wRDigit11
+    100080: wRDigit12
+    100082: wRDigit13
+    100084: wRDigit21
+    100086: wRDigit22
+    100088: wRDigit23
+    100090: wRDigit31
+    100092: wRDigit32
+    100094: wRDigit33
+    100096: wRDigit41
+    100098: wRDigit42
+    100100: wRDigit43
+    100102: wRDigit51
+    100104: wRDigit52
+    100106: wRDigit53
+    100108: wRFoot
+    100110: wRForearm
+    100112: wRibcage
+    100114: wRPalm
+    100116: wRPlatform
+    100118: wRThigh
+    100120: wRtoe1
+    100122: wRUpperarm
+    100124: wSpine1
+    100126: wSpine2
+    100128: wSpine3
+    100130: wSpine4
+    400000: IKTarget001
+    400002: //RootNode
+    400004: office_jockey_body
+    400006: office_jockey_glasses
+    400008: office_jockey_glasses_rim
+    400010: office_jockey_tie
+    400012: w
+    400014: wgun
+    400016: wHead
+    400018: wLCalf
+    400020: wLCollarbone
+    400022: wLDigit11
+    400024: wLDigit12
+    400026: wLDigit13
+    400028: wLDigit21
+    400030: wLDigit22
+    400032: wLDigit23
+    400034: wLDigit31
+    400036: wLDigit32
+    400038: wLDigit33
+    400040: wLDigit41
+    400042: wLDigit42
+    400044: wLDigit43
+    400046: wLDigit51
+    400048: wLDigit52
+    400050: wLDigit53
+    400052: wLFoot
+    400054: wLForearm
+    400056: wLIKTarget
+    400058: wLPalm
+    400060: wLPlatform
+    400062: wLThigh
+    400064: wLtoe1
+    400066: wLUpperarm
+    400068: wNeck1
+    400070: wNeck2
+    400072: wPelvis
+    400074: wRCalf
+    400076: wRCollarbone
+    400078: wRDigit11
+    400080: wRDigit12
+    400082: wRDigit13
+    400084: wRDigit21
+    400086: wRDigit22
+    400088: wRDigit23
+    400090: wRDigit31
+    400092: wRDigit32
+    400094: wRDigit33
+    400096: wRDigit41
+    400098: wRDigit42
+    400100: wRDigit43
+    400102: wRDigit51
+    400104: wRDigit52
+    400106: wRDigit53
+    400108: wRFoot
+    400110: wRForearm
+    400112: wRibcage
+    400114: wRPalm
+    400116: wRPlatform
+    400118: wRThigh
+    400120: wRtoe1
+    400122: wRUpperarm
+    400124: wSpine1
+    400126: wSpine2
+    400128: wSpine3
+    400130: wSpine4
+    4300000: office_jockey_body
+    4300002: office_jockey_glasses_rim
+    4300004: office_jockey_tie
+    4300006: office_jockey_glasses
+    7400000: Take 001
+    9500000: //RootNode
+    13700000: office_jockey_body
+    13700002: office_jockey_glasses
+    13700004: office_jockey_glasses_rim
+    13700006: office_jockey_tie
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
