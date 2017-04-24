@@ -47,7 +47,7 @@ public class AARotate : IAtomicAction
         _remainingRotation = _action.Value;
         _maxRotation = _action.Value;
         _dir = (_action.Value > 0) ? 1 : -1;
-        _target = _action.OriginalVec; 
+        _target = _action.SecondVec; 
         CalculateFinishTime(_action);
     }
     void CalculateFinishTime(Action _action)

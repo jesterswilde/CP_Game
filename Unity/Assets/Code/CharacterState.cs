@@ -54,7 +54,7 @@ public class CharacterState
         }
         return _actions; 
     }
-	public List<Action> SetStateToKeyboard(Character _character)
+	public List<Action> SetStateToKeyboard(Character _character, Vector3 pos, Vector3 rot)
     {
         bool[] _keyboard = PlayerInput.GetAbsKeyboardState(); 
         List<Action> _actions = new List<Action>(); 

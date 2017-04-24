@@ -48,7 +48,7 @@ public class AAMoveTo : IAtomicAction {
         _remaining = _action.Vector;
         _maxVector = _action.Vector;
         _dir = _action.Vector.normalized;
-        _target = _action.OriginalVec;  
+        _target = _action.SecondVec;  
         CalculateFinishTime(_action);
     }
     public Action Unset()

@@ -10,21 +10,22 @@ public class Character : WibblyWobbly {
     [SerializeField]
     float speed = 5;
     [SerializeField]
-    bool _canRewind = true; 
+    bool _canRewind = true;
     public bool CanRewind { get { return _canRewind; } }
     [SerializeField]
-    bool _canDeleteFuture = true; 
+    bool _canDeleteFuture = true;
     public bool CanDeleteFuture { get { return _canDeleteFuture; } }
-    bool _isDead = false; 
+    bool _isDead = false;
     CharacterCam _cam;
     public CharacterCam Cam { get { return _cam; } }
-    Transform _camTrans; 
+    Transform _camTrans;
     public Transform CamPoint { get { return _cam.CameraSpot; } }
     [SerializeField]
     float _maxTargetDistance = 0.1f;
     ITargetable _currentTarget;
     int _rollI;
-    bool _isExtracted; 
+    bool _isExtracted;
+    float _lastLockTime = 0; 
 
     CharacterState _state = new CharacterState();
     Renderer _renderer;
@@ -46,12 +47,17 @@ public class Character : WibblyWobbly {
     }
     public override void Play(float _time)
     {
-        if(_currentTarget != null)
+        if (_currentTarget != null)
         {
             SetAction(_combat.PullTrigger(_time, _currentTarget.Combat), true);
         }
+       if(_lastLockTime + 1 > GameManager.FixedGameTime)
+        {
+            LockFacing();
+            _lastLockTime = GameManager.FixedGameTime; 
+        }
         base.Play(_time);
-		SetExternalAction (_state.AnimState ()); 
+        SetExternalAction(_state.AnimState());
     }
 
     internal string toString()
@@ -69,12 +75,12 @@ public class Character : WibblyWobbly {
             Vector3 _projectedMove = Vector3.ProjectOnPlane(_move, _state.GroundNormal);
             if (_state.IsGrounded == 0)
             {
-                _projectedMove = new Vector3(_projectedMove.x, -10, _projectedMove.z); 
+                _projectedMove = new Vector3(_projectedMove.x, -10, _projectedMove.z);
             }
             transform.position += _projectedMove.normalized * speed * _deltaTime;
-			foreach (ITime _timeUser in _timeUsers) {
-				_timeUser.Act (_deltaTime); 
-			}
+            foreach (ITime _timeUser in _timeUsers) {
+                _timeUser.Act(_deltaTime);
+            }
         }
     }
 
@@ -83,7 +89,7 @@ public class Character : WibblyWobbly {
         if (CanAct())
         {
             transform.forward = _cam.CameraForward(_state.XRot);
-            Vector3 _move = ((_state.Forward * _state.CanForward) - (_state.Backward * _state.CanBackward)) * transform.forward + 
+            Vector3 _move = ((_state.Forward * _state.CanForward) - (_state.Backward * _state.CanBackward)) * transform.forward +
                 ((_state.Right * _state.CanRight) - (_state.Left * _state.CanLeft)) * transform.right;
             Vector3 _projectedMove = Vector3.ProjectOnPlane(_move, _state.GroundNormal);
             if (_state.IsGrounded == 0)
@@ -91,34 +97,34 @@ public class Character : WibblyWobbly {
                 _projectedMove = new Vector3(_projectedMove.x, -10, _projectedMove.z);
             }
             transform.position += _projectedMove.normalized * speed * _deltaTime * -1;
-			foreach (ITime _timeUser in _timeUsers) {
-				_timeUser.RewindAct (_deltaTime); 
-			}
+            foreach (ITime _timeUser in _timeUsers) {
+                _timeUser.RewindAct(_deltaTime);
+            }
         }
     }
-	public override void PlayVisuals (float _time)
-	{
-		foreach (ITime _timeUser in _timeUsers) {
-			SetExternalAction(_timeUser.PlayVisuals (_time)); 
-		}
+    public override void PlayVisuals(float _time)
+    {
+        foreach (ITime _timeUser in _timeUsers) {
+            SetExternalAction(_timeUser.PlayVisuals(_time));
+        }
         SmoothArtLerp(Time.deltaTime * GameManager.GameSpeed);
-	}
-	public override void RewindVisuals (float _time)
-	{
-		foreach (ITime _timeUser in _timeUsers) {
-			_timeUser.RewindVisuals (_time);
-		}
-        SmoothArtLerp(Time.deltaTime * GameManager.GameSpeed); 
-	}
+    }
+    public override void RewindVisuals(float _time)
+    {
+        foreach (ITime _timeUser in _timeUsers) {
+            _timeUser.RewindVisuals(_time);
+        }
+        SmoothArtLerp(Time.deltaTime * GameManager.GameSpeed);
+    }
     protected override void UseAction(Action _action, float _time)
     {
         switch (_action.Type)
         {
             case ActionType.StandingOnSurface:
                 SetExternalAction(new VectorAction(ActionType.LeavingSurface, _state.GroundNormal, true));
-                break; 
+                break;
             case ActionType.Activate:
-				Activate(_action.Target, _action.Vector); 
+                Activate(_action.Target, _action.Vector);
                 return;
             case ActionType.PickUp:
                 _inventory.PickUpItem(_action.Item);
@@ -128,12 +134,12 @@ public class Character : WibblyWobbly {
                 return;
             case ActionType.Extract:
                 _isExtracted = true;
-                return; 
+                return;
         }
-		foreach (ITime _timeUser in _timeUsers) {
-			SetAction(_timeUser.UseAction (_action, _time), true); 
-		}
-        SetAction(_combat.UseAction(_action), true); 
+        foreach (ITime _timeUser in _timeUsers) {
+            SetAction(_timeUser.UseAction(_action, _time), true);
+        }
+        SetAction(_combat.UseAction(_action), true);
         _state.UseAction(_action);
     }
     protected override void ReverseAction(Action _action, float _time)
@@ -141,7 +147,7 @@ public class Character : WibblyWobbly {
         switch (_action.Type)
         {
             case ActionType.Activate:
-                if(_action.Target != null)
+                if (_action.Target != null)
                 {
                     _action.Target.RewindActivation(_action);
                 }
@@ -155,15 +161,16 @@ public class Character : WibblyWobbly {
             case ActionType.Extract:
                 _isExtracted = false;
                 return;
-			case ActionType.LockTrans:
-				transform.position = _action.Vector;
-				transform.rotation = Quaternion.Euler (_action.OriginalVec); 
-				break;
+            case ActionType.LockTrans:
+                transform.position = _action.Vector;
+                transform.rotation = Quaternion.Euler(_action.SecondVec);
+                _lastLockTime = _action.Time; 
+                break;
         }
 
-		foreach (ITime _timeUser in _timeUsers) {
-			_timeUser.ReverseAction (_action, _time); 
-		}
+        foreach (ITime _timeUser in _timeUsers) {
+            _timeUser.ReverseAction(_action, _time);
+        }
         _combat.ReverseAction(_action);
         _state.ReverseAction(_action);
     }
@@ -176,14 +183,14 @@ public class Character : WibblyWobbly {
         }
     }
     #endregion
-    
+
     public string PrintInventory()
     {
-        return gameObject.name + " Escaped with: \n" + _inventory.PrintInventory(); 
+        return gameObject.name + " Escaped with: \n" + _inventory.PrintInventory();
     }
     public void Die()
     {
-        ClearState(); 
+        ClearState();
     }
     public void ReverseDying()
     {
@@ -191,53 +198,54 @@ public class Character : WibblyWobbly {
     }
     public void Activate(ITargetable _target, Vector3 _dir)
     {
-        float _dist = 0; 
-        if(_target != null)
+        float _dist = 0;
+        if (_target != null)
         {
-            _dist = (transform.position - _target.Position).magnitude; 
+            _dist = (transform.position - _target.Position).magnitude;
         }
-        if(_target != null && _target.isActivatable && _dist <_target.MinDistanceToActivate)
+        if (_target != null && _target.isActivatable && _dist < _target.MinDistanceToActivate)
         {
             Ray _ray = new Ray(transform.position, _target.Position - transform.position);
-            RaycastHit _hit; 
-            if(!Physics.Raycast(_ray, out _hit, _dist, GameManager.CollMask))
+            RaycastHit _hit;
+            if (!Physics.Raycast(_ray, out _hit, _dist, GameManager.CollMask))
             {
-				SetExternalAction(_target.Activate(this, _dir)); 
+                SetExternalAction(_target.Activate(this, _dir));
             }
         }
     }
-	public void Target(){
-		ITargetable _target = GameManager.GetTargeted(GameSettings.MaxTargetDistance); 
-		if(_target == null && _currentTarget != null)
-		{
-			_currentTarget.UnTargeted();
-			_currentTarget = _target;
-			return;
-		}
-		if(_target != null)
-		{
-			float _dist = Vector3.Distance (_target.Position, transform.position); 
-			if(_currentTarget != null)
-			{
-				_currentTarget.UnTargeted();
-			}
-			_currentTarget = _target;
-			_currentTarget.Targeted(_dist); 
-		}
-	}
+    public void Target() {
+        ITargetable _target = GameManager.GetTargeted(GameSettings.MaxTargetDistance);
+        if (_target == null && _currentTarget != null)
+        {
+            _currentTarget.UnTargeted();
+            _currentTarget = _target;
+            return;
+        }
+        if (_target != null)
+        {
+            float _dist = Vector3.Distance(_target.Position, transform.position);
+            if (_currentTarget != null)
+            {
+                _currentTarget.UnTargeted();
+            }
+            _currentTarget = _target;
+            _currentTarget.Targeted(_dist);
+        }
+    }
     public bool WillRotate()
     {
-        if(_playerControlled && _state.IsMoving())
+        if (_playerControlled && _state.IsMoving())
         {
-            return _state.XRot != _cam.XRot; 
+            return _state.XRot != _cam.XRot;
         }
-        return false; 
+        return false;
     }
     public void FaceCamera()
     {
         if (WillRotate())
         {
             SetAction(new ValueAction(ActionType.Rotation, RotationDifference()));
+            //LockFacing(); 
         }
     }
     public float RotationDifference()
@@ -246,32 +254,32 @@ public class Character : WibblyWobbly {
     }
     public Action CreateTargetAction()
     {
-		return new TargetedAction(ActionType.Activate, _currentTarget, _currentTarget.Position - transform.position); 
+        return new TargetedAction(ActionType.Activate, _currentTarget, _currentTarget.Position - transform.position);
     }
 
     public void SetAsActivePlayer()
     {
         _playerControlled = true;
-        GetComponent<MeshRenderer>().material.color = Color.red; 
+        GetComponent<MeshRenderer>().material.color = Color.red;
     }
     public void SetAsInactivePlayer()
     {
         _playerControlled = false;
         GetComponent<MeshRenderer>().material.color = Color.white;
-        SetAction(_state.ActionsToReset()); 
-        _history.AddToHead(new BasicAction(ActionType.Clear, _history.HeadAction.Time)); 
+        SetAction(_state.ActionsToReset());
+        _history.AddToHead(new BasicAction(ActionType.Clear, _history.HeadAction.Time));
     }
     public float GetHeadTimestamp()
     {
-        if(_history.HeadAction == null)
+        if (_history.HeadAction == null)
         {
-            return 0; 
+            return 0;
         }
-        return _history.HeadAction.Time; 
+        return _history.HeadAction.Time;
     }
     public bool IsPastMostRecentAction()
     {
-        return _history.IsPointerAtHead(); 
+        return _history.IsPointerAtHead();
     }
     public void DeleteFuture()
     {
@@ -284,36 +292,40 @@ public class Character : WibblyWobbly {
     }
     public void SetStateToKeyboard()
     {
-        SetAction(_combat.SetStateToKeyboard(_state.SetStateToKeyboard(this)));
+        SetAction(_combat.SetStateToKeyboard(_state.SetStateToKeyboard(this, transform.position, transform.rotation.eulerAngles)));
     }
     #region ArtGO
-    
+
     void SmoothArtLerp(float _delta)
     {
-        Vector3 _facing = GetFacing(); 
-        if(_facing != _artForward && _state.IsMoving())
+        Vector3 _facing = GetFacing();
+        if (_facing != _artForward && _state.IsMoving())
         {
             float _diff = Util.AngleBetweenVector3(_facing, _artForward, transform.up);
-            float _theta = Mathf.Deg2Rad*(_delta / _lerpIncrement * _lerpAmount * _diff);
+            float _theta = Mathf.Deg2Rad * (_delta / _lerpIncrement * _lerpAmount * _diff);
             if (Mathf.Abs(_diff) < _lerpThreshold * GameManager.GameSpeed)
             {
                 _artForward = _facing;
-            }else
+            } else
             {
-                Debug.Log(_diff + " | " + _theta + " | " + Mathf.Cos(_theta)); 
+                Debug.Log(_diff + " | " + _theta + " | " + Mathf.Cos(_theta));
                 float x = _artForward.x * Mathf.Cos(_theta) - _artForward.z * Mathf.Sin(_theta);
                 float z = _artForward.z * Mathf.Cos(_theta) + _artForward.x * Mathf.Sin(_theta);
                 _artForward.x = x;
-                _artForward.z = z; 
+                _artForward.z = z;
             }
-            _artGO.forward = _artForward; 
+            _artGO.forward = _artForward;
         }
     }
     Vector3 GetFacing()
     {
         Vector3 _forward = (_state.Forward - _state.Backward) * _cam.transform.forward;
         Vector3 _right = (_state.Right - _state.Left) * _cam.transform.right;
-        return (_forward + _right).normalized; 
+        return (_forward + _right).normalized;
+    }
+    void LockFacing()
+    {
+        SetExternalAction(new DirTargetAction(ActionType.LockTrans, transform.position, transform.rotation.eulerAngles, true));
     }
 
     #endregion
