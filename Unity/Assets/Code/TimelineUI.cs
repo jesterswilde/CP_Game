@@ -43,11 +43,11 @@ public class TimelineUI : MonoBehaviour {
     void Awake()
     {
         tui = (this);
-        TimeCounter.RegisterTimeline(this);
     }
     void Start()
     {
         SetPortraitChara();
+        TimeCounter.RegisterTimeline(this);
     }
 
     public void SetCharacterNames(Character _character)
