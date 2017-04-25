@@ -1,0 +1,167 @@
+fileFormatVersion: 2
+guid: 3cf6dc1813d1abb4e8e0feaa558ff0b5
+timeCreated: 1493088579
+licenseType: Free
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: //RootNode
+    100002: train_car
+    100004: train_car_glass
+    100006: door_train
+    100008: door_train001
+    100010: door_train002
+    100012: door_train003
+    100014: door_train004
+    100016: door_train005
+    100018: door_train006
+    100020: door_train007
+    100022: door_train_glass
+    100024: door_train_glass001
+    100026: door_train_glass002
+    100028: door_train_glass003
+    100030: door_train_glass004
+    100032: door_train_glass005
+    100034: door_train_glass006
+    100036: door_train_glass007
+    400000: //RootNode
+    400002: train_car
+    400004: train_car_glass
+    400006: door_train
+    400008: door_train001
+    400010: door_train002
+    400012: door_train003
+    400014: door_train004
+    400016: door_train005
+    400018: door_train006
+    400020: door_train007
+    400022: door_train_glass
+    400024: door_train_glass001
+    400026: door_train_glass002
+    400028: door_train_glass003
+    400030: door_train_glass004
+    400032: door_train_glass005
+    400034: door_train_glass006
+    400036: door_train_glass007
+    2300000: train_car
+    2300002: train_car_glass
+    2300004: door_train
+    2300006: door_train001
+    2300008: door_train002
+    2300010: door_train003
+    2300012: door_train004
+    2300014: door_train005
+    2300016: door_train006
+    2300018: door_train007
+    2300020: door_train_glass
+    2300022: door_train_glass001
+    2300024: door_train_glass002
+    2300026: door_train_glass003
+    2300028: door_train_glass004
+    2300030: door_train_glass005
+    2300032: door_train_glass006
+    2300034: door_train_glass007
+    3300000: train_car
+    3300002: train_car_glass
+    3300004: door_train
+    3300006: door_train001
+    3300008: door_train002
+    3300010: door_train003
+    3300012: door_train004
+    3300014: door_train005
+    3300016: door_train006
+    3300018: door_train007
+    3300020: door_train_glass
+    3300022: door_train_glass001
+    3300024: door_train_glass002
+    3300026: door_train_glass003
+    3300028: door_train_glass004
+    3300030: door_train_glass005
+    3300032: door_train_glass006
+    3300034: door_train_glass007
+    4300000: train_car
+    4300002: train_car_glass
+    4300004: door_train
+    4300006: door_train_glass
+    4300008: door_train001
+    4300010: door_train_glass001
+    4300012: door_train002
+    4300014: door_train_glass002
+    4300016: door_train003
+    4300018: door_train_glass003
+    4300020: door_train004
+    4300022: door_train_glass004
+    4300024: door_train005
+    4300026: door_train_glass005
+    4300028: door_train_glass006
+    4300030: door_train_glass007
+    4300032: door_train006
+    4300034: door_train007
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
