@@ -154,7 +154,7 @@ public class Interactable : WibblyWobbly, IAI {
                 break; 
 			case ActionType.LockTrans:
 				transform.position = _action.Vector; 
-				transform.rotation = Quaternion.Euler (_action.OriginalVec);
+				transform.rotation = Quaternion.Euler (_action.SecondVec);
 				break;
             case ActionType.AIMoveForward:
             case ActionType.AIMoveTo:

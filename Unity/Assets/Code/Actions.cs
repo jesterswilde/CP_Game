@@ -21,7 +21,7 @@ public abstract class Action
     public virtual IBehavior Behavior { get { return null; } }
     public virtual InvenItem Item { get { return null; } }
     public virtual int IValue { get { return int.MinValue; } }
-    public virtual Vector3 OriginalVec { get { return Vector3.zero; } }
+    public virtual Vector3 SecondVec { get { return Vector3.zero; } }
 	public abstract int SerialIndex{ get ; }
 	public virtual Action Parse (List<string> _tokens){
 		return null;
@@ -374,7 +374,7 @@ public class DirTargetAction : Action
         _time = time;
     }
     public override Vector3 Vector { get { return _dir; } }
-	public override Vector3 OriginalVec { get { return _target; } }
+	public override Vector3 SecondVec { get { return _target; } }
 	public override int SerialIndex { get { return 12; } }
 }
 
@@ -413,7 +413,7 @@ public class ValueTargetAction : Action
         _time = time;
     }
     public override float Value { get { return _value; } }
-	public override Vector3 OriginalVec { get { return _target; } }
+	public override Vector3 SecondVec { get { return _target; } }
 	public override int SerialIndex { get { return 13; } }
 }
 

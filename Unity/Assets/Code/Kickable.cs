@@ -91,7 +91,7 @@ public class Kickable : WibblyWobbly, ITargetable {
 			switch (_action.Type) {
 			case(ActionType.Deactivate):
 				//Here my morals die. 
-				transform.position = _action.OriginalVec; 
+				transform.position = _action.SecondVec; 
 				_speed = _action.Vector.magnitude; 
 				_dir = _action.Vector.normalized;
 				break; //my heart

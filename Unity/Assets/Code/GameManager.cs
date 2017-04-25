@@ -30,6 +30,7 @@ public class GameManager : MonoBehaviour {
     public static Character ActiveCharacter { get { return t._activeCharacter; } }
     List<Character> _characters = new List<Character>();
     public static List<Character> Characters { get { return t._characters; } } 
+    List<CharaDisplay> _charaDisplays = new List<CharaDisplay>();
     int _characterIndex = 0;
     List<WibblyWobbly> _timeyWimeys = new List<WibblyWobbly>();
     List<ITargetable> _targetables = new List<ITargetable>();
@@ -243,6 +244,10 @@ public class GameManager : MonoBehaviour {
         SetActiveCharacter(_nextCharacter);
         TimeCounter.SwitchedToCharacter(_nextCharacter); 
     }
+    public static void RegsisterDisplayChara(CharaDisplay _display)
+    {  
+        t._charaDisplays.Add(_display); 
+    }
     public static void SetActiveCharacter(int index)
     {
         t._characterIndex = index;
@@ -259,6 +264,10 @@ public class GameManager : MonoBehaviour {
         {
             t._activeCharacter.SetAsActivePlayer(); 
             SwitchCamera(t._activeCharacter.Cam); 
+        }
+        foreach (CharaDisplay _display in t._charaDisplays)
+        {
+            _display.SwitchedCharacter(t._activeCharacter);
         }
     }
 
