@@ -16,6 +16,14 @@ ModelImporter:
     100016: floor_3
     100018: floor_main_A
     100020: floor_main_B
+    100022: market_office
+    100024: market_otaku_floor
+    100026: merc_market
+    100028: office_floor
+    100030: otaku
+    100032: merc_kitchen
+    100034: Text001
+    100036: door_gate_A
     400000: building_whale
     400002: //RootNode
     400004: market_buildings
@@ -27,6 +35,14 @@ ModelImporter:
     400016: floor_3
     400018: floor_main_A
     400020: floor_main_B
+    400022: market_office
+    400024: market_otaku_floor
+    400026: merc_market
+    400028: office_floor
+    400030: otaku
+    400032: merc_kitchen
+    400034: Text001
+    400036: door_gate_A
     2300000: building_whale
     2300002: market_buildings
     2300004: market_centerSplit
@@ -37,6 +53,14 @@ ModelImporter:
     2300014: floor_3
     2300016: floor_main_A
     2300018: floor_main_B
+    2300020: market_office
+    2300022: market_otaku_floor
+    2300024: merc_market
+    2300026: office_floor
+    2300028: otaku
+    2300030: merc_kitchen
+    2300032: Text001
+    2300034: door_gate_A
     3300000: building_whale
     3300002: market_buildings
     3300004: market_centerSplit
@@ -47,6 +71,14 @@ ModelImporter:
     3300014: floor_3
     3300016: floor_main_A
     3300018: floor_main_B
+    3300020: market_office
+    3300022: market_otaku_floor
+    3300024: merc_market
+    3300026: office_floor
+    3300028: otaku
+    3300030: merc_kitchen
+    3300032: Text001
+    3300034: door_gate_A
     4300000: market_buildings
     4300002: market_centerSplit
     4300004: building_whale
@@ -57,6 +89,14 @@ ModelImporter:
     4300014: floor_3
     4300016: floor_main_A
     4300018: floor_main_B
+    4300020: market_office
+    4300022: market_otaku_floor
+    4300024: otaku
+    4300026: office_floor
+    4300028: merc_market
+    4300030: merc_kitchen
+    4300032: Text001
+    4300034: door_gate_A
   materials:
     importMaterials: 1
     materialName: 0
