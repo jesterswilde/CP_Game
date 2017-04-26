@@ -21,6 +21,9 @@ ModelImporter:
     100026: merc_market
     100028: office_floor
     100030: otaku
+    100032: merc_kitchen
+    100034: Text001
+    100036: door_gate_A
     400000: building_whale
     400002: //RootNode
     400004: market_buildings
@@ -37,6 +40,9 @@ ModelImporter:
     400026: merc_market
     400028: office_floor
     400030: otaku
+    400032: merc_kitchen
+    400034: Text001
+    400036: door_gate_A
     2300000: building_whale
     2300002: market_buildings
     2300004: market_centerSplit
@@ -52,6 +58,9 @@ ModelImporter:
     2300024: merc_market
     2300026: office_floor
     2300028: otaku
+    2300030: merc_kitchen
+    2300032: Text001
+    2300034: door_gate_A
     3300000: building_whale
     3300002: market_buildings
     3300004: market_centerSplit
@@ -67,6 +76,9 @@ ModelImporter:
     3300024: merc_market
     3300026: office_floor
     3300028: otaku
+    3300030: merc_kitchen
+    3300032: Text001
+    3300034: door_gate_A
     4300000: market_buildings
     4300002: market_centerSplit
     4300004: building_whale
@@ -82,6 +94,9 @@ ModelImporter:
     4300024: otaku
     4300026: office_floor
     4300028: merc_market
+    4300030: merc_kitchen
+    4300032: Text001
+    4300034: door_gate_A
   materials:
     importMaterials: 1
     materialName: 0
