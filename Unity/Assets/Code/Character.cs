@@ -51,8 +51,9 @@ public class Character : WibblyWobbly {
         {
             SetAction(_combat.PullTrigger(_time, _currentTarget.Combat), true);
         }
-       if(_lastLockTime + 1 > GameManager.FixedGameTime)
+       if(_lastLockTime + 1 < GameManager.FixedGameTime && _history.HeadAction.Type != ActionType.LockTrans)
         {
+            Debug.Log("locking");
             LockFacing();
             _lastLockTime = GameManager.FixedGameTime; 
         }
@@ -308,7 +309,6 @@ public class Character : WibblyWobbly {
                 _artForward = _facing;
             } else
             {
-                Debug.Log(_diff + " | " + _theta + " | " + Mathf.Cos(_theta));
                 float x = _artForward.x * Mathf.Cos(_theta) - _artForward.z * Mathf.Sin(_theta);
                 float z = _artForward.z * Mathf.Cos(_theta) + _artForward.x * Mathf.Sin(_theta);
                 _artForward.x = x;
