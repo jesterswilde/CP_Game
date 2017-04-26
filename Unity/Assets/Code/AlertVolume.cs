@@ -11,35 +11,52 @@ public class AlertVolume : MonoBehaviour {
     [SerializeField]
     LayerMask _collMask;
     int _count = 0;
-    RequiredItems _requiredItems; 
+    List<IRequire> _activationRequirements = new List<IRequire>();
 
+
+    bool MeetsRequirements(Character _character)
+    {
+        return _activationRequirements.All((_req) => _req.AllowActivation(_character));
+    }
     void OnTriggerEnter(Collider _coll)
     {
-        if (Util.LayerMaskContainsLayer(_collMask, _coll.gameObject.layer))
+       Character _character = Util.GetComponentInHierarchy<Character>(_coll.gameObject); 
+        if (Util.LayerMaskContainsLayer(_collMask, _coll.gameObject.layer) && MeetsRequirements(_character))
         {
             _count++;
             if (_count == 1)
             {
-                Character _character = Util.GetComponentInHierarchy<Character>(_coll.gameObject); 
                 foreach(AlertActions _target in _alerts)
                 {
                     _target.Interactable.ExternalTrigger(_target.EnterTask, _target.Enter, _character); 
                 }
+                List<Action> _actions = new List<Action>();
+                foreach (IRequire _req in _activationRequirements)
+                {
+                    _req.ActivationConsequences().AddTo(_actions);
+                }
+                _character.SetAction(_actions);
             }
         }
     }
     void OnTriggerExit(Collider _coll)
     {
-        if (Util.LayerMaskContainsLayer(_collMask, _coll.gameObject.layer))
+        Character _character = Util.GetComponentInHierarchy<Character>(_coll.gameObject);
+        if (Util.LayerMaskContainsLayer(_collMask, _coll.gameObject.layer) && MeetsRequirements(_character))
         {
             _count--;
             if (_count == 0)
             {
-                Character _character = Util.GetComponentInHierarchy<Character>(_coll.gameObject); 
                 foreach (AlertActions _target in _alerts)
                 {
                     _target.Interactable.ExternalTrigger(_target.ExitTask, _target.Exit, _character);
                 }
+                List<Action> _actions = new List<Action>();
+                foreach (IRequire _req in _activationRequirements)
+                {
+                    _req.ActivationConsequences().AddTo(_actions);
+                }
+                _character.SetAction(_actions);
             }
         }
         Debug.Log("Unlaunching: " + _count);
@@ -47,7 +64,7 @@ public class AlertVolume : MonoBehaviour {
     }
     void Awake()
     {
-        _requiredItems = GetComponent<RequiredItems>(); 
+        _activationRequirements = GetComponents<Component>().Where((Component _comp) => _comp is IRequire).Select((_comp) => _comp as IRequire).ToList();
     }
 }
 [Serializable]

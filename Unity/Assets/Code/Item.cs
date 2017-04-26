@@ -15,6 +15,9 @@ public class Item : MonoBehaviour, ITargetable {
     bool _isPhysical = false;
     public bool IsPhysical { get { return _isPhysical; } }
     [SerializeField]
+    bool _isGlobal = false; 
+    public bool IsGlobal { get { return _isGlobal; } }
+    [SerializeField]
     float _minDistanceToActivate = 2f;
 
     bool _isHeld = false;
@@ -23,6 +26,39 @@ public class Item : MonoBehaviour, ITargetable {
     CombatState _combat;
 	Material _baseMaterial;
 	List<IRequire> _activationRequirements = new List<IRequire> (); 
+
+
+    public static bool HasItem(string _name)
+    {
+        return HasItem(_name, 1); 
+    }
+    public static bool HasItem(string _name, float _amountNeeded)
+    {
+        float test = -1;
+        _globalItems.TryGetValue(_name, out test); 
+        Debug.Log("global trying " + _name + " | " + _amountNeeded + " | " + test);
+        float _amountHas;
+        return _globalItems.TryGetValue(_name, out _amountHas) && (_amountHas >= _amountNeeded); 
+    }
+    public static void AcquireItem(string _name, float _amount)
+    {
+        if (_globalItems.ContainsKey(_name))
+        {
+            _globalItems[_name] += _amount;
+        }else
+        {
+            _globalItems[_name] = _amount; 
+        }
+    }
+    public static bool RemoveItem(string _name, float _amount)
+    {
+        if (_globalItems.ContainsKey(_name))
+        {
+            return false; 
+        }
+        _globalItems[_name] = Math.Max(0, _globalItems[_name] - _amount); 
+        return true; 
+    }
 
     public bool IsVisible
     { get { return _renderer.isVisible; }}
@@ -37,10 +73,10 @@ public class Item : MonoBehaviour, ITargetable {
 
     public GameObject Go { get { return gameObject;  } }
     public float MinDistanceToActivate { get { return _minDistanceToActivate; } }
-
+    static Dictionary<string, float> _globalItems = new Dictionary<string, float>(); 
     public void PickedUp()
     {
-        Debug.Log("picking up " + _itemName);  ; 
+        Debug.Log("picking up " + _itemName);
         if(!_isHeld)
         {
             _isHeld = true;
@@ -141,7 +177,7 @@ public class Item : MonoBehaviour, ITargetable {
     }
     void Start()
     {
-        GameManager.RegisterTargetable(this); 
+        GameManager.RegisterTargetable(this);
     }
 }
 

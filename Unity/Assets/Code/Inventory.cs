@@ -34,18 +34,30 @@ public class Inventory : MonoBehaviour {
     }
     public void PickUpItem(InvenItem _item)
     {
-        if (_items.ContainsKey(_item.ItemName))
+        if (_item.Global)
         {
-            _items[_item.ItemName] += _item.Amount;
-        }else
+            Item.AcquireItem(_item.ItemName, _item.Amount); 
+        }
+        else
         {
-            _items[_item.ItemName] = _item.Amount; 
+            if (_items.ContainsKey(_item.ItemName))
+            {
+                _items[_item.ItemName] += _item.Amount;
+            }else
+            {
+                _items[_item.ItemName] = _item.Amount; 
+            }
         }
         _item.PickUp(); 
     }
     public bool RemoveItem(InvenItem _item)
     {
-        _item.PutDown(); 
+        _item.PutDown();
+        if (_item.Global)
+        {
+            Debug.Log("removing global"); 
+            return Item.RemoveItem(_item.ItemName, _item.Amount); 
+        }
         return RemoveItem(_item.ItemName, _item.Amount); 
     }
     public bool RemoveItem(string _name, float _amount)

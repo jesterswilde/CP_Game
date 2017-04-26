@@ -3,6 +3,16 @@ using UnityEngine;
 using System.Collections;
 using UnityEditor;
 
+
+[Serializable]
+public class GenericKVB<K, V, B>
+{
+    public K Key;
+    public V Value;
+    public B Global; 
+}
+[Serializable]
+public class StrIntBool : GenericKVB<string, int, Boolean> { }; 
 [Serializable]
 public class GenericKVP<K, V>
 {
