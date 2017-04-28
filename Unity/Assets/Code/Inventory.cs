@@ -55,7 +55,6 @@ public class Inventory : MonoBehaviour {
         _item.PutDown();
         if (_item.Global)
         {
-            Debug.Log("removing global"); 
             return Item.RemoveItem(_item.ItemName, _item.Amount); 
         }
         return RemoveItem(_item.ItemName, _item.Amount); 

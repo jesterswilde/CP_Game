@@ -52,10 +52,9 @@ public class Character : WibblyWobbly {
             SetAction(_combat.PullTrigger(_time, _currentTarget.Combat), true);
         }
        if(_lastLockTime + 1 < GameManager.FixedGameTime 
-            && _history.HeadAction.Type != ActionType.LockTrans
-            && _history.HeadAction.Type != ActionType.Null)
+            && (!_history.IsPointerAtHead() || _playerControlled))
         {
-            Debug.Log("locking");
+            Debug.Log("locking " + name + !_history.IsPointerAtHead() + " | " + _playerControlled);
             LockFacing();
             _lastLockTime = GameManager.FixedGameTime; 
         }

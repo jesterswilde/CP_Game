@@ -36,7 +36,6 @@ public class Item : MonoBehaviour, ITargetable {
     {
         float test = -1;
         _globalItems.TryGetValue(_name, out test); 
-        Debug.Log("global trying " + _name + " | " + _amountNeeded + " | " + test);
         float _amountHas;
         return _globalItems.TryGetValue(_name, out _amountHas) && (_amountHas >= _amountNeeded); 
     }
@@ -52,10 +51,11 @@ public class Item : MonoBehaviour, ITargetable {
     }
     public static bool RemoveItem(string _name, float _amount)
     {
-        if (_globalItems.ContainsKey(_name))
+        if (!_globalItems.ContainsKey(_name))
         {
             return false; 
         }
+        Debug.Log(_globalItems[_name] + " | " + _amount);
         _globalItems[_name] = Math.Max(0, _globalItems[_name] - _amount); 
         return true; 
     }
