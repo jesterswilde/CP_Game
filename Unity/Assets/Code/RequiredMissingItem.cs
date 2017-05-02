@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
-public class RequiredMissingItem : MonoBehaviour {
+public class RequiredMissingItem : MonoBehaviour, IRequire {
 
     [SerializeField]
     List<StrIntBool> _requiredItems;
@@ -38,6 +38,7 @@ public class RequiredMissingItem : MonoBehaviour {
             }
             else
             {
+            Debug.Log(!Item.HasItem(_kvp.Key, _kvp.Value));
                 return !Item.HasItem(_kvp.Key, _kvp.Value);
             }
         });

@@ -54,7 +54,6 @@ public class Character : WibblyWobbly {
        if(_lastLockTime + 1 < GameManager.FixedGameTime 
             && (!_history.IsPointerAtHead() || _playerControlled))
         {
-            Debug.Log("locking " + name + !_history.IsPointerAtHead() + " | " + _playerControlled);
             LockFacing();
             _lastLockTime = GameManager.FixedGameTime; 
         }

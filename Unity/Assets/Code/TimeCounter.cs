@@ -200,19 +200,19 @@ public class TimeCounter : MonoBehaviour {
         {
             if (_objText[i] == "0")
             {
-                _objectiveUI[i].SetMainVisibility(false);
+                //_objectiveUI[i].SetMainVisibility(false);
             }
             else
             {
-                _objectiveUI[i].SetMainVisibility(true);
+                /*_objectiveUI[i].SetMainVisibility(true);
                 _objectiveUI[i].SetText(_objText[i]);
-                _objectiveUI[i].SetIntVisibility(false);
+                _objectiveUI[i].CompleteQuest(false);*/
             }
         }
     }
     public void ObjectiveComplete (int number, bool visibility)
     {
-        _objectiveUI[number].SetIntVisibility(visibility);
+        _objectiveUI[number].CompleteQuest(visibility);
     }
     public static void RegisterTimeline(TimelineUI _timeline)
     {

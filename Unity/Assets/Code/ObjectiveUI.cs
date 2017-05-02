@@ -18,21 +18,8 @@ public class ObjectiveUI : MonoBehaviour
             _text[i].text = _content;
         }
     }
-
-    public void SetMainVisibility(bool visibility)
-    {
-        for (int i = 0; i < _hexExterior.Length; i++)
-        {
-            _hexExterior[i].enabled = visibility;
-        }
-        for(int i = 0; i < _text.Length; i++)
-        {
-            _text[i].enabled = visibility;
-        }
-        SetIntVisibility(visibility);        
-    }
-
-    public void SetIntVisibility(bool visibility)
+ 
+    public void CompleteQuest(bool visibility)
     {
         for(int i = 0; i < _hexInterior.Length; i++)
         {

@@ -236,6 +236,7 @@ public class Interactable : WibblyWobbly, IAI {
     }
     public virtual void ExternalTrigger(Task _task, TriggerType _trigger, Character _character  )
     {
+        Debug.Log("External talsk received"); 
         if (GameManager.IsPlaying)
         {
             if(_task != null)
@@ -263,6 +264,7 @@ public class Interactable : WibblyWobbly, IAI {
     {
         if (GameManager.IsPlaying)
         {
+            Debug.Log("setting task"); 
             UnloadAll(); 
             _task.SimulateTask(this, GameManager.FixedGameTime, index); 
         }

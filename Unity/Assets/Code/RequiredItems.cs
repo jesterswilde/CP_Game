@@ -4,7 +4,7 @@ using UnityEngine;
 using System.Linq; 
 
 public class RequiredItems : MonoBehaviour, IRequire {
-
+    
     [SerializeField]
     List<StrIntBool> _requiredItems;
     [SerializeField]

@@ -26,6 +26,7 @@ public class AlertVolume : MonoBehaviour {
             _count++;
             if (_count == 1)
             {
+                Debug.Log("Alerting"); 
                 foreach(AlertActions _target in _alerts)
                 {
                     _target.Interactable.ExternalTrigger(_target.EnterTask, _target.Enter, _character); 
@@ -59,8 +60,6 @@ public class AlertVolume : MonoBehaviour {
                 _character.SetAction(_actions);
             }
         }
-        Debug.Log("Unlaunching: " + _count);
-
     }
     void Awake()
     {

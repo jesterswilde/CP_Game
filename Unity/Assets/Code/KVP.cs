@@ -18,11 +18,24 @@ public class GenericKVP<K, V>
 {
     public K Key;
     public V Value;
+    public GenericKVP(K _key, V _value)
+    {
+        Key = _key;
+        Value = _value; 
+    }
+    public GenericKVP() { }
 }
 [Serializable]
 public class StringObjectKVP : GenericKVP<string, UnityEngine.Object> { }
 [Serializable]
-public class StringIntKVP : GenericKVP<string, int> { }; 
+public class StringIntKVP : GenericKVP<string, int> {
+    public StringIntKVP(string _k, int _v)
+    {
+        Key = _k;
+        Value = _v; 
+    }
+    public StringIntKVP() { }
+};  
 
 [CustomPropertyDrawer(typeof(StringObjectKVP))]
 public class StringObjectDrawer : PropertyDrawer
