@@ -23,6 +23,15 @@ ModelImporter:
     100030: office_3_window_pane005
     100032: office_3_window_pane006
     100034: //RootNode
+    100036: balconys
+    100038: bathroom
+    100040: bathroom001
+    100042: floor_up
+    100044: main_room_floor
+    100046: office_floor
+    100048: office_walls_2
+    100050: rope_line
+    100052: chara_body
     400000: Box011
     400002: office_3
     400004: office_3_floor
@@ -41,6 +50,15 @@ ModelImporter:
     400030: office_3_window_pane005
     400032: office_3_window_pane006
     400034: //RootNode
+    400036: balconys
+    400038: bathroom
+    400040: bathroom001
+    400042: floor_up
+    400044: main_room_floor
+    400046: office_floor
+    400048: office_walls_2
+    400050: rope_line
+    400052: chara_body
     2300000: Box011
     2300002: office_3
     2300004: office_3_floor
@@ -58,6 +76,15 @@ ModelImporter:
     2300028: office_3_window_pane004
     2300030: office_3_window_pane005
     2300032: office_3_window_pane006
+    2300034: balconys
+    2300036: bathroom
+    2300038: bathroom001
+    2300040: floor_up
+    2300042: main_room_floor
+    2300044: office_floor
+    2300046: office_walls_2
+    2300048: rope_line
+    2300050: chara_body
     3300000: Box011
     3300002: office_3
     3300004: office_3_floor
@@ -75,6 +102,15 @@ ModelImporter:
     3300028: office_3_window_pane004
     3300030: office_3_window_pane005
     3300032: office_3_window_pane006
+    3300034: balconys
+    3300036: bathroom
+    3300038: bathroom001
+    3300040: floor_up
+    3300042: main_room_floor
+    3300044: office_floor
+    3300046: office_walls_2
+    3300048: rope_line
+    3300050: chara_body
     4300000: office_3
     4300002: office_3_floor
     4300004: Box011
@@ -92,6 +128,15 @@ ModelImporter:
     4300028: office_3_window_pane005
     4300030: office_3_window006
     4300032: office_3_window_pane006
+    4300034: rope_line
+    4300036: office_walls_2
+    4300038: balconys
+    4300040: bathroom
+    4300042: bathroom001
+    4300044: office_floor
+    4300046: floor_up
+    4300048: main_room_floor
+    4300050: chara_body
   materials:
     importMaterials: 1
     materialName: 0
