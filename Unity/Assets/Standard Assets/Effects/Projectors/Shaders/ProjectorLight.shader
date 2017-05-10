@@ -1,11 +1,12 @@
 // Upgrade NOTE: replaced '_Projector' with 'unity_Projector'
 // Upgrade NOTE: replaced '_ProjectorClip' with 'unity_ProjectorClip'
 
-Shader "Projector/Light" {
+Shader "Projector/LightNoBack" {
 	Properties {
 		_Color ("Main Color", Color) = (1,1,1,1)
 		_ShadowTex ("Cookie", 2D) = "" {}
 		_FalloffTex ("FallOff", 2D) = "" {}
+		_Normal("ProjectorNormal", Color) =  (0,0,0,0)
 	}
 	
 	Subshader {
@@ -27,17 +28,24 @@ Shader "Projector/Light" {
 				float4 uvFalloff : TEXCOORD1;
 				UNITY_FOG_COORDS(2)
 				float4 pos : SV_POSITION;
+				float a : TEXCOORD2; 
 			};
-			
+			struct io {
+				float4 vertex: POSITION;
+				float3 normal : NORMAL;
+			};
 			float4x4 unity_Projector;
 			float4x4 unity_ProjectorClip;
+			fixed4 _Normal; 
 			
-			v2f vert (float4 vertex : POSITION)
+			v2f vert (io i)
 			{
 				v2f o;
-				o.pos = mul (UNITY_MATRIX_MVP, vertex);
-				o.uvShadow = mul (unity_Projector, vertex);
-				o.uvFalloff = mul (unity_ProjectorClip, vertex);
+				o.pos = mul (UNITY_MATRIX_MVP, i.vertex);
+				o.uvShadow = mul (unity_Projector, i.vertex);
+				o.uvFalloff = mul (unity_ProjectorClip, i.vertex);
+				o.a = dot(i.normal, _Normal.xyz);
+				o.a = (o.a < 0) ? 1 : 0;
 				UNITY_TRANSFER_FOG(o,o.pos);
 				return o;
 			}
@@ -53,7 +61,7 @@ Shader "Projector/Light" {
 				texS.a = 1.0-texS.a;
 	
 				fixed4 texF = tex2Dproj (_FalloffTex, UNITY_PROJ_COORD(i.uvFalloff));
-				fixed4 res = texS * texF.a;
+				fixed4 res = texS * texF.a * i.a;
 
 				UNITY_APPLY_FOG_COLOR(i.fogCoord, res, fixed4(0,0,0,0));
 				return res;
