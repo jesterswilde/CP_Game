@@ -6,7 +6,8 @@ Shader "Projector/LightNoBack" {
 		_Color ("Main Color", Color) = (1,1,1,1)
 		_ShadowTex ("Cookie", 2D) = "" {}
 		_FalloffTex ("FallOff", 2D) = "" {}
-		_Normal("ProjectorNormal", Color) =  (0,0,0,0)
+		_Intensity ("Intensity", Range(0, 10)) = 1	
+		_Normal("ProjectorNormal", Vector) =  (0,0,0,0)
 	}
 	
 	Subshader {
@@ -53,7 +54,8 @@ Shader "Projector/LightNoBack" {
 			fixed4 _Color;
 			sampler2D _ShadowTex;
 			sampler2D _FalloffTex;
-			
+			float _Intensity;
+
 			fixed4 frag (v2f i) : SV_Target
 			{
 				fixed4 texS = tex2Dproj (_ShadowTex, UNITY_PROJ_COORD(i.uvShadow));
@@ -61,7 +63,7 @@ Shader "Projector/LightNoBack" {
 				texS.a = 1.0-texS.a;
 	
 				fixed4 texF = tex2Dproj (_FalloffTex, UNITY_PROJ_COORD(i.uvFalloff));
-				fixed4 res = texS * texF.a * i.a;
+				fixed4 res = texS * texF.a * i.a * _Intensity;
 
 				UNITY_APPLY_FOG_COLOR(i.fogCoord, res, fixed4(0,0,0,0));
 				return res;
