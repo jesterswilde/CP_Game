@@ -32,6 +32,12 @@ public class Inventory : MonoBehaviour {
     {
         return _items.ContainsKey(_name) && _items[_name] >= _amount;
     }
+    public float NumHeld(string _name)
+    {
+        float result = 0;
+        _items.TryGetValue(_name, out result);
+        return result; 
+    }
     public void PickUpItem(InvenItem _item)
     {
         if (_item.Global)

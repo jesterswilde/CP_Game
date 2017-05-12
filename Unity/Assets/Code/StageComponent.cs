@@ -1,9 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System.Linq; 
+using System.Linq;
+using System;
 
-public class StageComponent : MonoBehaviour, IRequire {
+public class StageComponent : MonoBehaviour, IRequire, IExists {
 
     [SerializeField]
     int[] _activeStages;
@@ -16,9 +17,11 @@ public class StageComponent : MonoBehaviour, IRequire {
 
 
 	#region IRequire implementation
+    public bool CurrentlyExists { get { return !_isInactive; } }
 
 	public string UIText { get { return ""; } }
-	public bool AllowActivation (Character _character)
+
+    public bool AllowActivation (Character _character)
 	{
 		return _activeStages.Contains (StageManager.CurrentStage) || _replayStages.Contains (StageManager.CurrentStage); 
 	}

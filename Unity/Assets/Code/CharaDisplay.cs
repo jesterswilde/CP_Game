@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
-public class CharaDisplay : MonoBehaviour, IRequire
+public class CharaDisplay : MonoBehaviour, IRequire, IExists
 {
     [SerializeField]
     List<Character> _displayCharacters;
@@ -31,6 +31,7 @@ public class CharaDisplay : MonoBehaviour, IRequire
 
 
     #endregion
+    public bool CurrentlyExists { get { return _isActive; } }
 
     public void SwitchedCharacter(Character _character)
     {

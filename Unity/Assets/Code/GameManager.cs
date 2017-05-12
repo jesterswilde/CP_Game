@@ -49,6 +49,7 @@ public class GameManager : MonoBehaviour {
     public static bool ShowingCtrlMenu { get { return t._showingCtrlMenu; } }
     bool _canAcceptPlayerInput = true; 
     public static bool CanAcceptPlayerInput { get { return t._canAcceptPlayerInput; } }
+    Dictionary<string, Character> _charByName = new Dictionary<string, Character>(); 
 
     ICamera _camController;
     ICamera _nextCamController;
@@ -273,7 +274,14 @@ public class GameManager : MonoBehaviour {
 
     public static void RegisterCharacter(Character _character)
     {
-        t._characters.Add(_character); 
+        t._characters.Add(_character);
+        t._charByName[_character.name] = _character; 
+    }
+    public static Character CharByName(string _name)
+    {
+        Character _char = null;
+        t._charByName.TryGetValue(_name, out _char);
+        return _char; 
     }
     public static void UnRegisterCharacter(Character _character)
     {
@@ -294,6 +302,7 @@ public class GameManager : MonoBehaviour {
     public static void RegisterTargetable(ITargetable _target)
     {
         t._targetables.Add(_target); 
+        
     }
     public static void UnRegisterTargetable(ITargetable _target)
     {

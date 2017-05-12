@@ -19,14 +19,13 @@ public class Kickable : WibblyWobbly, ITargetable {
 
 	Vector3 _dir = Vector3.zero;
 	float _speed = 0; 
-	float _minSpeedThreshold = 0.1f; 
+	float _minSpeedThreshold = 0.5f; 
 	bool _firstPlay = true; 
 	bool _hasCast = false; 
 
 	public override void Play (float _time)
 	{
-		//Debug.Log ("Play"); 
-		if (_speed != 0 && _firstPlay && !_hasCast) {
+		if (_speed != 0) {
 			_firstPlay = false; 
 			Ray _ray = new Ray (transform.position, _dir); 
 			RaycastHit _hit; 
@@ -43,21 +42,20 @@ public class Kickable : WibblyWobbly, ITargetable {
 			}
 		}
 		base.Play (_time);
-		_firstPlay = true; 
 	}
 	int ModSpeed(float _deltaTime){
-		if (_speed < _minSpeedThreshold && _speed != 0) {
-			SetExternalAction (new ValueAction (ActionType.ThresholdReached, _speed)); 
-			return (int)_speed;  
-		} else {
-			int _intSpeed = (int)(_speed * 10000); 
-			return Mathf.FloorToInt(_intSpeed * _drag * _deltaTime); 
-		}
+		int _intSpeed = (int)(_speed * 10000); 
+	    return Mathf.FloorToInt(_intSpeed * _drag * _deltaTime); 
 	}
-
+        
 	protected override void Act (float _deltaTime)
 	{
 		if (_speed != 0) {
+            if(_speed < _minSpeedThreshold){
+                SetExternalAction(new ValueAction(ActionType.ThresholdReached, _speed));
+                _speed = 0;
+                return; 
+            }
 			int _intSpeed = Mathf.FloorToInt(_speed * 10000); 
 			_intSpeed -= ModSpeed (_deltaTime);	
 			_speed = _intSpeed / 10000f; 
@@ -77,7 +75,7 @@ public class Kickable : WibblyWobbly, ITargetable {
 
 	protected override void UseAction (Action _action, float _time)
 	{
-		Debug.Log (_action.Type); 
+		Debug.Log ("Ball | " + _action.Type); 
 		switch (_action.Type) {
 		case(ActionType.Activate):
 			_speed = _action.Vector.magnitude;
@@ -117,7 +115,6 @@ public class Kickable : WibblyWobbly, ITargetable {
 	}
 	public List<Action> Activate (Character _character, Vector3 _newDir)
 	{
-		Debug.Log (_character.transform.position + " | " + transform.position);
 		_newDir = new Vector3 (_newDir.x, 0, _newDir.z).normalized * _force; 
 		SetAction(new VectorAction (ActionType.Activate, _newDir, true));  
 		SetAction(new DirTargetAction(ActionType.Deactivate, _dir * _speed, transform.position, true)); 
